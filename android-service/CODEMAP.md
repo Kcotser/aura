@@ -67,9 +67,12 @@ Para agregar una pantalla nueva: (1) añadir el `object` a `Screen` o `Sheet`, (
 - **`PinRepository`** (EncryptedSharedPreferences) — PIN como hash SHA-256 + salt, nunca en texto plano. `setPin()` usa `commit()` (no `apply()`) a propósito, para garantizar que quedó en disco antes de navegar.
 - **`SessionState`** (objeto en memoria, `mutableStateOf`) — `tabsUnlocked`: si ya se autenticó para ver más allá de Inicio, en esta sesión. Se resetea a `false` al relockear (2 min en background) o al "Cerrar sesión".
 - **`AuthRepository`** (EncryptedSharedPreferences) — la única cuenta **no** local: sesión contra el backend (`/api/v1/auth`). Guarda access + refresh token y renueva solo cuando hace falta. El backend **rota** el refresh token en cada `/auth/refresh`, así que hay que guardar el par nuevo cada vez. `accessTokenValido()` es bloqueante y está sincronizado: la subida de evidencia corre en un worker en paralelo a la UI.
-- **`AuraApplication`** expone `profileRepository`, `pinRepository` y `authRepository` como singletons; se obtienen vía `LocalContext.current.applicationContext as AuraApplication`.
+- **`ContactosRepository`** (DataStore propio, `aura_contactos`) — CRUD de los contactos de confianza de la Red de Apoyo, máximo `MAXIMO` (5). Se serializan como JSON dentro de una preference en vez de usar una tabla: son pocos registros que siempre se leen completos. DataStore aparte del perfil a propósito — borrar los contactos no debe poder llevarse por delante el onboarding.
+- **`AuraApplication`** expone `profileRepository`, `pinRepository`, `authRepository` y `contactosRepository` como singletons; se obtienen vía `LocalContext.current.applicationContext as AuraApplication`.
 
-**Flujo de onboarding** (`NombrePerfilScreen` → `PermisosEsencialesScreen` → `AccesoBiometricoScreen` → `CrearPinScreen` → `CalibracionGestoRapidoScreen` → `OnboardingCompletadoScreen`): el PIN se configura **siempre**, sea o no el método principal — sirve de respaldo si falla la biometría. Recién en `OnboardingCompletadoScreen` se marca `onboardingCompletado = true`.
+**Flujo de onboarding** (`SplashScreen` → `LoginScreen` → `PermisosEsencialesScreen` → `AccesoBiometricoScreen` → `CrearPinScreen` → `CalibracionGestoRapidoScreen` → `OnboardingCompletadoScreen`): el PIN se configura **siempre**, sea o no el método principal — sirve de respaldo si falla la biometría. Recién en `OnboardingCompletadoScreen` se marca `onboardingCompletado = true`.
+
+El nombre de la usuaria sale del registro en el backend (`GET /users/me`, cacheado en `AuthRepository.nombre`), no de una pantalla local: por eso ya no existe `NombrePerfilScreen` ni `Profile.nombre`. Pedirlo dos veces era pedirle lo mismo dos veces y arriesgarse a que no coincidieran.
 
 **Reingreso**: Inicio (el botón de SOS) es siempre visible sin PIN. Tocar cualquier otra pestaña sin `SessionState.tabsUnlocked` muestra `LockScreen` (composable reutilizable, recibe `onUnlocked: () -> Unit`, ya no es un `Screen` de la pila) en el lugar de esa pestaña. `AuraApp.kt` también relockea (pone `tabsUnlocked = false` y hace `popToMain()`) si la app estuvo 2+ min en segundo plano.
 
@@ -92,6 +95,15 @@ Lo que pasa entre que arranca la alerta y que la evidencia queda en el backend:
 - **`EvidenceUploadWorker`** — sube la evidencia con WorkManager, **no** dentro del servicio: el servicio muere apenas cierra los archivos, y subir dos videos puede tardar minutos y fallar. Abre el incidente (`/incidents/activate`) y sube el multipart (`/incidents/{id}/evidence`). El `incidentId` se memoriza en disco entre reintentos: sin eso cada reintento dejaría un incidente huérfano.
 - **`EstadoSubida`** — objeto en memoria con el id del trabajo encolado, para que `EnvioEvidenciaScreen` muestre el estado real. Si el proceso muere se pierde el progreso en pantalla, no la subida.
 - **`network/AuraApi`** — cliente OkHttp. El multipart va en streaming desde el `content://`; cargar los videos en memoria sería un OOM justo al subir la evidencia. La URL base es `BuildConfig.AURA_BASE_URL`, configurable con `-PauraBaseUrl=` o `gradle.properties`.
+- **`RegistroEvidencia`** — el camino de vuelta: consulta MediaStore por `DISPLAY_NAME LIKE 'SOS_%'` y reconstruye las alertas agrupando por la marca de tiempo del nombre. Es lo que alimenta Historial. No hay base de datos propia a propósito: MediaStore ya es la fuente de verdad y un registro paralelo se desincronizaría al borrar archivos desde la galería.
+
+Convención de nombres de la que depende ese agrupamiento — **cambiarla rompe Historial**:
+```
+SOS_<yyyyMMdd_HHmmss>.mp4            simple → cámara trasera
+SOS_<yyyyMMdd_HHmmss>_frontal.mp4    dual   → cámara frontal
+SOS_<yyyyMMdd_HHmmss>_trasera.mp4    dual   → cámara trasera
+SOS_<yyyyMMdd_HHmmss>[_frontal].m4a         → audio extraído
+```
 
 Mapeo a las partes que espera el backend: dual → `frontCamera` + `backCamera` + `ambientAudio`; simple → `backCamera` + `ambientAudio`. El backend solo emite `AllEvidenceUploadedEvent` con las tres, así que en modo simple el incidente no avanza de estado solo.
 
@@ -104,6 +116,14 @@ Mapeo a las partes que espera el backend: dual → `frontCamera` + `backCamera` 
 | `Dimens.kt` | `Spacing` (4/8pt grid), `Sizes` (alturas: botón 48dp, input 52dp, lista 64dp, touch-min 44dp), `Shapes` (card 16dp, button/input 8dp, chip full, bottomSheet solo esquinas superiores). |
 | `Theme.kt` | `AuraTheme{}` — color scheme fijo de marca, **sin** dynamic color ni dark theme del sistema (el "modo oscuro" real de la app es el Modo Camuflaje). |
 
+## Insets / edge-to-edge
+
+`MainActivity` llama a `enableEdgeToEdge()`, así que **el contenido se dibuja debajo de la barra de estado**: cada pantalla tiene que reservar ese espacio o el título queda tapado por el reloj.
+
+- Las pantallas con `AuraTopBar` no hacen nada: la barra ya aplica `statusBarsPadding()` internamente.
+- Las que no la usan (`InicioScreen`, `LoginScreen`, `SosFlowScreens`, `SplashScreen`) lo aplican ellas mismas.
+- **No** envolver un `AuraTopBar` en un contenedor que ya tenga `systemBarsPadding()`: se duplica el margen.
+
 ## Componentes reutilizables (`ui/components/Components.kt`)
 
 `PrimaryButton`, `CriticalButton` (rojo, para SOS/logout), `SecondaryOutlineButton`, `StatusChip`, `AppCard`, `SectionHeader`, `AuraTopBar` (con back opcional), `IconButtonSlot`, `CircleIcon`, `AvatarPlaceholder`, `AppTextField`, `SelectableOptionCard`, `WarningBanner`, `SwitchSettingRow`, `PinDots`/`PinKeypad` (teclado numérico, compartido por `CrearPinScreen`, `LockScreen` y "cambiar PIN" en Ajustes).
@@ -114,9 +134,9 @@ Shell principal (`Screen.Main`, 4 tabs — bottom nav propio, no pasa por `Nav`)
 
 | Tab | Archivo | Función |
 |---|---|---|
-| Inicio | `InicioScreen.kt` | Botón circular de activación (long-press → `TransicionActivando`), tarjeta Red de Apoyo. Único tab sin candado. |
-| Historial | `HistorialScreen.kt` | Lista de casos con filtros y búsqueda (visual, maqueta) |
-| Red de Apoyo | `RedApoyoScreen.kt` | Contactos de confianza + directorio institucional (maqueta, no persiste) |
+| Inicio | `InicioScreen.kt` | Saludo con el nombre real de la cuenta + botón circular de activación (long-press → `TransicionActivando`). Único tab sin candado. |
+| Historial | `HistorialScreen.kt` | **Real**: una tarjeta por alerta con sus archivos (fecha, duración, tamaño), leídos de MediaStore vía `RegistroEvidencia`. Tocar un archivo lo abre en el reproductor del sistema. |
+| Red de Apoyo | `RedApoyoScreen.kt` | **Real**: CRUD de contactos de confianza persistido en `ContactosRepository` (alta/edición/borrado desde los sheets, tope de 5). Los botones de llamar abren el marcador (`ACTION_DIAL`, sin permiso `CALL_PHONE`). El directorio institucional sigue hardcodeado, pero sus números marcan de verdad. |
 | Ajustes | `AjustesScreen.kt` | Perfil, estado del sistema, links a ajustes avanzados, cerrar sesión |
 
 Pantallas de pila completa (`Screen`), por archivo:
@@ -125,7 +145,6 @@ Pantallas de pila completa (`Screen`), por archivo:
 |---|---|
 | `SplashScreen.kt` | `Splash` (un solo CTA "Comenzar" → `Login`) |
 | `LoginScreen.kt` | `Login` (real) — login y registro contra el backend en el mismo formulario |
-| `NombrePerfilScreen.kt` | `NombrePerfil` (pide el nombre, real) |
 | `CrearPinScreen.kt` | `CrearPin` (real) |
 | `LockScreen.kt` | Candado reutilizable (real) — ya **no** es un `Screen` de la pila, ver "Perfil local y acceso" |
 | `OnboardingScreens.kt` | `PermisosEsenciales` (permisos reales), `AccesoBiometrico` (real), `CalibracionGesto` (gesto real de volumen), `OnboardingCompletado` |
@@ -144,8 +163,8 @@ Bottom sheets (`ui/sheets/BottomSheets.kt`, todas `Sheet`): `AgregarContacto`, `
 **Ya real**: perfil local (nombre, onboarding), permisos del sistema (cámara/audio/ubicación/notificaciones pedidos una sola vez), método de acceso PIN/biometría con PIN siempre como respaldo, candado por pestaña con relock por tiempo, gesto físico de volumen que dispara la alerta SOS fuera de la app y con pantalla bloqueada (vía `AccessibilityService` + foreground service), notificaciones de debug del gesto.
 
 **Sigue siendo maqueta** (sin ViewModel, sin persistencia, sin validación real):
-- Red de Apoyo: contactos hardcodeados, no hay CRUD real ni llamadas reales.
-- Historial / Incidentes: datos de ejemplo, sin persistencia.
+- Red de Apoyo: el CRUD de contactos y el marcado ya son reales. Falta que el SOS **avise** a esos contactos — hoy se guardan pero nadie los notifica (el sheet `EnviarAContacto` sigue con destinatarios de ejemplo).
+- Incidentes (`DetalleDeCaso`, `FichaIncidente`, `VisorMultimedia`): datos de ejemplo. Historial ya **no** lo es — lista la evidencia real del dispositivo.
 - SOS: el trigger, la captura (cámara + audio) y la subida al backend son reales. Siguen siendo visuales el envío a contactos y el cifrado.
 - GPS: el incidente se abre con coordenadas placeholder (`AuraApi.LAT_PLACEHOLDER`/`LNG_PLACEHOLDER`); el backend exige lat/lng para activar, pero todavía no se manda la ubicación real.
 - Camuflaje: no cambia el ícono/nombre real de la app.

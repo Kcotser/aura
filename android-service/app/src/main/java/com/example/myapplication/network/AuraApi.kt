@@ -53,7 +53,10 @@ object AuraApi {
     private val client: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
+            // El plan free de Render apaga el servicio por inactividad: la primera request
+            // después de un rato se queda esperando ~50 s mientras el contenedor arranca. Con
+            // los 10 s habituales, ese arranque en frío se vería como "no hay conexión".
+            .readTimeout(120, TimeUnit.SECONDS)
             // Subir dos videos por una red móvil puede tardar bastante más que una request normal.
             .writeTimeout(10, TimeUnit.MINUTES)
             .callTimeout(15, TimeUnit.MINUTES)
@@ -103,6 +106,17 @@ object AuraApi {
             .put("deviceId", deviceId)
 
         return ejecutar(postJson("api/v1/auth/refresh", body)).use { AuthTokens.desde(dataObject(it)) }
+    }
+
+    /** Perfil de la cuenta autenticada (`GET /users/me`). */
+    fun perfil(accessToken: String): PerfilUsuario {
+        val request = Request.Builder()
+            .url(baseUrl.newBuilder().addPathSegments("api/v1/users/me").build())
+            .header("Authorization", "Bearer $accessToken")
+            .get()
+            .build()
+
+        return ejecutar(request).use { PerfilUsuario.desde(dataObject(it)) }
     }
 
     /* -------------------------------------------------------------- incidentes */
@@ -215,6 +229,21 @@ object AuraApi {
         }
         return sobre.optJSONObject("data")
             ?: throw AuraApiException(respuesta.code, sobre.optString("message", "El servidor no devolvió datos"))
+    }
+}
+
+/** Datos de la cuenta que devuelve `/users/me`. */
+data class PerfilUsuario(
+    val email: String,
+    val nombre: String,
+    val apellido: String
+) {
+    companion object {
+        fun desde(json: JSONObject) = PerfilUsuario(
+            email = json.optString("email"),
+            nombre = json.optString("firstName"),
+            apellido = json.optString("lastName")
+        )
     }
 }
 

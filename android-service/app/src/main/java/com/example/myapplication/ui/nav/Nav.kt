@@ -21,7 +21,6 @@ sealed class Screen {
     object Login : Screen()
 
     // Perfil local / acceso
-    object NombrePerfil : Screen()
     object CrearPin : Screen()
     // El candado de reingreso ya no es una pantalla completa de la pila — ver
     // MainShell (AuraApp.kt), que lo muestra inline al tocar una pestaña bloqueada.
@@ -64,7 +63,9 @@ sealed class Screen {
 /** Bottom sheets modales (se superponen a la pantalla actual). */
 sealed class Sheet {
     object AgregarContacto : Sheet()
-    object EditarContacto : Sheet()
+
+    /** Edita un contacto concreto de la Red de Apoyo. */
+    data class EditarContacto(val contactoId: String) : Sheet()
     object EnviarAContacto : Sheet()
     object ExportarReporte : Sheet()
     object EliminarArchivos : Sheet()

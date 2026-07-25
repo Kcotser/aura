@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -214,6 +215,14 @@ fun SectionHeader(text: String, modifier: Modifier = Modifier) {
  * Barra superior simple con back + título
  * ------------------------------------------------------------------------- */
 
+/**
+ * Barra superior de la app.
+ *
+ * Reserva el alto de la barra de estado ella misma: la Activity dibuja en modo edge-to-edge
+ * (`enableEdgeToEdge()`), así que sin esto el título queda por debajo del reloj y la batería.
+ * Va acá y no en cada pantalla para que ninguna se olvide — es el error que tenían Historial,
+ * Red de Apoyo y Ajustes.
+ */
 @Composable
 fun AuraTopBar(
     title: String,
@@ -225,6 +234,7 @@ fun AuraTopBar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
+            .statusBarsPadding()
             .height(56.dp)
             .padding(horizontal = Spacing.xs)
     ) {

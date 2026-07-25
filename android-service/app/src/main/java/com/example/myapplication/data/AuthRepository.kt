@@ -43,6 +43,13 @@ class AuthRepository(private val context: Context) {
 
     val email: String? get() = prefs.getString(KEY_EMAIL, null)
 
+    /**
+     * Nombre de pila de la cuenta, como se registró en el backend. Es lo que saluda la pantalla
+     * de inicio, así que se cachea en disco: pedirlo por red en cada arranque haría que el
+     * saludo apareciera tarde (o nunca, sin conexión).
+     */
+    val nombre: String? get() = prefs.getString(KEY_NOMBRE, null)?.takeIf { it.isNotBlank() }
+
     /** Identificador estable de este dispositivo, para que el backend distinga sesiones. */
     val deviceId: String
         get() = prefs.getString(KEY_DEVICE_ID, null) ?: UUID.randomUUID().toString().also {
@@ -52,6 +59,7 @@ class AuthRepository(private val context: Context) {
     suspend fun login(email: String, password: String) = withContext(Dispatchers.IO) {
         val tokens = AuraApi.login(email.trim(), password, deviceId)
         guardar(tokens, email.trim())
+        traerNombre(tokens.accessToken)
     }
 
     suspend fun registrar(
@@ -65,6 +73,22 @@ class AuthRepository(private val context: Context) {
         // El registro no devuelve tokens, así que se encadena un login para dejar la sesión lista.
         val tokens = AuraApi.login(email.trim(), password, deviceId)
         guardar(tokens, email.trim())
+        traerNombre(tokens.accessToken)
+    }
+
+    /**
+     * Actualiza el nombre cacheado contra `/users/me`. Silencioso a propósito: es un detalle
+     * cosmético del saludo, y fallar acá no debe romper un login que por lo demás salió bien.
+     */
+    suspend fun refrescarPerfil() = withContext(Dispatchers.IO) {
+        runCatching { traerNombre(accessTokenValido()) }
+        Unit
+    }
+
+    private fun traerNombre(accessToken: String) {
+        runCatching { AuraApi.perfil(accessToken) }.onSuccess { perfil ->
+            prefs.edit().putString(KEY_NOMBRE, perfil.nombre).commit()
+        }
     }
 
     fun cerrarSesion() {
@@ -73,6 +97,7 @@ class AuthRepository(private val context: Context) {
             .remove(KEY_REFRESH)
             .remove(KEY_EXPIRA_EN)
             .remove(KEY_EMAIL)
+            .remove(KEY_NOMBRE)
             .commit()
     }
 
@@ -130,6 +155,7 @@ class AuthRepository(private val context: Context) {
         const val KEY_REFRESH = "refresh_token"
         const val KEY_EXPIRA_EN = "access_expira_en"
         const val KEY_EMAIL = "email"
+        const val KEY_NOMBRE = "nombre"
         const val KEY_DEVICE_ID = "device_id"
         const val MARGEN_SEGUNDOS = 60L
     }
