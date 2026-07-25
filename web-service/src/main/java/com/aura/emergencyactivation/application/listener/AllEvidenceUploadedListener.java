@@ -33,6 +33,7 @@ public class AllEvidenceUploadedListener {
         this.eventPublisher = eventPublisher;
     }
 
+    @EventListener
     @ApplicationModuleListener
     public void on(AllEvidenceUploadedEvent event) {
         log.info("Received AllEvidenceUploadedEvent for incidentId: {}", event.incidentId());
