@@ -3,6 +3,11 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+// URL base del backend de AURA, sin barra final.
+// Se puede pisar sin tocar este archivo con -PauraBaseUrl=... o una línea en gradle.properties.
+// TODO: reemplazar por la URL real del backend desplegado.
+val auraBaseUrl = (findProperty("auraBaseUrl") as String?) ?: "https://REEMPLAZAR-CON-TU-BACKEND"
+
 android {
     namespace = "com.example.myapplication"
     compileSdk {
@@ -19,6 +24,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "AURA_BASE_URL", "\"$auraBaseUrl\"")
     }
 
     buildTypes {
@@ -34,6 +41,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -57,6 +65,9 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.video)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

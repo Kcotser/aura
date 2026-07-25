@@ -22,6 +22,14 @@ spring:
       name: admin
       password: ${ADMIN_PASSWORD:admin}
 
+  # Multipart — evidence uploads carry video files. The Spring defaults (1MB per file,
+  # 10MB per request) reject any real recording, so they are raised here: three streams
+  # (front camera, back camera, ambient audio) travel in a single request.
+  servlet:
+    multipart:
+      max-file-size: ${MULTIPART_MAX_FILE_SIZE:150MB}
+      max-request-size: ${MULTIPART_MAX_REQUEST_SIZE:400MB}
+
 server:
   port: ${PORT:8080}
 

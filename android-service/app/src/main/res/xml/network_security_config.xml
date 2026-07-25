@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Todo el tráfico va por HTTPS. La única excepción es el backend corriendo en la máquina
+    de desarrollo, que no tiene certificado: sin esto, probar contra un Spring local desde
+    el emulador falla con CLEARTEXT_NOT_PERMITTED y parece un error de red.
+
+    Si pruebas desde un celular físico contra tu PC en la misma WiFi, agrega su IP LAN
+    (ej. 192.168.1.42) como un <domain> más acá abajo.
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- localhost de la máquina anfitriona, visto desde el emulador de Android -->
+        <domain includeSubdomains="false">10.0.2.2</domain>
+        <domain includeSubdomains="false">localhost</domain>
+    </domain-config>
+</network-security-config>

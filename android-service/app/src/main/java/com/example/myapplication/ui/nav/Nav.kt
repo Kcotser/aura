@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
+import com.example.myapplication.ui.Tab
 
 /**
  * Destinos de pantalla completa (participan en el back stack).
@@ -15,6 +16,9 @@ import androidx.compose.runtime.toMutableStateList
  */
 sealed class Screen {
     object Splash : Screen()
+
+    /** Cuenta del backend (la única que no es local): sin ella no se puede subir evidencia. */
+    object Login : Screen()
 
     // Perfil local / acceso
     object NombrePerfil : Screen()
@@ -34,7 +38,9 @@ sealed class Screen {
     // Activación SOS
     object TransicionActivando : Screen()
     object ConfirmandoSOS : Screen()
-    object ProcesandoIncidente : Screen()
+
+    /** Cierre de la alerta: muestra cómo va el envío de la evidencia al backend. */
+    object EnvioEvidencia : Screen()
 
     // Historial / incidentes
     object DetalleDeCaso : Screen()
@@ -70,10 +76,21 @@ sealed class Sheet {
 /** Controlador de navegación simple: pila de pantallas + sheet modal activo. */
 class Nav(
     val backStack: SnapshotStateList<Screen>,
-    private val sheetState: MutableState<Sheet?>
+    private val sheetState: MutableState<Sheet?>,
+    private val tabSolicitadaState: MutableState<Tab?>
 ) {
     val current: Screen get() = backStack.last()
     val sheet: Sheet? get() = sheetState.value
+
+    /**
+     * Pestaña con la que debe abrirse el shell principal. La consume [Screen.Main] al mostrarse
+     * y vuelve a null: es una orden de una sola vez, no el estado de la pestaña actual.
+     */
+    var tabSolicitada: Tab?
+        get() = tabSolicitadaState.value
+        set(value) {
+            tabSolicitadaState.value = value
+        }
 
     fun push(screen: Screen) {
         backStack.add(screen)
@@ -87,8 +104,14 @@ class Nav(
         backStack[backStack.lastIndex] = screen
     }
 
-    /** Vuelve a la raíz (Main) descartando toda la pila intermedia. */
-    fun popToMain() {
+    /**
+     * Vuelve a la raíz (Main) descartando toda la pila intermedia.
+     *
+     * @param tab pestaña con la que abrir el shell. Si está bloqueada, el candado se muestra
+     *   igual que al tocarla a mano; no salta la protección.
+     */
+    fun popToMain(tab: Tab? = null) {
+        tabSolicitada = tab
         backStack.clear()
         backStack.add(Screen.Main)
     }
@@ -106,5 +129,6 @@ class Nav(
 fun rememberNav(start: Screen = Screen.Splash): Nav {
     val backStack = remember { mutableListOf(start).toMutableStateList() }
     val sheetState = remember { mutableStateOf<Sheet?>(null) }
-    return remember { Nav(backStack, sheetState) }
+    val tabSolicitadaState = remember { mutableStateOf<Tab?>(null) }
+    return remember { Nav(backStack, sheetState, tabSolicitadaState) }
 }
