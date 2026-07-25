@@ -1,5 +1,5 @@
 # =============================================================================
-# AURA — Default (dev) configuration
+# AURA — Application Configuration (Dev & Production / Render Ready)
 # =============================================================================
 spring:
   application:
@@ -10,47 +10,47 @@ spring:
     virtual:
       enabled: true
 
-  # MongoDB — dev defaults (local)
+  # MongoDB — supports Render MONGODB_URI or local fallback
   data:
     mongodb:
-      uri: mongodb://localhost:27017/aura_dev
-      database: aura_dev
+      uri: ${MONGODB_URI:mongodb://localhost:27017/aura_dev}
+      database: ${MONGODB_DATABASE:aura_dev}
 
-  # Disable Spring Security's default generated password in logs
+  # Disable Spring Security default password logging
   security:
     user:
       name: admin
-      password: admin
+      password: ${ADMIN_PASSWORD:admin}
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
-# JWT configuration
+# AURA Platform Configuration
 aura:
+  gemma:
+    api-url: ${GEMMA_API_URL}
+    api-key: ${GEMMA_API_KEY}
+
   jwt:
-    # Dev-only secret — NEVER use in production
-    # Generate for prod: openssl rand -base64 32
-    secret: ZGV2LW9ubHktc2VjcmV0LWZvci1hdXJhLWRvLW5vdC11c2UtaW4tcHJvZA==
-    access-token-expiration-minutes: 15
-    refresh-token-expiration-days: 30
+    secret: ${JWT_SECRET:ZGV2LW9ubHktc2VjcmV0LWZvci1hdXJhLWRvLW5vdC11c2UtaW4tcHJvZA==}
+    access-token-expiration-minutes: ${JWT_ACCESS_TOKEN_EXPIRATION:15}
+    refresh-token-expiration-days: ${JWT_REFRESH_TOKEN_EXPIRATION:30}
 
   security:
     cors:
-      allowed-origins: http://localhost:3000,http://localhost:5173
+      allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173,*}
 
   rate-limit:
     login:
-      # Max 10 attempts per minute per IP
       capacity: 10
       refill-tokens: 10
       refill-duration-seconds: 60
     pin:
-      # Max 5 attempts per minute per IP
       capacity: 5
       refill-tokens: 5
       refill-duration-seconds: 60
 
-# Actuator — expose health and info in dev
+# Actuator — Health & Info Endpoints
 management:
   endpoints:
     web:
@@ -60,19 +60,22 @@ management:
     health:
       show-details: always
 
-# SpringDoc / Swagger UI
+# SpringDoc / Swagger UI (Active in Production / Render)
 springdoc:
   api-docs:
     path: /v3/api-docs
+    enabled: true
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
+    try-it-out-enabled: true
+    filter: true
     tags-sorter: alpha
     operations-sorter: alpha
 
-# Logging — console in dev
+# Logging Configuration
 logging:
   level:
     root: INFO
-    com.aura: DEBUG
-    org.springframework.security: DEBUG
+    com.aura: INFO
+    org.springframework.security: INFO
