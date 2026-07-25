@@ -1,0 +1,78 @@
+# =============================================================================
+# AURA — Default (dev) configuration
+# =============================================================================
+spring:
+  application:
+    name: aura-backend
+
+  # Virtual Threads (Java 21) for I/O-bound operations
+  threads:
+    virtual:
+      enabled: true
+
+  # MongoDB — dev defaults (local)
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/aura_dev
+      database: aura_dev
+
+  # Disable Spring Security's default generated password in logs
+  security:
+    user:
+      name: admin
+      password: admin
+
+server:
+  port: 8080
+
+# JWT configuration
+aura:
+  jwt:
+    # Dev-only secret — NEVER use in production
+    # Generate for prod: openssl rand -base64 32
+    secret: ZGV2LW9ubHktc2VjcmV0LWZvci1hdXJhLWRvLW5vdC11c2UtaW4tcHJvZA==
+    access-token-expiration-minutes: 15
+    refresh-token-expiration-days: 30
+
+  security:
+    cors:
+      allowed-origins: http://localhost:3000,http://localhost:5173
+
+  rate-limit:
+    login:
+      # Max 10 attempts per minute per IP
+      capacity: 10
+      refill-tokens: 10
+      refill-duration-seconds: 60
+    pin:
+      # Max 5 attempts per minute per IP
+      capacity: 5
+      refill-tokens: 5
+      refill-duration-seconds: 60
+
+# Actuator — expose health and info in dev
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# SpringDoc / Swagger UI
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+# Logging — console in dev
+logging:
+  level:
+    root: INFO
+    com.aura: DEBUG
+    org.springframework.security: DEBUG
