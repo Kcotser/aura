@@ -47,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.AuraApplication
 import com.example.myapplication.capture.SosCaptureService
 import com.example.myapplication.ui.components.IconButtonSlot
 import com.example.myapplication.ui.components.StatusChip
@@ -60,6 +61,7 @@ import com.example.myapplication.ui.theme.Spacing
 import com.example.myapplication.ui.theme.Success
 import com.example.myapplication.ui.theme.AuraTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 
 /* =============================================================================
  * 1. TRANSICIÓN ACTIVANDO (pantalla intermedia, avanza sola)
@@ -69,9 +71,13 @@ import kotlinx.coroutines.delay
 fun TransicionActivandoScreen(nav: Nav) {
     val context = LocalContext.current
     LaunchedEffect(Unit) {
-        // Arranca la grabación real (video trasero + audio) apenas se activa la protección;
-        // se corta en ProcesandoIncidenteScreen (fin del incidente) o si se cierra la app.
-        SosCaptureService.start(context)
+        // Arranca la grabación real apenas se activa la protección; se corta en
+        // ProcesandoIncidenteScreen (fin del incidente) o si se cierra la app. La preferencia
+        // se lee acá y no dentro del servicio para no bloquear el arranque de la captura
+        // leyendo DataStore en el hilo principal justo en el momento de la emergencia.
+        val app = context.applicationContext as AuraApplication
+        val dual = app.profileRepository.profile.first().grabacionDual
+        SosCaptureService.start(context, dual = dual)
         delay(1600)
         nav.push(Screen.ConfirmandoSOS)
     }

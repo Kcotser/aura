@@ -18,7 +18,9 @@ data class Profile(
     val nombre: String,
     val onboardingCompletado: Boolean,
     val permisosSolicitados: Boolean,
-    val metodoAcceso: MetodoAcceso
+    val metodoAcceso: MetodoAcceso,
+    /** Grabar con las dos cámaras a la vez durante el SOS. Depende del hardware; ver DualCameraSupport. */
+    val grabacionDual: Boolean
 )
 
 /** Perfil local único (sin login/backend): nombre, flags de onboarding y método de acceso elegido. */
@@ -29,6 +31,7 @@ class ProfileRepository(private val context: Context) {
         val ONBOARDING_COMPLETADO = booleanPreferencesKey("onboarding_completado")
         val PERMISOS_SOLICITADOS = booleanPreferencesKey("permisos_solicitados")
         val METODO_ACCESO = stringPreferencesKey("metodo_acceso")
+        val GRABACION_DUAL = booleanPreferencesKey("grabacion_dual")
     }
 
     val profile: Flow<Profile> = context.profileDataStore.data.map { prefs ->
@@ -38,7 +41,8 @@ class ProfileRepository(private val context: Context) {
             permisosSolicitados = prefs[Keys.PERMISOS_SOLICITADOS] ?: false,
             metodoAcceso = prefs[Keys.METODO_ACCESO]
                 ?.let { runCatching { MetodoAcceso.valueOf(it) }.getOrNull() }
-                ?: MetodoAcceso.PIN
+                ?: MetodoAcceso.PIN,
+            grabacionDual = prefs[Keys.GRABACION_DUAL] ?: false
         )
     }
 
@@ -56,5 +60,9 @@ class ProfileRepository(private val context: Context) {
 
     suspend fun setOnboardingCompletado(value: Boolean) {
         context.profileDataStore.edit { it[Keys.ONBOARDING_COMPLETADO] = value }
+    }
+
+    suspend fun setGrabacionDual(value: Boolean) {
+        context.profileDataStore.edit { it[Keys.GRABACION_DUAL] = value }
     }
 }
