@@ -62,6 +62,14 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.of("BUSINESS_RULE_VIOLATION", ex.getMessage()));
     }
 
+    @ExceptionHandler(org.springframework.dao.DuplicateKeyException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateKey(org.springframework.dao.DuplicateKeyException ex) {
+        log.warn("Duplicate key violation: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ErrorResponse.of("BUSINESS_RULE_VIOLATION", "Email is already registered"));
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex) {
         return ResponseEntity

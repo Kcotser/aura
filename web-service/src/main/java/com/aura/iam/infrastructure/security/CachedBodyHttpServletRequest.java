@@ -55,6 +55,11 @@ class CachedBodyHttpServletRequest extends HttpServletRequestWrapper {
             public int read() {
                 return buffer.read();
             }
+
+            @Override
+            public int read(byte[] b, int off, int len) throws IOException {
+                return buffer.read(b, off, len);
+            }
         };
     }
 

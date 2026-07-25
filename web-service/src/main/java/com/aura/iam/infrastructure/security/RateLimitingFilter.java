@@ -70,8 +70,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String path = request.getRequestURI();
-        if (!isRateLimitedPath(path)) {
+        if (!isRateLimitedPath(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -95,7 +94,11 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         filterChain.doFilter(cached, response);
     }
 
-    private boolean isRateLimitedPath(String path) {
+    private boolean isRateLimitedPath(HttpServletRequest request) {
+        if (!"POST".equalsIgnoreCase(request.getMethod())) {
+            return false;
+        }
+        String path = request.getRequestURI();
         return path.equals("/api/v1/auth/login") || path.equals("/api/v1/auth/pin/validate");
     }
 
