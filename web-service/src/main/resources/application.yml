@@ -27,6 +27,10 @@ server:
 
 # JWT configuration
 aura:
+  gemma:
+    api-url: ${GEMMA_API_URL}
+    api-key: ${GEMMA_API_KEY}
+
   jwt:
     # Dev-only secret — NEVER use in production
     # Generate for prod: openssl rand -base64 32
