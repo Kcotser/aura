@@ -7,8 +7,11 @@ spring:
       database: aura_test
 
 aura:
+  gemini:
+    api-url: ${GEMINI_API_URL:https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash}
+
   gemma:
-    api-url: ${GEMMA_API_URL:https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash}
+    api-url: ${GEMMA_API_URL:https://generativelanguage.googleapis.com/v1beta/models/gemma-4-31b-it}
     api-key: ${GEMMA_API_KEY:}
 
   jwt:

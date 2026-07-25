@@ -37,10 +37,15 @@ server:
 
 # AURA Platform Configuration
 aura:
+  # Analisis en dos etapas. Gemma rechaza audio ("Audio input modality is not enabled for this
+  # model"), asi que la percepcion multimodal la hace Gemini y el triage de texto lo hace Gemma.
+  # Los defaults son obligatorios: un placeholder sin fallback aborta el arranque con
+  # "Could not resolve placeholder" si Render no inyecta la variable.
+  gemini:
+    api-url: ${GEMINI_API_URL:https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash}
+
   gemma:
-    # Los defaults son obligatorios: un placeholder sin fallback aborta el arranque
-    # con "Could not resolve placeholder" si Render no inyecta la variable.
-    api-url: ${GEMMA_API_URL:https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash}
+    api-url: ${GEMMA_API_URL:https://generativelanguage.googleapis.com/v1beta/models/gemma-4-31b-it}
     api-key: ${GEMMA_API_KEY:}
 
   jwt:
