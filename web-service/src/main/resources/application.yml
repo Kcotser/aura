@@ -37,11 +37,7 @@ server:
 
 # AURA Platform Configuration
 aura:
-  # Analisis en dos etapas: Gemini realiza la percepcion multimodal (audio + video) y Gemma 4 realiza el triage de texto.
-  gemini:
-    api-url: ${GEMINI_API_URL:https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash}
-    api-key: ${GEMINI_API_KEY:}
-
+  # Analisis multimodal directo con Gemma 4 31B
   gemma:
     api-url: ${GEMMA_API_URL:https://generativelanguage.googleapis.com/v1beta/models/gemma-4-31b}
     api-key: ${GEMMA_API_KEY:}
