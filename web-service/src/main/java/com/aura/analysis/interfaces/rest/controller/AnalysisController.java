@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/v1/incidents/{incidentId}/analysis")
-@Tag(name = "Incident Analysis", description = "Endpoints for multimodal Gemma 4 AI incident analysis")
+@Tag(name = "Incident Analysis",
+     description = "Analisis multimodal de la evidencia: Gemini transcribe el audio y describe el "
+             + "video, y Gemma 4 clasifica entidad de derivacion y nivel de amenaza")
 @SecurityRequirement(name = "bearerAuth")
 public class AnalysisController {
 

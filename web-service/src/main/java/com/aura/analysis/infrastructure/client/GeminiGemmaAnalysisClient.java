@@ -100,9 +100,12 @@ public class GeminiGemmaAnalysisClient implements GemmaAnalysisClient {
         String visual = text(perception, "visualContextDescription", "Sin evidencia visual adjunta");
 
         // Etapa 2 — Gemma 4: triage sobre el texto que produjo Gemini.
+        // Los centinelas son explicitos a proposito: pasar null aqui hace que el constructor
+        // compacto de AnalysisResult rellene "comisaria-mujer"/"HIGH", y un triage caido
+        // terminaba guardado como si fuera una clasificacion real.
         JsonNode triage = runGemmaTriage(incidentId, transcript, visual);
-        String entityCode = text(triage, "suggestedEntityCode", null);
-        String threatLevel = text(triage, "threatLevel", null);
+        String entityCode = text(triage, "suggestedEntityCode", "sin-clasificar");
+        String threatLevel = text(triage, "threatLevel", "UNKNOWN");
 
         log.info("Analisis completado incidentId={}, threatLevel={}, entityCode={}, transcriptChars={}",
                 incidentId, threatLevel, entityCode, transcript.length());
@@ -261,8 +264,7 @@ public class GeminiGemmaAnalysisClient implements GemmaAnalysisClient {
     JsonNode extractJson(String rawResponse, String modelLabel) {
         try {
             JsonNode root = objectMapper.readTree(rawResponse);
-            String text = root.path("candidates").get(0)
-                    .path("content").path("parts").get(0).path("text").asText().trim();
+            String text = answerText(root.path("candidates").get(0).path("content").path("parts"));
 
             Matcher matcher = JSON_OBJECT.matcher(text);
             String lastObject = null;
@@ -278,6 +280,25 @@ public class GeminiGemmaAnalysisClient implements GemmaAnalysisClient {
             throw new IllegalStateException(
                     "No se pudo interpretar la respuesta de " + modelLabel + ": " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Junta el texto de la respuesta descartando las partes de razonamiento.
+     *
+     * <p>Estos modelos devuelven varias {@code parts}: las intermedias vienen marcadas con
+     * {@code "thought": true} y solo la ultima es la respuesta. Leer {@code parts[0]} daba el
+     * razonamiento, que o no trae JSON — y el analisis quedaba sin clasificar — o trae un JSON
+     * tentativo que el modelo despues descarta, que es peor porque se guarda como si fuera bueno.
+     */
+    private String answerText(JsonNode parts) {
+        StringBuilder answer = new StringBuilder();
+        for (JsonNode part : parts) {
+            if (part.path("thought").asBoolean(false)) {
+                continue;
+            }
+            answer.append(part.path("text").asText(""));
+        }
+        return answer.toString().trim();
     }
 
     private String text(JsonNode node, String field, String fallback) {
