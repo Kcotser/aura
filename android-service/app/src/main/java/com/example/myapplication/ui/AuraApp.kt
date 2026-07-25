@@ -68,7 +68,6 @@ import com.example.myapplication.ui.screens.HistorialScreen
 import com.example.myapplication.ui.screens.InicioScreen
 import com.example.myapplication.ui.screens.LockScreen
 import com.example.myapplication.ui.screens.LoginScreen
-import com.example.myapplication.ui.screens.NombrePerfilScreen
 import com.example.myapplication.ui.screens.OnboardingCompletadoScreen
 import com.example.myapplication.ui.screens.PermisosEsencialesScreen
 import com.example.myapplication.ui.screens.EnvioEvidenciaScreen
@@ -106,7 +105,6 @@ enum class Tab(val label: String, val icon: ImageVector) {
 private val onboardingFlowScreens = setOf(
     Screen.Splash,
     Screen.Login,
-    Screen.NombrePerfil,
     Screen.PermisosEsenciales,
     Screen.AccesoBiometrico,
     Screen.CrearPin,
@@ -197,10 +195,9 @@ fun AuraApp() {
             Screen.Splash -> SplashScreen(onComenzar = { nav.push(Screen.Login) })
             Screen.Login -> LoginScreen(
                 onListo = {
-                    if (onboardingCompletado) nav.popToMain() else nav.replace(Screen.NombrePerfil)
+                    if (onboardingCompletado) nav.popToMain() else nav.replace(Screen.PermisosEsenciales)
                 }
             )
-            Screen.NombrePerfil -> NombrePerfilScreen(nav)
             Screen.CrearPin -> CrearPinScreen(nav)
             Screen.PermisosEsenciales -> PermisosEsencialesScreen(nav)
             Screen.AccesoBiometrico -> AccesoBiometricoScreen(nav)
@@ -233,7 +230,7 @@ fun AuraApp() {
             ) {
                 when (sheet) {
                     Sheet.AgregarContacto -> AgregarContactoSheetContent(nav)
-                    Sheet.EditarContacto -> EditarContactoSheetContent(nav)
+                    is Sheet.EditarContacto -> EditarContactoSheetContent(nav, sheet.contactoId)
                     Sheet.EnviarAContacto -> EnviarAContactoSheetContent(nav)
                     Sheet.ExportarReporte -> ExportarReporteSheetContent(nav)
                     Sheet.EliminarArchivos -> EliminarArchivosSheetContent(nav)

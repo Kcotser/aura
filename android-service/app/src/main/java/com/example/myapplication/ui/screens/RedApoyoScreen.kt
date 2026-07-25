@@ -1,5 +1,9 @@
 package com.example.myapplication.ui.screens
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,14 +37,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.AuraApplication
+import com.example.myapplication.data.ContactoConfianza
+import com.example.myapplication.data.ContactosRepository
 import com.example.myapplication.ui.components.AvatarPlaceholder
 import com.example.myapplication.ui.components.IconButtonSlot
 import com.example.myapplication.ui.components.AuraTopBar
@@ -54,20 +64,31 @@ import com.example.myapplication.ui.nav.Nav
 import com.example.myapplication.ui.nav.Sheet
 import com.example.myapplication.ui.nav.rememberNav
 
-private data class Contacto(val nombre: String, val relacion: String, val inicial: String)
-private data class Institucion(val nombre: String, val desc: String, val icon: ImageVector)
+private data class Institucion(
+    val nombre: String,
+    val desc: String,
+    val icon: ImageVector,
+    val telefono: String
+)
 
+/**
+ * Red de Apoyo: contactos de confianza (reales, guardados en el dispositivo vía
+ * [com.example.myapplication.data.ContactosRepository]) y directorio institucional.
+ *
+ * Los botones de llamar abren el marcador con el número puesto, no llaman solos: se usa
+ * `ACTION_DIAL` en vez de `ACTION_CALL` para que nadie dispare una llamada sin querer y para no
+ * tener que pedir el permiso `CALL_PHONE`.
+ */
 @Composable
 fun RedApoyoScreen(nav: Nav) {
-    val contactos = listOf(
-        Contacto("Elena Valdivia", "Mamá • Contacto SOS", "E"),
-        Contacto("Lucía Ferreyra", "Mejor Amiga • Contacto SOS", "L"),
-        Contacto("Carlos Ruiz", "Hermano • Contacto SOS", "C")
-    )
+    val context = LocalContext.current
+    val app = context.applicationContext as AuraApplication
+    val contactos by app.contactosRepository.contactos.collectAsState(initial = emptyList())
+
     val instituciones = listOf(
-        Institucion("Línea 100", "Violencia familiar y sexual", Icons.Filled.SupportAgent),
-        Institucion("PNP", "Emergencias policiales (105)", Icons.Filled.LocalPolice),
-        Institucion("Serenazgo", "Seguridad ciudadana local", Icons.Filled.Shield)
+        Institucion("Línea 100", "Violencia familiar y sexual", Icons.Filled.SupportAgent, "100"),
+        Institucion("PNP", "Emergencias policiales (105)", Icons.Filled.LocalPolice, "105"),
+        Institucion("Bomberos", "Emergencias médicas y rescate (116)", Icons.Filled.Shield, "116")
     )
 
     Column(
@@ -104,7 +125,7 @@ fun RedApoyoScreen(nav: Nav) {
                     shape = Shapes.chip
                 ) {
                     Text(
-                        "3/5 ACTIVOS",
+                        "${contactos.size}/${ContactosRepository.MAXIMO} ACTIVOS",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
@@ -113,12 +134,22 @@ fun RedApoyoScreen(nav: Nav) {
                 }
             }
 
+            if (contactos.isEmpty()) {
+                SinContactos()
+                Spacer(Modifier.height(Spacing.sm))
+            }
+
             contactos.forEach { c ->
-                ContactoCard(c, onEdit = { nav.showSheet(Sheet.EditarContacto) })
+                ContactoCard(
+                    c,
+                    onEdit = { nav.showSheet(Sheet.EditarContacto(c.id)) },
+                    onLlamar = { marcar(context, c.telefono) }
+                )
                 Spacer(Modifier.height(Spacing.sm))
             }
 
             // Agregar contacto (borde punteado simulado con borde sólido tenue)
+            val hayEspacio = contactos.size < ContactosRepository.MAXIMO
             Surface(
                 color = Color.Transparent,
                 shape = Shapes.card,
@@ -131,19 +162,22 @@ fun RedApoyoScreen(nav: Nav) {
                         Shapes.card
                     )
                     .clip(Shapes.card)
-                    .clickable { nav.showSheet(Sheet.AgregarContacto) }
+                    .clickable(enabled = hayEspacio) { nav.showSheet(Sheet.AgregarContacto) }
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Icon(Icons.Filled.Add, null, tint = MaterialTheme.colorScheme.primary)
-                    Spacer(Modifier.size(Spacing.xs))
+                    val tinte = MaterialTheme.colorScheme.primary.copy(alpha = if (hayEspacio) 1f else 0.4f)
+                    if (hayEspacio) {
+                        Icon(Icons.Filled.Add, null, tint = tinte)
+                        Spacer(Modifier.size(Spacing.xs))
+                    }
                     Text(
-                        "Agregar contacto",
+                        if (hayEspacio) "Agregar contacto" else "Llegaste al máximo de contactos",
                         style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = tinte,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -158,7 +192,7 @@ fun RedApoyoScreen(nav: Nav) {
             Spacer(Modifier.height(Spacing.sm))
 
             instituciones.forEach { inst ->
-                InstitucionCard(inst)
+                InstitucionCard(inst, onLlamar = { marcar(context, inst.telefono) })
                 Spacer(Modifier.height(Spacing.sm))
             }
 
@@ -176,7 +210,8 @@ fun RedApoyoScreen(nav: Nav) {
                     Icon(Icons.Filled.Info, null, tint = OnSuccessContainer)
                     Spacer(Modifier.size(Spacing.sm))
                     Text(
-                        "Tu Red de Apoyo recibirá una alerta inmediata con tu ubicación en tiempo real si activas el modo SOS.",
+                        "Tus contactos se guardan solo en este teléfono. El aviso automático al " +
+                            "activar el SOS todavía no está conectado.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = OnSuccessContainer
                     )
@@ -187,8 +222,42 @@ fun RedApoyoScreen(nav: Nav) {
     }
 }
 
+/** Estado vacío: sin esto, la pantalla arranca con un botón suelto y sin explicar para qué sirve. */
 @Composable
-private fun ContactoCard(c: Contacto, onEdit: () -> Unit) {
+private fun SinContactos() {
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        shape = Shapes.card,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(Modifier.padding(Spacing.md)) {
+            Text(
+                "Todavía no agregaste a nadie",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                "Agrega hasta ${ContactosRepository.MAXIMO} personas de confianza para tenerlas " +
+                    "a mano cuando las necesites.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+/** Abre el marcador con el número cargado. No llama: la usuaria confirma en su teléfono. */
+private fun marcar(context: Context, telefono: String) {
+    val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", telefono, null))
+    runCatching { context.startActivity(intent) }.onFailure {
+        Toast.makeText(context, "No hay una app de teléfono disponible", Toast.LENGTH_SHORT).show()
+    }
+}
+
+@Composable
+private fun ContactoCard(c: ContactoConfianza, onEdit: () -> Unit, onLlamar: () -> Unit) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shape = Shapes.card,
@@ -226,15 +295,21 @@ private fun ContactoCard(c: Contacto, onEdit: () -> Unit) {
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    c.relacion,
+                    c.descripcion,
                     style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    c.telefono,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             IconButtonSlot(
                 icon = Icons.Filled.Edit,
                 onClick = onEdit,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                contentDescription = "Editar contacto"
             )
             Box(
                 contentAlignment = Alignment.Center,
@@ -242,6 +317,7 @@ private fun ContactoCard(c: Contacto, onEdit: () -> Unit) {
                     .size(48.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primary)
+                    .clickable { onLlamar() }
             ) {
                 Icon(Icons.Filled.Call, "Llamar", tint = MaterialTheme.colorScheme.onPrimary)
             }
@@ -250,7 +326,7 @@ private fun ContactoCard(c: Contacto, onEdit: () -> Unit) {
 }
 
 @Composable
-private fun InstitucionCard(inst: Institucion) {
+private fun InstitucionCard(inst: Institucion, onLlamar: () -> Unit) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
         shape = Shapes.card,
@@ -284,7 +360,7 @@ private fun InstitucionCard(inst: Institucion) {
                 )
             }
             Button(
-                onClick = {},
+                onClick = onLlamar,
                 shape = Shapes.chip,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary,

@@ -106,16 +106,17 @@ fun AjustesScreen(nav: Nav) {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(Spacing.md)
                 ) {
-                    AvatarPlaceholder(initial = "E", size = 64.dp)
+                    val nombreCuenta = app.authRepository.nombre
+                    AvatarPlaceholder(initial = nombreCuenta?.take(1)?.uppercase() ?: "?", size = 64.dp)
                     Spacer(Modifier.size(Spacing.md))
                     Column {
                         Text(
-                            "Elena Soriano",
+                            nombreCuenta ?: "Sin sesión",
                             style = MaterialTheme.typography.headlineMedium,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            "Cuenta verificada • Nivel 3",
+                            app.authRepository.email ?: "Inicia sesión para respaldar tu evidencia",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

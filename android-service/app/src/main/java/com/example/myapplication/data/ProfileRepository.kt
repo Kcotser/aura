@@ -15,7 +15,6 @@ private val Context.profileDataStore: DataStore<Preferences> by preferencesDataS
 enum class MetodoAcceso { PIN, BIOMETRICO }
 
 data class Profile(
-    val nombre: String,
     val onboardingCompletado: Boolean,
     val permisosSolicitados: Boolean,
     val metodoAcceso: MetodoAcceso,
@@ -23,11 +22,16 @@ data class Profile(
     val grabacionDual: Boolean
 )
 
-/** Perfil local único (sin login/backend): nombre, flags de onboarding y método de acceso elegido. */
+/**
+ * Preferencias locales del dispositivo: flags de onboarding, método de acceso y ajustes de captura.
+ *
+ * El nombre de la usuaria **no** vive acá: viene de la cuenta del backend
+ * ([com.example.myapplication.data.AuthRepository.nombre]), para que sea el mismo que se registró
+ * y no una copia local que se pueda desincronizar.
+ */
 class ProfileRepository(private val context: Context) {
 
     private object Keys {
-        val NOMBRE = stringPreferencesKey("nombre")
         val ONBOARDING_COMPLETADO = booleanPreferencesKey("onboarding_completado")
         val PERMISOS_SOLICITADOS = booleanPreferencesKey("permisos_solicitados")
         val METODO_ACCESO = stringPreferencesKey("metodo_acceso")
@@ -36,7 +40,6 @@ class ProfileRepository(private val context: Context) {
 
     val profile: Flow<Profile> = context.profileDataStore.data.map { prefs ->
         Profile(
-            nombre = prefs[Keys.NOMBRE] ?: "",
             onboardingCompletado = prefs[Keys.ONBOARDING_COMPLETADO] ?: false,
             permisosSolicitados = prefs[Keys.PERMISOS_SOLICITADOS] ?: false,
             metodoAcceso = prefs[Keys.METODO_ACCESO]
@@ -44,10 +47,6 @@ class ProfileRepository(private val context: Context) {
                 ?: MetodoAcceso.PIN,
             grabacionDual = prefs[Keys.GRABACION_DUAL] ?: false
         )
-    }
-
-    suspend fun setNombre(nombre: String) {
-        context.profileDataStore.edit { it[Keys.NOMBRE] = nombre }
     }
 
     suspend fun setPermisosSolicitados(value: Boolean) {

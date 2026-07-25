@@ -3,8 +3,13 @@ package com.example.myapplication.ui.sheets
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.provider.ContactsContract
 import android.provider.Settings
 import android.view.accessibility.AccessibilityManager
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,9 +46,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,6 +65,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.example.myapplication.AuraApplication
+import com.example.myapplication.data.ContactosRepository
 import com.example.myapplication.data.SessionState
 import com.example.myapplication.gesture.VolumeGestureAccessibilityService
 import com.example.myapplication.ui.components.AppTextField
@@ -72,6 +82,7 @@ import com.example.myapplication.ui.theme.Shapes
 import com.example.myapplication.ui.theme.Spacing
 import com.example.myapplication.ui.theme.Success
 import com.example.myapplication.ui.theme.SuccessContainer
+import kotlinx.coroutines.launch
 
 /** Contenedor común: padding horizontal + espacio inferior para la barra de navegación. */
 @Composable
@@ -93,8 +104,28 @@ private fun SheetContainer(content: @Composable androidx.compose.foundation.layo
 
 @Composable
 fun AgregarContactoSheetContent(nav: Nav) {
+    val context = LocalContext.current
+    val app = context.applicationContext as AuraApplication
+    val scope = rememberCoroutineScope()
+
     var nombre by remember { mutableStateOf("") }
     var telefono by remember { mutableStateOf("") }
+    var relacion by remember { mutableStateOf("") }
+    var guardando by remember { mutableStateOf(false) }
+
+    // Selector de contactos del sistema. Se usa ACTION_PICK sobre la tabla de teléfonos (y no
+    // una consulta propia) justamente para no pedir READ_CONTACTS: el sistema muestra su propia
+    // lista y devuelve un permiso temporal solo sobre la fila elegida.
+    val selector = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { resultado ->
+        val uri = resultado.data?.data ?: return@rememberLauncherForActivityResult
+        val elegido = leerContactoElegido(context, uri)
+        if (elegido == null) {
+            Toast.makeText(context, "No se pudo leer ese contacto", Toast.LENGTH_SHORT).show()
+        } else {
+            nombre = elegido.first
+            telefono = elegido.second
+        }
+    }
 
     SheetContainer {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -102,28 +133,93 @@ fun AgregarContactoSheetContent(nav: Nav) {
             Icon(Icons.Filled.Close, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.clickable { nav.hideSheet() })
         }
         Spacer(Modifier.height(Spacing.md))
-        SecondaryOutlineButton(text = "Importar desde contactos", onClick = {})
+        SecondaryOutlineButton(
+            text = "Importar desde contactos",
+            onClick = {
+                val intent = Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI)
+                runCatching { selector.launch(intent) }.onFailure {
+                    Toast.makeText(context, "No hay una app de contactos disponible", Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
         Spacer(Modifier.height(Spacing.md))
-        AppTextField(value = nombre, onValueChange = { nombre = it }, label = "Nombre completo")
+        AppTextField(value = nombre, onValueChange = { nombre = it }, label = "Nombre completo", enabled = !guardando)
         Spacer(Modifier.height(Spacing.sm))
-        AppTextField(value = telefono, onValueChange = { telefono = it }, label = "Número de teléfono", isPhone = true)
+        AppTextField(value = telefono, onValueChange = { telefono = it }, label = "Número de teléfono", isPhone = true, enabled = !guardando)
         Spacer(Modifier.height(Spacing.sm))
-        AppTextField(value = "", onValueChange = {}, label = "Relación")
+        AppTextField(value = relacion, onValueChange = { relacion = it }, label = "Relación (mamá, hermana, amiga...)", enabled = !guardando)
         Spacer(Modifier.height(Spacing.md))
-        InfoNote("Este contacto recibirá una notificación por SMS en caso de que actives una alerta SOS de emergencia.")
+        InfoNote("Este contacto queda guardado solo en tu teléfono. Todavía no se le envían mensajes al activar una alerta.")
         Spacer(Modifier.height(Spacing.md))
-        PrimaryButton(text = "Agregar contacto", onClick = { nav.hideSheet() }, icon = Icons.Filled.Check)
+        PrimaryButton(
+            text = "Agregar contacto",
+            enabled = nombre.isNotBlank() && telefono.isNotBlank() && !guardando,
+            icon = Icons.Filled.Check,
+            onClick = {
+                guardando = true
+                scope.launch {
+                    val agregado = app.contactosRepository.agregar(nombre, telefono, relacion)
+                    guardando = false
+                    if (agregado) {
+                        nav.hideSheet()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Ya tienes el máximo de ${ContactosRepository.MAXIMO} contactos",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+        )
     }
 }
+
+/** @return (nombre, teléfono) de la fila que devolvió el selector del sistema. */
+private fun leerContactoElegido(context: Context, uri: Uri): Pair<String, String>? = runCatching {
+    context.contentResolver.query(
+        uri,
+        arrayOf(
+            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.Phone.NUMBER
+        ),
+        null, null, null
+    )?.use { cursor ->
+        if (!cursor.moveToFirst()) return@use null
+        val nombre = cursor.getString(0).orEmpty()
+        val numero = cursor.getString(1).orEmpty()
+        if (numero.isBlank()) null else nombre to numero
+    }
+}.getOrNull()
 
 /* =============================================================================
  * 2. EDITAR CONTACTO
  * ========================================================================== */
 
 @Composable
-fun EditarContactoSheetContent(nav: Nav) {
-    var nombre by remember { mutableStateOf("Elena Aguilar") }
-    var telefono by remember { mutableStateOf("+34 600 000 000") }
+fun EditarContactoSheetContent(nav: Nav, contactoId: String) {
+    val context = LocalContext.current
+    val app = context.applicationContext as AuraApplication
+    val scope = rememberCoroutineScope()
+
+    val contactos by app.contactosRepository.contactos.collectAsState(initial = null)
+    val original = contactos?.find { it.id == contactoId }
+
+    // `contactos == null` es "todavía cargando"; una lista ya cargada sin este id significa que
+    // el contacto se borró (por ejemplo desde otra pantalla), así que se cierra el sheet en vez
+    // de dejar un formulario que al guardar no haría nada.
+    LaunchedEffect(contactos, contactoId) {
+        if (contactos != null && original == null) nav.hideSheet()
+    }
+
+    if (original == null) {
+        SheetContainer { Spacer(Modifier.height(Spacing.xl)) }
+        return
+    }
+
+    var nombre by remember(contactoId) { mutableStateOf(original.nombre) }
+    var telefono by remember(contactoId) { mutableStateOf(original.telefono) }
+    var relacion by remember(contactoId) { mutableStateOf(original.relacion) }
 
     SheetContainer {
         Text("Editar Contacto", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.onSurface)
@@ -137,8 +233,21 @@ fun EditarContactoSheetContent(nav: Nav) {
         AppTextField(value = nombre, onValueChange = { nombre = it }, label = "Nombre completo")
         Spacer(Modifier.height(Spacing.sm))
         AppTextField(value = telefono, onValueChange = { telefono = it }, label = "Teléfono móvil", isPhone = true)
+        Spacer(Modifier.height(Spacing.sm))
+        AppTextField(value = relacion, onValueChange = { relacion = it }, label = "Relación")
         Spacer(Modifier.height(Spacing.md))
-        PrimaryButton(text = "Actualizar contacto", onClick = { nav.hideSheet() })
+        PrimaryButton(
+            text = "Actualizar contacto",
+            enabled = nombre.isNotBlank() && telefono.isNotBlank(),
+            onClick = {
+                scope.launch {
+                    app.contactosRepository.actualizar(
+                        original.copy(nombre = nombre, telefono = telefono, relacion = relacion)
+                    )
+                    nav.hideSheet()
+                }
+            }
+        )
         Spacer(Modifier.height(Spacing.sm))
         Text(
             "Eliminar de mi Red de Apoyo",
@@ -146,7 +255,15 @@ fun EditarContactoSheetContent(nav: Nav) {
             color = MaterialTheme.colorScheme.error,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth().clickable { nav.hideSheet() }.padding(Spacing.sm)
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    scope.launch {
+                        app.contactosRepository.eliminar(contactoId)
+                        nav.hideSheet()
+                    }
+                }
+                .padding(Spacing.sm)
         )
         Text(
             "Cancelar",

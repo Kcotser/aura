@@ -3,10 +3,10 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
-// URL base del backend de AURA, sin barra final.
-// Se puede pisar sin tocar este archivo con -PauraBaseUrl=... o una línea en gradle.properties.
-// TODO: reemplazar por la URL real del backend desplegado.
-val auraBaseUrl = (findProperty("auraBaseUrl") as String?) ?: "https://REEMPLAZAR-CON-TU-BACKEND"
+// URL base del backend de AURA, sin barra final. Es el despliegue en Render (ver
+// web-service/render.yaml). Se puede apuntar a otro backend sin tocar este archivo, con
+// -PauraBaseUrl=http://10.0.2.2:8080 o una línea en gradle.properties.
+val auraBaseUrl = (findProperty("auraBaseUrl") as String?) ?: "https://aura-hf0c.onrender.com"
 
 android {
     namespace = "com.example.myapplication"
