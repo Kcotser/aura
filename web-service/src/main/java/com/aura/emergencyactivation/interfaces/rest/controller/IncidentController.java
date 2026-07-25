@@ -14,6 +14,7 @@ import com.aura.emergencyactivation.interfaces.rest.response.IncidentResponse;
 import com.aura.iam.infrastructure.security.UserPrincipal;
 import com.aura.shared.interfaces.rest.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,7 @@ import java.util.List;
  * REST controller for emergency incident activation and state machine lifecycle.
  */
 @Tag(name = "Emergency Activation", description = "Safety incident activation and state machine management")
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/v1/incidents")
 public class IncidentController {

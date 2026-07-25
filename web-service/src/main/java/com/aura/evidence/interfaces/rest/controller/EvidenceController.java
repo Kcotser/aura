@@ -13,6 +13,7 @@ import com.aura.shared.interfaces.rest.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +36,7 @@ import java.util.List;
  * REST controller for evidence upload, metadata retrieval, binary streaming, and retention management.
  */
 @Tag(name = "Evidence Management", description = "Multipart upload, metadata inspection, streaming download, and retention purging")
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping
 public class EvidenceController {

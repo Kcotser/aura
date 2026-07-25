@@ -28,7 +28,10 @@ public class OpenApiConfig {
                                 .email("team@aura.com"))
                         .license(new License()
                                 .name("Private — Hackathon Project")))
-                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                // Sin requisito global de seguridad: aplicarlo aqui ponia candado tambien en
+                // /auth/register, /auth/login y /auth/refresh, que son publicos, y Swagger les
+                // mandaba un Authorization que el cliente real no manda. Cada controller declara
+                // su propio @SecurityRequirement.
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth",
                                 new SecurityScheme()

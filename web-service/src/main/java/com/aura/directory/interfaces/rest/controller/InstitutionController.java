@@ -7,6 +7,7 @@ import com.aura.directory.domain.model.InstitutionType;
 import com.aura.shared.interfaces.rest.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.List;
  * Provides endpoints to list all institutions and get a single institution details by code.
  */
 @Tag(name = "Institutional Directory", description = "Read-only access to the catalog of support institutions")
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/v1/institutions")
 public class InstitutionController {

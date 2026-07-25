@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,6 +37,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.of("VALIDATION_ERROR", "Input validation failed", details));
+    }
+
+    /**
+     * Body ausente, JSON malformado o un tipo que no encaja en el DTO.
+     *
+     * <p>Sin este handler la excepcion caia en el catch-all y devolvia 500, que le dice al
+     * cliente que el servidor se rompio cuando en realidad la request venia mal. El cliente
+     * movil, ademas, trata los 5xx como transitorios y reintenta un envio que nunca va a andar.
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleUnreadableBody(HttpMessageNotReadableException ex) {
+        log.warn("Malformed request body: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.of("MALFORMED_REQUEST", "Request body is missing or malformed"));
     }
 
     @ExceptionHandler(BusinessRuleViolationException.class)
