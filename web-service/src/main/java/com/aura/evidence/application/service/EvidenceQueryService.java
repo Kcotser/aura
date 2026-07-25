@@ -5,19 +5,17 @@ import com.aura.evidence.domain.model.EvidenceAsset;
 import com.aura.evidence.domain.model.EvidenceAssetId;
 import com.aura.evidence.domain.repository.EvidenceRepository;
 import com.aura.evidence.domain.repository.MediaStorageService;
-import com.aura.shared.domain.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Public application query service for the Evidence bounded context.
- * Exposes evidence download references and binary stream access for analysis processing.
+ * Exposes evidence download references for analysis processing without leaking domain aggregates.
  */
 @Service
 public class EvidenceQueryService {
@@ -48,28 +46,10 @@ public class EvidenceQueryService {
     }
 
     /**
-     * Reads the raw binary bytes of an evidence asset from GridFS for multimodal AI analysis.
+     * Carga el contenido binario de una evidencia desde GridFS para mandarlo al modelo multimodal.
      *
-     * @param evidenceId the EvidenceAsset ID
-     * @return raw binary content byte array
-     */
-    public byte[] readEvidenceBytes(String evidenceId) {
-        EvidenceAsset asset = evidenceRepository.findById(EvidenceAssetId.of(evidenceId))
-                .orElseThrow(() -> new ResourceNotFoundException("EvidenceAsset", evidenceId));
-
-        if (asset.getStorageReference() == null) {
-            return new byte[0];
-        }
-
-        try (InputStream is = mediaStorageService.load(asset.getStorageReference())) {
-            return is.readAllBytes();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to read evidence binary for id=" + evidenceId, e);
-        }
-    }
-
-    /**
-     * Loads evidence content safely as an Optional.
+     * <p>Devuelve {@code Optional.empty()} si la evidencia no existe o no se pudo leer, para que
+     * un archivo corrupto no tumbe el analisis del resto de las evidencias del incidente.
      */
     public Optional<byte[]> loadContent(String evidenceId) {
         Optional<EvidenceAsset> asset = evidenceRepository.findById(EvidenceAssetId.of(evidenceId));
@@ -85,15 +65,4 @@ public class EvidenceQueryService {
             return Optional.empty();
         }
     }
-
-    /**
-     * Retrieves the MIME content type of an evidence asset.
-     */
-    public String getContentType(String evidenceId) {
-        return evidenceRepository.findById(EvidenceAssetId.of(evidenceId))
-                .map(EvidenceAsset::getContentType)
-                .orElse("application/octet-stream");
-    }
 }
-
-
