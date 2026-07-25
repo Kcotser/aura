@@ -23,7 +23,6 @@ public class AnalysisCompletedListener {
         this.draftReportUseCase = draftReportUseCase;
     }
 
-    @EventListener
     @ApplicationModuleListener
     public void onAnalysisCompleted(AnalysisCompletedEvent event) {
         log.info("Received AnalysisCompletedEvent for incidentId={}. Generating incident report draft.", event.incidentId());

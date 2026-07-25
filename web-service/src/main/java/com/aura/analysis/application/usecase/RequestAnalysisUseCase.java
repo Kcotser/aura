@@ -5,6 +5,8 @@ import com.aura.analysis.domain.event.AnalysisFailedEvent;
 import com.aura.analysis.domain.event.AnalysisRequestedEvent;
 import com.aura.analysis.domain.model.AnalysisJob;
 import com.aura.analysis.domain.model.AnalysisResult;
+import com.aura.analysis.domain.model.AnalysisStatus;
+import com.aura.analysis.domain.model.EvidenceMediaPayload;
 import com.aura.analysis.domain.repository.AnalysisJobRepository;
 import com.aura.analysis.domain.repository.GemmaAnalysisClient;
 import com.aura.evidence.application.dto.EvidenceDownloadReference;
@@ -14,10 +16,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Use case to request and execute multimodal AI analysis for an incident.
+ * Use case to request and execute multimodal AI analysis for an incident using Gemma 4 31B.
  */
 @Service
 public class RequestAnalysisUseCase {
@@ -46,6 +49,11 @@ public class RequestAnalysisUseCase {
         AnalysisJob job = analysisJobRepository.findByIncidentId(incidentId)
                 .orElseGet(() -> AnalysisJob.create(incidentId));
 
+        if (job.getStatus() == AnalysisStatus.COMPLETED) {
+            log.info("AnalysisJob already completed for incidentId={}. Returning existing job.", incidentId);
+            return job;
+        }
+
         job.startProcessing();
         analysisJobRepository.save(job);
 
@@ -53,7 +61,22 @@ public class RequestAnalysisUseCase {
 
         try {
             List<EvidenceDownloadReference> evidenceFiles = evidenceQueryService.getDownloadReferencesForIncident(incidentId);
-            AnalysisResult result = gemmaAnalysisClient.analyzeIncident(incidentId, evidenceFiles);
+
+            // Fetch real binary evidence payloads from GridFS via EvidenceQueryService
+            List<EvidenceMediaPayload> mediaPayloads = new ArrayList<>();
+            for (EvidenceDownloadReference ref : evidenceFiles) {
+                try {
+                    byte[] data = evidenceQueryService.readEvidenceBytes(ref.evidenceId());
+                    String contentType = evidenceQueryService.getContentType(ref.evidenceId());
+                    mediaPayloads.add(new EvidenceMediaPayload(ref.evidenceId(), ref.mediaType(), contentType, data));
+                    log.info("Loaded evidence binary for incidentId={}, mediaType={}, sizeBytes={}",
+                            incidentId, ref.mediaType(), data.length);
+                } catch (Exception ex) {
+                    log.warn("Could not read binary content for evidenceId={}: {}", ref.evidenceId(), ex.getMessage());
+                }
+            }
+
+            AnalysisResult result = gemmaAnalysisClient.analyzeIncident(incidentId, evidenceFiles, mediaPayloads);
 
             job.complete(result, "{\"status\":\"SUCCESS\",\"incidentId\":\"" + incidentId + "\"}");
             analysisJobRepository.save(job);
@@ -72,3 +95,4 @@ public class RequestAnalysisUseCase {
         }
     }
 }
+
