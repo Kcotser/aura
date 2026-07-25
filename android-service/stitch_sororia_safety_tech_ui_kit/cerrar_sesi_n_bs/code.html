@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006878",
+                    "primary-container": "#5a189a",
+                    "secondary-fixed-dim": "#58d6f1",
+                    "on-primary-fixed": "#2b0052",
+                    "surface-container-high": "#e4e9eb",
+                    "on-tertiary-container": "#54bf8e",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#cec3d4",
+                    "inverse-primary": "#dbb8ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4b4452",
+                    "surface": "#f5fafc",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#a7edff",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#001f25",
+                    "secondary-container": "#69e5ff",
+                    "on-surface": "#171c1e",
+                    "primary-fixed": "#efdbff",
+                    "on-primary-container": "#c896ff",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f5fafc",
+                    "tertiary-fixed": "#8df7c2",
+                    "outline": "#7d7483",
+                    "inverse-surface": "#2c3133",
+                    "surface-tint": "#7a3fbb",
+                    "on-background": "#171c1e",
+                    "on-secondary-fixed-variant": "#004e5b",
+                    "surface-dim": "#d6dbdd",
+                    "tertiary-fixed-dim": "#71daa7",
+                    "surface-variant": "#dee3e5",
+                    "surface-container-highest": "#dee3e5",
+                    "tertiary-container": "#004a30",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1f3",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary": "#00311f",
+                    "primary-fixed-dim": "#dbb8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#006575",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#eff4f6",
+                    "background": "#f5fafc",
+                    "on-primary-fixed-variant": "#6122a1",
+                    "primary": "#3f0075"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "44px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "button-height": "48px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "input-height": "52px",
+                    "list-item-height": "64px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "critical-data": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md-mobile": ["11px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md-mobile": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "headline-md-mobile": ["18px", {"lineHeight": "24px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bottom-sheet-transition {
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .scrim-transition {
+            transition: opacity 0.3s ease;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col overflow-hidden">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-40 flex items-center justify-between px-4 h-[64px] bg-surface">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center transition-colors duration-200 hover:bg-surface-container rounded-full text-primary">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md-mobile text-headline-md-mobile font-bold text-primary">SororIA</h1>
+</div>
+<div class="flex items-center">
+<button class="w-10 h-10 flex items-center justify-center transition-colors duration-200 hover:bg-surface-container rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+</header>
+<!-- Background Content (Simulated Profile Settings) -->
+<main class="flex-1 px-4 py-6 overflow-y-auto">
+<div class="space-y-6">
+<div class="flex flex-col items-center mb-8">
+<div class="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-primary-container shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A professional and friendly portrait of a young woman with a calm expression, set against a soft violet gradient background. The lighting is bright and ethereal, reflecting a modern femtech brand aesthetic with high-quality digital photography style. The image conveys trust, safety, and empowerment within a clean light-mode interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJIxwiTD5oZk9o6g_ADL1TuO8saOnoV6PQIuDi5SsEggHzAJcgHt2DunRwlmLKwCwVcnDd--PtTCJgAHaIyy9DzPHtEOYJ5wNwnbN6llY9pkzers_d63mtjcIzd5rbqnHTB9V03aX560UNBjEwapQiNuxIwsp657Te42pOw1-Md9pwgTJhE3LPRlUWy5CrxmmqStW-DUTCwqm3SPOnmiHJm5RCpXV3FaxtMW3UAlzlG3RsPajvNJWtR5xKWCaB_zESvGgd41TcBa0"/>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Elena Rodríguez</h2>
+<p class="font-body-md-mobile text-body-md-mobile text-on-surface-variant">elena.segura@email.com</p>
+</div>
+<section class="space-y-4">
+<h3 class="font-label-md text-label-md text-primary px-2">Configuración de Cuenta</h3>
+<div class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm">
+<div class="flex items-center justify-between p-4 h-[64px] hover:bg-surface-container transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+<span class="font-body-lg text-body-lg">Editar Perfil</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-4 h-[64px] hover:bg-surface-container transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="font-body-lg text-body-lg">Notificaciones</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-4 h-[64px] hover:bg-surface-container transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">security</span>
+<span class="font-body-lg text-body-lg">Seguridad y Privacidad</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</section>
+<section class="space-y-4">
+<h3 class="font-label-md text-label-md text-primary px-2">Soporte</h3>
+<div class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm">
+<div class="flex items-center justify-between p-4 h-[64px] hover:bg-surface-container transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">description</span>
+<span class="font-body-lg text-body-lg">Términos de Servicio</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Scrim / Overlay -->
+<div class="fixed inset-0 bg-black/40 z-50 opacity-100 scrim-transition backdrop-blur-[2px]" id="scrim"></div>
+<!-- Bottom Sheet 'Cerrar Sesión / Eliminar Cuenta' -->
+<div class="fixed bottom-0 left-0 right-0 z-50 bg-surface-container-lowest rounded-t-[28px] shadow-[0px_-8px_24px_rgba(0,0,0,0.12)] h-[60%] flex flex-col bottom-sheet-transition translate-y-0" id="bottom-sheet">
+<!-- Handle for dragging (Visual only) -->
+<div class="w-full flex justify-center pt-4 pb-2">
+<div class="w-12 h-1.5 bg-surface-variant rounded-full"></div>
+</div>
+<div class="flex-1 px-6 pt-4 pb-8 flex flex-col items-center justify-between overflow-y-auto">
+<div class="w-full space-y-8">
+<!-- Header of the sheet -->
+<div class="text-center space-y-2">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Gestión de Cuenta</h2>
+<p class="font-body-md-mobile text-body-md-mobile text-on-surface-variant px-4">Selecciona una acción para continuar con tu cuenta de SororIA.</p>
+</div>
+<!-- Session management -->
+<div class="w-full space-y-4">
+<button class="w-full h-button-height flex items-center justify-center gap-2 border-2 border-primary-container text-primary-container font-headline-md-mobile text-headline-md-mobile rounded-full active:scale-95 transition-transform">
+<span class="material-symbols-outlined">logout</span>
+                        Cerrar Sesión
+                    </button>
+</div>
+<!-- Risk Zone Separator -->
+<div class="w-full space-y-6">
+<div class="flex items-center gap-4">
+<div class="h-[1px] flex-1 bg-error/30"></div>
+<span class="font-label-md text-label-md text-error tracking-[2px] uppercase">Zona de Riesgo</span>
+<div class="h-[1px] flex-1 bg-error/30"></div>
+</div>
+<div class="bg-error-container/20 p-4 rounded-xl border border-error/10">
+<p class="font-body-md-mobile text-body-md-mobile text-on-error-container text-center leading-relaxed">
+                            Al eliminar tu cuenta, se borrarán permanentemente todos tus datos, historial de rutas y contactos de confianza. Esta acción no se puede deshacer.
+                        </p>
+</div>
+<button class="w-full h-button-height bg-error text-on-error font-headline-md-mobile text-headline-md-mobile rounded-full shadow-md active:scale-95 transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">delete_forever</span>
+                        Eliminar mi cuenta permanentemente
+                    </button>
+</div>
+</div>
+<!-- Cancel action -->
+<button class="mt-4 text-on-surface-variant font-label-md text-label-md underline underline-offset-4 touch-target-min" id="close-sheet">
+                Volver a Ajustes
+            </button>
+</div>
+</div>
+<!-- No Bottom Navigation as per request -->
+<script>
+        const scrim = document.getElementById('scrim');
+        const sheet = document.getElementById('bottom-sheet');
+        const closeBtn = document.getElementById('close-sheet');
+
+        function hideSheet() {
+            sheet.classList.add('translate-y-full');
+            scrim.classList.remove('opacity-100');
+            scrim.classList.add('opacity-0');
+            setTimeout(() => {
+                scrim.style.display = 'none';
+            }, 300);
+        }
+
+        function showSheet() {
+            scrim.style.display = 'block';
+            setTimeout(() => {
+                sheet.classList.remove('translate-y-full');
+                scrim.classList.add('opacity-100');
+                scrim.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        closeBtn.addEventListener('click', hideSheet);
+        scrim.addEventListener('click', hideSheet);
+
+        // Initial visual state is open as per prompt "Screen 33 - Bottom Sheet..."
+        // but adding logic to close it for interactivity demonstration
+    </script>
+</body></html>

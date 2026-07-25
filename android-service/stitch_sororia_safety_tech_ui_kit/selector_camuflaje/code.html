@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006878",
+                    "primary-container": "#5a189a",
+                    "secondary-fixed-dim": "#58d6f1",
+                    "on-primary-fixed": "#2b0052",
+                    "surface-container-high": "#e4e9eb",
+                    "on-tertiary-container": "#54bf8e",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#cec3d4",
+                    "inverse-primary": "#dbb8ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4b4452",
+                    "surface": "#f5fafc",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#a7edff",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#001f25",
+                    "secondary-container": "#69e5ff",
+                    "on-surface": "#171c1e",
+                    "primary-fixed": "#efdbff",
+                    "on-primary-container": "#c896ff",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f5fafc",
+                    "tertiary-fixed": "#8df7c2",
+                    "outline": "#7d7483",
+                    "inverse-surface": "#2c3133",
+                    "surface-tint": "#7a3fbb",
+                    "on-background": "#171c1e",
+                    "on-secondary-fixed-variant": "#004e5b",
+                    "surface-dim": "#d6dbdd",
+                    "tertiary-fixed-dim": "#71daa7",
+                    "surface-variant": "#dee3e5",
+                    "surface-container-highest": "#dee3e5",
+                    "tertiary-container": "#004a30",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1f3",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary": "#00311f",
+                    "primary-fixed-dim": "#dbb8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#006575",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#eff4f6",
+                    "background": "#f5fafc",
+                    "on-primary-fixed-variant": "#6122a1",
+                    "primary": "#3f0075"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "44px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "button-height": "48px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "input-height": "52px",
+                    "list-item-height": "64px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "critical-data": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5fafc;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .option-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-card.selected {
+            border-color: #5a189a;
+            border-width: 3px;
+            box-shadow: 0 4px 12px rgba(90, 24, 154, 0.15);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen text-on-surface">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 flex items-center justify-between px-4 h-[64px] bg-surface dark:bg-surface-dim">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center w-10 h-10 hover:bg-surface-container rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md-mobile text-headline-md-mobile font-bold text-primary">SororIA</h1>
+</div>
+<div class="w-10"></div> <!-- Spacer for balance -->
+</header>
+<main class="flex-1 px-md py-lg pb-[100px] overflow-y-auto max-w-[390px] mx-auto w-full">
+<section class="mb-xl">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-xs">Elige tu pantalla de camuflaje</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Esta interfaz se mostrará automáticamente si necesitas ocultar la aplicación rápidamente.</p>
+</section>
+<!-- Selection Grid -->
+<div class="grid grid-cols-2 gap-md" id="camouflage-options">
+<!-- Calculator Option -->
+<button class="option-card group relative flex flex-col items-center bg-surface-container-lowest rounded-xl border-2 border-transparent p-sm text-left" onclick="selectOption(this, 'calculator')">
+<div class="w-full aspect-[9/16] rounded-lg overflow-hidden mb-sm bg-surface-container relative">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist smartphone interface showing a standard calculator application. The colors are neutral grays and whites, following a corporate modern aesthetic. The layout is professional and unremarkable, designed to blend in perfectly with standard utility apps on a mobile device." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2Oh0WETjaRyIIAKrlG_Su8VGVkiCaVu4t_a8fXqdE6TmcqmwMVycm2wyORPoXXtuduyGRcGIq6C-9bg-o4PIx2XtX-wke78XNfLJLv1tccL8Ms_FX6zuSFBqucffEEi-gqhBh1g2m54JHCAio4YkzdVNWbZWl9BTu8iLc4AlJ09Le7Z3cikECTZ-IedB_MNNj3gNFtZpK7eCVX1N01coQTQsX2Bm6kIBhGM_BiIW9IMFH27ejLVpc1T48MdDgT47KxtaEHrVzkj4"/>
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="font-body-lg text-body-lg font-semibold text-on-surface">Calculadora</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Funcional y discreta</span>
+<div class="absolute top-2 right-2 hidden check-icon">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</button>
+<!-- Notes Option -->
+<button class="option-card group relative flex flex-col items-center bg-surface-container-lowest rounded-xl border-2 border-transparent p-sm text-left" onclick="selectOption(this, 'notes')">
+<div class="w-full aspect-[9/16] rounded-lg overflow-hidden mb-sm bg-surface-container relative">
+<img class="w-full h-full object-cover" data-alt="A generic mobile notes application screen with a list of mundane shopping items and tasks. The design uses a soft light-mode palette with subtle lines and a professional font. It looks exactly like a standard system notes app to ensure maximum camouflage for the user." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzORnBG-UPCD8GnN_oILXHWDw_3blygxBq-CvBRHK00A20rY-mkNx9heQoxRXZMpzyl2PsshasO7dAAyOx117tbVGO3JTtGb4qGS1XSpC5mnBy7I3BAASd5gE87BNJgn3DpHvCkV-2lUUUQedoXmEU4oUQUgOt1Ntz5lhZ5nNqD5VwK5HUkpjmyvw_qMQHwF_UT7-12Ajeeevmgpco-MyvY45l9fQWW0m8I0gY7ARmPaxu3BmLSeOj_d5pBLmBcXES-nwrRzj5qmc"/>
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="font-body-lg text-body-lg font-semibold text-on-surface">Notas</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Lista de pendientes</span>
+<div class="absolute top-2 right-2 hidden check-icon">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</button>
+<!-- Music Option -->
+<button class="option-card group relative flex flex-col items-center bg-surface-container-lowest rounded-xl border-2 border-transparent p-sm text-left" onclick="selectOption(this, 'music')">
+<div class="w-full aspect-[9/16] rounded-lg overflow-hidden mb-sm bg-surface-container relative">
+<img class="w-full h-full object-cover" data-alt="A sleek music player interface for a mobile device, showing a neutral album cover with abstract geometric shapes in muted violet tones. The UI includes standard playback controls like play, pause, and skip. It maintains a professional, modern look while appearing completely harmless." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAD6q1H7ez5TYmsd63qI3qUPEQ04ac6uPY2n25gn_ux1yp5U-ObZ1IF-fcdIS-uBSmsrSwHizbGx9huJHc_7NNSVD35uXII0HkK3N1g_z3QjEKTeQQLgou98D70lb7O1VtJ9IDdgJrvdqkgVjKB_ceHEUZ4G-tWLPGJEkKbsMZWnVirsr67Z5DTWfrwIqiSMAdFx4s7ywSCUZ5SMjC0QXR380J6MgjI622suOVVZdSPbA3qw_U2vbTQyDt85mK7B8KU23MxvZrYGpM"/>
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="font-body-lg text-body-lg font-semibold text-on-surface">Música</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Reproductor neutro</span>
+<div class="absolute top-2 right-2 hidden check-icon">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</button>
+<!-- Weather (Bonus for Grid) -->
+<button class="option-card group relative flex flex-col items-center bg-surface-container-lowest rounded-xl border-2 border-transparent p-sm text-left" onclick="selectOption(this, 'weather')">
+<div class="w-full aspect-[9/16] rounded-lg overflow-hidden mb-sm bg-surface-container relative">
+<img class="w-full h-full object-cover" data-alt="A standard weather forecasting app interface showing a 5-day outlook with simple sun and cloud icons. The background is a soft blue gradient, typical of utility applications. The design is clean, high-reliability, and doesn't draw any suspicious attention." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAF6zTFbYfrnuTDlhRCoGbMX61BTn5knpYUkDAfGRaVru7n-oMAo_OWUDlMf2cQfVU10M81hS3dt0y5pboNGtxXA-T-KAYBwa46E9wNG6LDFeI1AlZ8Tkw6L8rV6J7i6ZlL1Se4Bd95dRW_Zf_FgpZuhE9wrLr0fwxWl9eKnSSQlZhC398GduXCB8iuCrlRnH5n0TlGpT-vLGdfmAAbmZ3VwkY_inNIB_CcUsfoZX-0_D8BpOhD5sPA9Iqi0ghYLuQQLzIsR7I529I"/>
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="font-body-lg text-body-lg font-semibold text-on-surface">Clima</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Pronóstico local</span>
+<div class="absolute top-2 right-2 hidden check-icon">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</button>
+</div>
+<!-- Action Button -->
+<div class="mt-xl">
+<button class="w-full h-[48px] bg-primary-container text-on-primary rounded-full font-body-lg font-semibold shadow-md active:scale-95 transition-transform">
+                Guardar preferencia
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 h-[72px] bg-surface dark:bg-inverse-surface shadow-[0px_-4px_12px_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md-mobile">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md text-label-md-mobile">Historial</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">group_add</span>
+<span class="font-label-md text-label-md-mobile">Red de Apoyo</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 hover:opacity-80 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md-mobile">Ajustes</span>
+</a>
+</nav>
+<script>
+        function selectOption(element, value) {
+            // Remove selection from all
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+                card.querySelector('.check-icon').classList.add('hidden');
+            });
+            
+            // Add selection to clicked
+            element.classList.add('selected');
+            element.querySelector('.check-icon').classList.remove('hidden');
+            
+            // Interaction feedback
+            if (window.navigator && window.navigator.vibrate) {
+                window.navigator.vibrate(10);
+            }
+        }
+
+        // Initialize with first selection
+        document.addEventListener('DOMContentLoaded', () => {
+            const firstOption = document.querySelector('.option-card');
+            if(firstOption) selectOption(firstOption, 'calculator');
+        });
+    </script>
+</body></html>

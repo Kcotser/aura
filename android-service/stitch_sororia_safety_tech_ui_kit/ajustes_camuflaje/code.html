@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006878",
+                    "primary-container": "#5a189a",
+                    "secondary-fixed-dim": "#58d6f1",
+                    "on-primary-fixed": "#2b0052",
+                    "surface-container-high": "#e4e9eb",
+                    "on-tertiary-container": "#54bf8e",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#cec3d4",
+                    "inverse-primary": "#dbb8ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4b4452",
+                    "surface": "#f5fafc",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#a7edff",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#001f25",
+                    "secondary-container": "#69e5ff",
+                    "on-surface": "#171c1e",
+                    "primary-fixed": "#efdbff",
+                    "on-primary-container": "#c896ff",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f5fafc",
+                    "tertiary-fixed": "#8df7c2",
+                    "outline": "#7d7483",
+                    "inverse-surface": "#2c3133",
+                    "surface-tint": "#7a3fbb",
+                    "on-background": "#171c1e",
+                    "on-secondary-fixed-variant": "#004e5b",
+                    "surface-dim": "#d6dbdd",
+                    "tertiary-fixed-dim": "#71daa7",
+                    "surface-variant": "#dee3e5",
+                    "surface-container-highest": "#dee3e5",
+                    "tertiary-container": "#004a30",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1f3",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary": "#00311f",
+                    "primary-fixed-dim": "#dbb8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#006575",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#eff4f6",
+                    "background": "#f5fafc",
+                    "on-primary-fixed-variant": "#6122a1",
+                    "primary": "#3f0075"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "44px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "button-height": "48px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "input-height": "52px",
+                    "list-item-height": "64px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "critical-data": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #EDF2F4;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .camouflage-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .camouflage-card.active {
+            border: 2px solid #3f0075;
+            background-color: #efdbff;
+        }
+        .custom-shadow {
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        /* Hide bottom nav specifically as requested */
+        #bottom-nav { display: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar Component (Mapped from JSON) -->
+<header class="sticky top-0 w-full z-50 flex items-center justify-between px-4 h-[64px] bg-surface">
+<div class="flex items-center gap-2 cursor-pointer transition-colors duration-200 hover:bg-surface-container-high p-2 rounded-full">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary">Ajustes</h1>
+</div>
+<div class="w-10 h-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="info">info</span>
+</div>
+</header>
+<main class="flex-1 px-4 py-6 max-w-md mx-auto w-full">
+<!-- Title and Description -->
+<section class="mb-8">
+<h2 class="font-headline-lg text-headline-lg-mobile text-on-surface mb-2">Modo Camuflaje</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Selecciona una interfaz alternativa para ocultar SororIA. Al activarse, la aplicación cambiará su icono y pantalla principal por una de estas opciones.
+            </p>
+</section>
+<!-- Camouflage Grid -->
+<div class="grid grid-cols-2 gap-4 mb-8">
+<!-- Calculator (Active) -->
+<div class="camouflage-card active relative flex flex-col items-center p-4 bg-surface-container-lowest rounded-xl custom-shadow cursor-pointer" id="card-calc" onclick="selectCamouflage('calc')">
+<div class="absolute top-2 right-2">
+<span class="material-symbols-outlined text-primary" id="check-calc" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="w-16 h-16 bg-surface-container rounded-lg flex items-center justify-center mb-3">
+<span class="material-symbols-outlined text-primary scale-150" data-icon="calculate">calculate</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Calculadora</span>
+<div class="mt-4 w-full h-24 bg-surface-dim rounded-md overflow-hidden relative">
+<img class="w-full h-full object-cover opacity-60" data-alt="A clean UI interface of a basic calculator app, featuring light gray buttons and a dark display area. Minimalist corporate modern aesthetic with precise grid spacing and professional typography on a white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALJxb0P2IOr2bDcvZCGN-Fizc8pvKi1C7_Gma6gqAOifrFFUSHgyX0xTA_PhvhShEuV4onoasxhQUrvurdU7MV4OcU6xIdlE0ZWVd8Z14upcKpSCFzbMx38Y8dy8wbpsqAjpNh1Gtm4AnhevW3emoLQJF_4ewtylW25SKp6f-p5L_rJdtF2easF0iK0NP72JJS5fbKMSGyrQyw2vl1taK-Z6w49up5zqGeraQn2ubGsrItCP4B0Va2TAT97T7AoQdm54ARbAQskv0"/>
+</div>
+</div>
+<!-- Notes -->
+<div class="camouflage-card relative flex flex-col items-center p-4 bg-surface-container-lowest border-2 border-transparent rounded-xl custom-shadow cursor-pointer" id="card-notes" onclick="selectCamouflage('notes')">
+<div class="absolute top-2 right-2">
+<span class="material-symbols-outlined text-outline-variant hidden" id="check-notes">circle</span>
+</div>
+<div class="w-16 h-16 bg-surface-container rounded-lg flex items-center justify-center mb-3">
+<span class="material-symbols-outlined text-on-surface-variant scale-150" data-icon="description">description</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Notas</span>
+<div class="mt-4 w-full h-24 bg-surface-dim rounded-md overflow-hidden relative">
+<img class="w-full h-full object-cover opacity-60" data-alt="A simple digital notepad user interface showing lines of dummy text. The design is minimalist, clean, and professional, following a light mode aesthetic with soft shadows and high-reliability reliability patterns." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA19IHZPZAe4rCcGiQvXY7gtC7yh0ebCt21hB-a6jeHp51msOfqZ2T608R20rsceKhiCKwlrvDqnGbqY1hHBnMRpZCTCDIBMbg2cb7xk2o716lLIEuFHtBfa2rjPFCa4HSFyy0EfyoRfodYI8BLgJPpzL8RiIcLGdffQK032ULyKPOzCSsVHkM4w_BPD-sFXrBBLrsKDJoWEr_Aav1M0Dg-KP955ELaqGW5mfai-gc6YJQq_1Ib-QdaM2t_D5lGieghWX4y2uQ1Yoc"/>
+</div>
+</div>
+<!-- Music -->
+<div class="camouflage-card relative flex flex-col items-center p-4 bg-surface-container-lowest border-2 border-transparent rounded-xl custom-shadow cursor-pointer" id="card-music" onclick="selectCamouflage('music')">
+<div class="absolute top-2 right-2">
+<span class="material-symbols-outlined text-outline-variant hidden" id="check-music">circle</span>
+</div>
+<div class="w-16 h-16 bg-surface-container rounded-lg flex items-center justify-center mb-3">
+<span class="material-symbols-outlined text-on-surface-variant scale-150" data-icon="music_note">music_note</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Música</span>
+<div class="mt-4 w-full h-24 bg-surface-dim rounded-md overflow-hidden relative">
+<img class="w-full h-full object-cover opacity-60" data-alt="A music player interface display with play, pause, and skip icons. The aesthetic is modern corporate with a high degree of clarity and empowering violets as subtle accent colors on a light background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDF-oXDnnay3IIAbBUh5zcds9VPU2IKLQXgTe0LWfaEv6FLlzFtqngWJR5mtAOapKhm-OtJQxoPlZRYX4Ua-eN7gksp4ErSwH6V-oZ4xYr6PhkQ91pOksUhPCjlsunb-_GeNYKVu0bXD4pvPhsmT2Spva75fjJlEWPEQIcEYJ0MgOJyG8QmR0GgeqtiCM4VLXlbl9cpQ-OLK6uuWCld-zqrSm3le7U471Xqpyie-OVrNJiFOYR4sYXCs7t4c6KzI6rVmDWaapfeNvc"/>
+</div>
+</div>
+<!-- Custom Placeholder (to maintain grid balance) -->
+<div class="flex flex-col items-center p-4 bg-surface-container-low rounded-xl border-2 border-dashed border-outline-variant opacity-50 cursor-not-allowed">
+<div class="w-16 h-16 flex items-center justify-center mb-3">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="add_circle">add_circle</span>
+</div>
+<span class="font-label-md text-label-md">Más pronto</span>
+</div>
+</div>
+<!-- Toggle Section -->
+<div class="bg-surface-container-low rounded-xl p-4 mb-8 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">Activar automáticamente</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Activa el camuflaje tras 5 min de inactividad</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-dim peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Action Button -->
+<button class="w-full h-[48px] bg-primary text-on-primary font-headline-md text-headline-md-mobile rounded-full custom-shadow flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="save">save</span>
+            Guardar preferencia
+        </button>
+</main>
+<!-- Contextual Information Card -->
+<aside class="px-4 pb-8 max-w-md mx-auto w-full">
+<div class="bg-surface-container-high rounded-lg p-4 flex gap-3 items-start">
+<span class="material-symbols-outlined text-secondary" data-icon="lock">lock</span>
+<p class="font-label-md text-label-md text-on-surface-variant">
+                Tu seguridad es nuestra prioridad. El camuflaje se puede desactivar manteniendo presionado el logo durante 3 segundos en la pantalla oculta.
+            </p>
+</div>
+</aside>
+<script>
+        function selectCamouflage(type) {
+            // Reset all cards
+            const cards = ['calc', 'notes', 'music'];
+            cards.forEach(c => {
+                const card = document.getElementById('card-' + c);
+                const check = document.getElementById('check-' + c);
+                
+                card.classList.remove('active', 'border-primary', 'bg-primary-fixed');
+                card.classList.add('border-transparent');
+                
+                check.innerHTML = 'circle';
+                check.classList.add('hidden');
+                check.classList.remove('text-primary');
+                check.style.fontVariationSettings = "'FILL' 0";
+            });
+
+            // Set active card
+            const activeCard = document.getElementById('card-' + type);
+            const activeCheck = document.getElementById('check-' + type);
+            
+            activeCard.classList.add('active');
+            activeCard.classList.remove('border-transparent');
+            
+            activeCheck.innerHTML = 'check_circle';
+            activeCheck.classList.remove('hidden');
+            activeCheck.classList.add('text-primary');
+            activeCheck.style.fontVariationSettings = "'FILL' 1";
+
+            // Vibration feedback for touch interaction
+            if (window.navigator.vibrate) {
+                window.navigator.vibrate(10);
+            }
+        }
+    </script>
+</body></html>

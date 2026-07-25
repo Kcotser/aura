@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .gesture-card-active {
+            border: 2px solid #3f0075;
+            background: #efdbff;
+        }
+        .practice-pulse {
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(90, 24, 154, 0.4); }
+            70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(90, 24, 154, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(90, 24, 154, 0); }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#006878",
+                        "primary-container": "#5a189a",
+                        "secondary-fixed-dim": "#58d6f1",
+                        "on-primary-fixed": "#2b0052",
+                        "surface-container-high": "#e4e9eb",
+                        "on-tertiary-container": "#54bf8e",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#cec3d4",
+                        "inverse-primary": "#dbb8ff",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#4b4452",
+                        "surface": "#f5fafc",
+                        "on-tertiary-fixed-variant": "#005235",
+                        "secondary-fixed": "#a7edff",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#001f25",
+                        "secondary-container": "#69e5ff",
+                        "on-surface": "#171c1e",
+                        "primary-fixed": "#efdbff",
+                        "on-primary-container": "#c896ff",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f5fafc",
+                        "tertiary-fixed": "#8df7c2",
+                        "outline": "#7d7483",
+                        "inverse-surface": "#2c3133",
+                        "surface-tint": "#7a3fbb",
+                        "on-background": "#171c1e",
+                        "on-secondary-fixed-variant": "#004e5b",
+                        "surface-dim": "#d6dbdd",
+                        "tertiary-fixed-dim": "#71daa7",
+                        "surface-variant": "#dee3e5",
+                        "surface-container-highest": "#dee3e5",
+                        "tertiary-container": "#004a30",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#ecf1f3",
+                        "on-tertiary-fixed": "#002113",
+                        "tertiary": "#00311f",
+                        "primary-fixed-dim": "#dbb8ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#006575",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#eaeff1",
+                        "surface-container-low": "#eff4f6",
+                        "background": "#f5fafc",
+                        "on-primary-fixed-variant": "#6122a1",
+                        "primary": "#3f0075"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "44px",
+                        "xs": "8px",
+                        "lg": "24px",
+                        "sm": "12px",
+                        "button-height": "48px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "input-height": "52px",
+                        "list-item-height": "64px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "critical-data": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen flex flex-col items-center justify-start overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 flex items-center justify-between px-4 h-[64px] bg-surface">
+<div class="flex items-center gap-4">
+<button aria-label="Volver" class="w-11 h-11 flex items-center justify-center hover:bg-surface-container rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined text-primary text-[24px]">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary">SororIA</h1>
+</div>
+<div class="flex items-center">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-md text-label-md">Modo Seguro</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-[390px] px-md flex flex-col gap-xl pt-lg pb-xl">
+<!-- Screen Title Section -->
+<section class="space-y-xs">
+<h2 class="font-headline-lg text-headline-lg-mobile text-primary">Tu gesto de activación</h2>
+<p class="text-on-surface-variant font-body-md">Configura un acceso rápido y discreto para pedir ayuda inmediata sin mirar la pantalla.</p>
+</section>
+<!-- Horizontal Gesture Selector -->
+<section class="w-full">
+<div class="flex overflow-x-auto pb-md gap-md no-scrollbar snap-x snap-mandatory">
+<!-- Option 1: Triple Clic Volumen (Active) -->
+<div class="flex-shrink-0 w-44 snap-start cursor-pointer transition-transform active:scale-95" onclick="selectGesture(this)">
+<div class="gesture-card-active h-48 rounded-xl flex flex-col items-center justify-center p-md text-center gap-sm shadow-[0px_4px_12px_rgba(0,0,0,0.05)]">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">volume_up</span>
+</div>
+<span class="font-label-md text-primary font-bold">Triple clic volumen</span>
+<div class="mt-auto px-2 py-1 bg-primary-container rounded text-[10px] text-on-primary-container font-bold">RECOMENDADO</div>
+</div>
+</div>
+<!-- Option 2: Agitar teléfono -->
+<div class="flex-shrink-0 w-44 snap-start cursor-pointer transition-transform active:scale-95" onclick="selectGesture(this)">
+<div class="bg-surface-container-low h-48 rounded-xl flex flex-col items-center justify-center p-md text-center gap-sm border-2 border-transparent hover:border-outline-variant transition-all">
+<div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">vibration</span>
+</div>
+<span class="font-label-md text-on-surface font-semibold">Agitar teléfono</span>
+<p class="text-[10px] text-on-surface-variant">Activa al sacudir con fuerza</p>
+</div>
+</div>
+<!-- Option 3: Mantener botón lateral -->
+<div class="flex-shrink-0 w-44 snap-start cursor-pointer transition-transform active:scale-95" onclick="selectGesture(this)">
+<div class="bg-surface-container-low h-48 rounded-xl flex flex-col items-center justify-center p-md text-center gap-sm border-2 border-transparent hover:border-outline-variant transition-all">
+<div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">touch_app</span>
+</div>
+<span class="font-label-md text-on-surface font-semibold">Botón lateral</span>
+<p class="text-[10px] text-on-surface-variant">Presión larga (3 seg)</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Practice Area -->
+<section class="bg-surface-container-lowest rounded-xl p-lg flex flex-col items-center gap-lg border border-outline-variant shadow-sm">
+<div class="text-center">
+<h3 class="font-headline-md text-on-surface">Zona de práctica</h3>
+<p class="text-on-surface-variant font-label-md">Familiarízate con el movimiento antes de activarlo</p>
+</div>
+<!-- Visualization Component -->
+<div class="relative w-48 h-48 flex items-center justify-center">
+<!-- Animation Placeholder -->
+<div class="absolute inset-0 practice-pulse rounded-full opacity-20 bg-primary-container"></div>
+<div class="relative z-10 w-32 h-32 rounded-full bg-white flex items-center justify-center shadow-lg border border-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover opacity-80" data-alt="A detailed digital 3D illustration of a hand holding a modern sleek smartphone, performing a shaking motion. The lighting is soft and professional, with violet and light blue neon accents. The background is a clean, minimalist lavender gradient. High-reliability Corporate Modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-LMru0TqOT6uIDu6ti43GjbC7-d1QtFEtAQeY3NemaoYryaLEyq7i1Aq-wdNKbtaQLnP5uist1pVZ1bcmc0LkkAKVNW80S2bMTTAJyxD6JbLFvhdz6YjnmI_lT--G8o4siqB17mSR3QpFfgjeM1jnNBzu7nIuMKvGRY58AmmrH8yIFrC3hl2AnViMWwLOzPyymlSA7nlAduXak3GiJTVGHi_7E1ChRu4bQBQh_hL1Arxhsh70jkvXG8-iiqZdQpw_srkbCPa3bQ8"/>
+</div>
+</div>
+<button class="flex items-center gap-sm px-xl py-md bg-secondary text-on-primary rounded-full font-label-md transition-all active:scale-90 hover:opacity-90 shadow-md" id="testBtn">
+<span class="material-symbols-outlined">play_circle</span>
+                Probar mi gesto ahora
+            </button>
+</section>
+<!-- Instruction Steps -->
+<section class="flex flex-col gap-md">
+<div class="flex gap-md items-start">
+<div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-fixed text-primary flex items-center justify-center font-bold text-xs">1</div>
+<p class="font-body-md text-on-surface">Pulsa el botón de "Probar" para iniciar la simulación.</p>
+</div>
+<div class="flex gap-md items-start">
+<div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-fixed text-primary flex items-center justify-center font-bold text-xs">2</div>
+<p class="font-body-md text-on-surface">Realiza el triple clic en el botón de subir volumen de tu dispositivo.</p>
+</div>
+<div class="flex gap-md items-start">
+<div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-fixed text-primary flex items-center justify-center font-bold text-xs">3</div>
+<p class="font-body-md text-on-surface">Si el gesto es detectado, el teléfono vibrará una vez.</p>
+</div>
+</section>
+<!-- Final Action -->
+<footer class="mt-md">
+<button class="w-full h-[48px] bg-primary text-white rounded-xl font-headline-md shadow-md active:scale-[0.98] transition-transform flex items-center justify-center gap-sm">
+                Guardar configuración
+                <span class="material-symbols-outlined">check_circle</span>
+</button>
+<p class="text-center mt-md text-on-surface-variant font-label-md opacity-60">Podrás cambiar esto en Ajustes en cualquier momento.</p>
+</footer>
+</main>
+<!-- Feedback Snackbar (Hidden by default) -->
+<div class="fixed bottom-lg left-1/2 -translate-x-1/2 w-[90%] max-w-[350px] bg-inverse-surface text-inverse-on-surface px-md py-sm rounded-lg flex items-center gap-sm shadow-xl opacity-0 translate-y-8 transition-all duration-300 pointer-events-none z-[100]" id="feedback">
+<span class="material-symbols-outlined text-tertiary-fixed">check_circle</span>
+<span class="font-body-md">¡Gesto detectado correctamente!</span>
+</div>
+<script>
+        function selectGesture(element) {
+            // Remove active state from all
+            const cards = document.querySelectorAll('.snap-start > div');
+            cards.forEach(card => {
+                card.classList.remove('gesture-card-active', 'bg-primary-fixed', 'border-primary');
+                card.classList.add('bg-surface-container-low', 'border-transparent');
+                
+                // Reset child icon/text colors
+                const iconContainer = card.querySelector('div');
+                if (iconContainer) iconContainer.classList.replace('bg-primary', 'bg-surface-variant');
+                const label = card.querySelector('span');
+                if (label) label.classList.replace('text-primary', 'text-on-surface');
+            });
+
+            // Add active state to selected
+            element.children[0].classList.add('gesture-card-active');
+            element.children[0].classList.remove('bg-surface-container-low', 'border-transparent');
+            
+            const iconContainer = element.children[0].querySelector('div');
+            if (iconContainer) iconContainer.classList.replace('bg-surface-variant', 'bg-primary');
+            const label = element.children[0].querySelector('span');
+            if (label) label.classList.replace('text-on-surface', 'text-primary');
+        }
+
+        // Simulating the test functionality
+        const testBtn = document.getElementById('testBtn');
+        const feedback = document.getElementById('feedback');
+
+        testBtn.addEventListener('click', () => {
+            testBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Esperando gesto...';
+            testBtn.classList.replace('bg-secondary', 'bg-outline');
+            
+            // Simulate detection after 2 seconds
+            setTimeout(() => {
+                // Show success snackbar
+                feedback.classList.remove('opacity-0', 'translate-y-8');
+                feedback.classList.add('opacity-100', 'translate-y-0');
+                
+                // Reset button
+                testBtn.innerHTML = '<span class="material-symbols-outlined">play_circle</span> Probar mi gesto ahora';
+                testBtn.classList.replace('bg-outline', 'bg-secondary');
+
+                // Vibrate if supported
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(200);
+                }
+
+                // Hide snackbar after 3s
+                setTimeout(() => {
+                    feedback.classList.replace('opacity-100', 'translate-y-0', 'opacity-0', 'translate-y-8');
+                }, 3000);
+            }, 2500);
+        });
+    </script>
+</body></html>

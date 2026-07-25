@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006878",
+                    "primary-container": "#5a189a",
+                    "secondary-fixed-dim": "#58d6f1",
+                    "on-primary-fixed": "#2b0052",
+                    "surface-container-high": "#e4e9eb",
+                    "on-tertiary-container": "#54bf8e",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#cec3d4",
+                    "inverse-primary": "#dbb8ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4b4452",
+                    "surface": "#f5fafc",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#a7edff",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#001f25",
+                    "secondary-container": "#69e5ff",
+                    "on-surface": "#171c1e",
+                    "primary-fixed": "#efdbff",
+                    "on-primary-container": "#c896ff",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f5fafc",
+                    "tertiary-fixed": "#8df7c2",
+                    "outline": "#7d7483",
+                    "inverse-surface": "#2c3133",
+                    "surface-tint": "#7a3fbb",
+                    "on-background": "#171c1e",
+                    "on-secondary-fixed-variant": "#004e5b",
+                    "surface-dim": "#d6dbdd",
+                    "tertiary-fixed-dim": "#71daa7",
+                    "surface-variant": "#dee3e5",
+                    "surface-container-highest": "#dee3e5",
+                    "tertiary-container": "#004a30",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1f3",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary": "#00311f",
+                    "primary-fixed-dim": "#dbb8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#006575",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#eff4f6",
+                    "background": "#f5fafc",
+                    "on-primary-fixed-variant": "#6122a1",
+                    "primary": "#3f0075"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "44px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "button-height": "48px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "input-height": "52px",
+                    "list-item-height": "64px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "critical-data": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0b0d0e;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .music-progress {
+            background: linear-gradient(90deg, #ffffff 45%, #333333 45%);
+        }
+        .album-art-container {
+            box-shadow: 0px 20px 40px rgba(0,0,0,0.6);
+        }
+        /* Discrete indicator for recording */
+        .recording-pulse {
+            width: 4px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: pulse-low 4s infinite ease-in-out;
+        }
+        @keyframes pulse-low {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-items-center justify-center min-h-screen">
+<!-- Camouflage Music Player UI -->
+<main class="w-full max-w-[390px] h-[844px] flex flex-col px-xl pt-xl pb-lg relative bg-[#0b0d0e]">
+<!-- Header: Minimal Control -->
+<header class="flex justify-between items-center w-full mb-xl">
+<button class="w-10 h-10 flex items-center justify-center opacity-60 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 0;">expand_more</span>
+</button>
+<div class="flex flex-col items-center">
+<span class="font-label-md text-label-md-mobile text-white/40 tracking-wider">REPRODUCIENDO DESDE</span>
+<span class="font-label-md text-label-md-mobile font-semibold text-white/80">Favoritos 2024</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center opacity-60 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">more_vert</span>
+</button>
+</header>
+<!-- Album Art -->
+<section class="flex-grow flex items-center justify-center mb-xl">
+<div class="album-art-container aspect-square w-full rounded-xl overflow-hidden bg-[#1a1c1e] relative">
+<img class="w-full h-full object-cover grayscale-[20%] opacity-80" data-alt="A generic, minimalist album cover art with abstract dark blue and charcoal geometric shapes. The style is moody and cinematic, featuring subtle grain and soft gradients. It looks like a common indie music cover with no text or logos, fitting a modern smartphone music player interface perfectly." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJEOqETN3tpDtS4ZNq10Pm9DEWaB-e9kn4RE8jeC6VVy9uE6kXzew3uI5pTJghDkahyVHbiIPG_dI3W2yyJTJnraH-qbJ93qH_GPGP1ukey0jrWhr6D9M15P6STP5fUzAdzsDumcSAAfTSbZAhB9xhCpwSLAySgb8siRspyI04i2wigXKD7JGOOuE55J2n1zZCLATdMsYNo865zv1v9t6Au_aXeEmV9PXfq_cmSKV_GQ32Buo0dV84V8eZaa-iR9OBgBSpXHUUADY"/>
+<!-- Secret Recording Light (Barely visible to someone looking over shoulder) -->
+<div class="absolute top-4 right-4 recording-pulse"></div>
+</div>
+</section>
+<!-- Track Info -->
+<section class="flex flex-col mb-lg">
+<div class="flex justify-between items-end">
+<div class="flex flex-col gap-base">
+<h1 class="font-headline-lg text-headline-lg-mobile text-white font-bold">Nocturnal Echoes</h1>
+<h2 class="font-body-lg text-body-lg-mobile text-white/60">Midnight Sessions</h2>
+</div>
+<button class="p-2 opacity-60 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 0;">favorite</span>
+</button>
+</div>
+</section>
+<!-- Player Controls -->
+<section class="flex flex-col gap-xl mb-xl">
+<!-- Progress Bar -->
+<div class="flex flex-col gap-sm">
+<div class="w-full h-1 rounded-full music-progress"></div>
+<div class="flex justify-between">
+<span class="font-label-md text-label-md-mobile text-white/40">1:42</span>
+<span class="font-label-md text-label-md-mobile text-white/40">3:58</span>
+</div>
+</div>
+<!-- Transport Buttons -->
+<div class="flex items-center justify-between px-xs">
+<button class="opacity-80 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">shuffle</span>
+</button>
+<button class="opacity-100 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[44px]" style="font-variation-settings: 'FILL' 1;">skip_previous</span>
+</button>
+<button class="w-[72px] h-[72px] rounded-full bg-white text-[#0b0d0e] flex items-center justify-center active:scale-95 transition-transform" id="playPauseBtn">
+<span class="material-symbols-outlined text-[48px]" id="playIcon" style="font-variation-settings: 'FILL' 1;">pause</span>
+</button>
+<button class="opacity-100 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[44px]" style="font-variation-settings: 'FILL' 1;">skip_next</span>
+</button>
+<button class="opacity-80 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">repeat</span>
+</button>
+</div>
+</section>
+<!-- Footer Accessory -->
+<footer class="flex justify-between items-center mb-md px-xs">
+<button class="opacity-40 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">devices</span>
+</button>
+<button class="opacity-40 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">share</span>
+</button>
+</footer>
+</main>
+<!-- Invisible Micro-Interactions -->
+<script>
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playIcon = document.getElementById('playIcon');
+        let isPlaying = true;
+
+        playPauseBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            playIcon.textContent = isPlaying ? 'pause' : 'play_arrow';
+            
+            // Subtle feedback - in a real app this would trigger vibration
+            if (window.navigator && window.navigator.vibrate) {
+                window.navigator.vibrate(5);
+            }
+        });
+
+        // Background logic for "Secret Recording" visual feedback
+        // The recording-pulse element already provides a tiny subtle hint.
+        // In this screen, we simulate the "hidden" nature by having NO navigation.
+        
+        // Prevent accidental system gestures if possible for better camouflage
+        document.addEventListener('touchmove', function (e) {
+            if (e.scale !== 1) { e.preventDefault(); }
+        }, { passive: false });
+
+        // Simple time updater for the fake player
+        let currentSeconds = 102;
+        setInterval(() => {
+            if (isPlaying) {
+                currentSeconds++;
+                const mins = Math.floor(currentSeconds / 60);
+                const secs = currentSeconds % 60;
+                const timeStr = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                const timeElement = document.querySelector('.font-label-md.text-white\\/40');
+                if (timeElement) timeElement.textContent = timeStr;
+                
+                // Update progress bar width mockup
+                const progress = (currentSeconds / 238) * 100;
+                document.querySelector('.music-progress').style.background = `linear-gradient(90deg, #ffffff ${progress}%, #333333 ${progress}%)`;
+            }
+        }, 1000);
+    </script>
+</body></html>

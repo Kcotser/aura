@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SororIA - Onboarding Completado</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006878",
+                    "primary-container": "#5a189a",
+                    "secondary-fixed-dim": "#58d6f1",
+                    "on-primary-fixed": "#2b0052",
+                    "surface-container-high": "#e4e9eb",
+                    "on-tertiary-container": "#54bf8e",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#cec3d4",
+                    "inverse-primary": "#dbb8ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4b4452",
+                    "surface": "#f5fafc",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#a7edff",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#001f25",
+                    "secondary-container": "#69e5ff",
+                    "on-surface": "#171c1e",
+                    "primary-fixed": "#efdbff",
+                    "on-primary-container": "#c896ff",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f5fafc",
+                    "tertiary-fixed": "#8df7c2",
+                    "outline": "#7d7483",
+                    "inverse-surface": "#2c3133",
+                    "surface-tint": "#7a3fbb",
+                    "on-background": "#171c1e",
+                    "on-secondary-fixed-variant": "#004e5b",
+                    "surface-dim": "#d6dbdd",
+                    "tertiary-fixed-dim": "#71daa7",
+                    "surface-variant": "#dee3e5",
+                    "surface-container-highest": "#dee3e5",
+                    "tertiary-container": "#004a30",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1f3",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary": "#00311f",
+                    "primary-fixed-dim": "#dbb8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#006575",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#eff4f6",
+                    "background": "#f5fafc",
+                    "on-primary-fixed-variant": "#6122a1",
+                    "primary": "#3f0075"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "44px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "button-height": "48px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "input-height": "52px",
+                    "list-item-height": "64px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "critical-data": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md-mobile": ["11px", {"lineHeight": "14px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "headline-md-mobile": ["18px", {"lineHeight": "24px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #3f0075; /* Primary Violet */
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .constellation-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle var(--duration) ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.2); }
+        }
+
+        .success-check-animation {
+            animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .content-card {
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 10;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-primary overflow-hidden">
+<!-- Constellation Background -->
+<div class="constellation-bg" id="constellation"></div>
+<main class="relative z-10 w-full max-w-[390px] h-[844px] px-md flex flex-col items-center justify-between py-xl text-center">
+<!-- Header Section -->
+<div class="flex flex-col items-center mt-xl">
+<!-- Icono check grande -->
+<div class="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-lg shadow-[0px_8px_24px_rgba(0,0,0,0.15)] success-check-animation">
+<span class="material-symbols-outlined text-primary text-[56px] font-bold">check</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-white mb-xs">
+                Estás protegida
+            </h1>
+<p class="font-body-md text-body-md text-white/80 max-w-[280px]">
+                SororIA está lista para actuar por ti
+            </p>
+</div>
+<!-- Summary List (Bento-style items) -->
+<div class="w-full flex flex-col gap-sm content-card p-lg rounded-xl">
+<div class="flex items-center justify-between text-left">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-on-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container text-[20px] fill-icon">check_circle</span>
+</div>
+<span class="font-body-md text-body-md text-white">Permisos</span>
+</div>
+<span class="font-label-md text-label-md text-on-tertiary-container bg-on-tertiary-container/10 px-sm py-base rounded-full">Activo</span>
+</div>
+<div class="w-full h-[1px] bg-white/10"></div>
+<div class="flex items-center justify-between text-left">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-on-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container text-[20px] fill-icon">check_circle</span>
+</div>
+<span class="font-body-md text-body-md text-white">Biométrico</span>
+</div>
+<span class="font-label-md text-label-md text-on-tertiary-container bg-on-tertiary-container/10 px-sm py-base rounded-full">Vinculado</span>
+</div>
+<div class="w-full h-[1px] bg-white/10"></div>
+<div class="flex items-center justify-between text-left">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-on-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container text-[20px] fill-icon">check_circle</span>
+</div>
+<span class="font-body-md text-body-md text-white">Contactos</span>
+</div>
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border border-primary bg-surface-container" data-alt="A close-up professional headshot of a supportive female friend, smiling warmly, captured in soft natural lighting with a minimalist blurred background, representing trust and safety in a high-quality modern digital interface." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBhHvxAb6lR0FPFtVNuYknxdBlDtrxWBcYaeFVNyCPKF_PXc8K0imWXowrc3IShli8Gr1m8FuTmuiVryBDgfK9fHwFoTiVMIsDNsC0-fa-l-5HnKTnwvVj_AEgWtQEsmYmULBX2DoMwaO40WuMEfMcFzcBla7A7gEAQ7z2qQr1nQwWDE4MTKrYB4e0s0uLIrj_qTJqDMdyhsOq4yfcq0HtC_UGc3w9ioC6oKDJon2KCjc4OZbRDhFa8SvKB8W_5K8bK7Id_-2JKqMk')"></div>
+<div class="w-6 h-6 rounded-full border border-primary bg-surface-container" data-alt="A portrait of a kind mature woman with a reassuring expression, soft evening lighting illuminating her face, styled in a professional but approachable manner for a safety app's contact list." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCDQtGeG9k6q1WpjhHoFx39SrhIG70oUz12BD_nfJbXzSrBErEc5CWk8QCV94HBj1hedsEGHw4IiurYuFL1S4pMryv9aKQgcy-3A5N7x8rXhJATFspMcREjcxdVFZSDnqa8HAysWopdN9muX_FdzWNBx10nxPuUYN-2EwDddCeEmF79i57rPx63lhphLg1dD_mtuiza-__uS-3U6ABx-2yKLM_7nAWUP9K13XbfczYm29f5spTu5v9w9sGmVpKpDWabebujdenEykI')"></div>
+<div class="flex items-center justify-center w-6 h-6 rounded-full border border-primary bg-on-tertiary-container text-[8px] text-primary font-bold">+1</div>
+</div>
+</div>
+</div>
+<!-- Call to Action -->
+<div class="w-full flex flex-col gap-md pb-lg">
+<button class="w-full h-[48px] bg-white text-primary font-headline-md-mobile text-headline-md-mobile rounded-xl shadow-lg active:scale-95 transition-transform duration-200" onclick="window.location.reload()">
+                Ir a Inicio
+            </button>
+<p class="font-label-md text-label-md text-white/60">
+                Tu seguridad es nuestra prioridad.
+            </p>
+</div>
+</main>
+<!-- Navigation Suppressed as per Onboarding rule: "Linear/Transactional" -->
+<script>
+        // Generate Starry Constellation Background
+        const constellation = document.getElementById('constellation');
+        const starCount = 60;
+
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            
+            const size = Math.random() * 3 + 1 + 'px';
+            star.style.width = size;
+            star.style.height = size;
+            
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            
+            const duration = Math.random() * 3 + 2 + 's';
+            star.style.setProperty('--duration', duration);
+            
+            const delay = Math.random() * 5 + 's';
+            star.style.animationDelay = delay;
+            
+            const opacity = Math.random() * 0.5 + 0.2;
+            star.style.opacity = opacity;
+            
+            constellation.appendChild(star);
+        }
+
+        // Add some "lines" for the constellation effect (limited)
+        for (let j = 0; j < 5; j++) {
+            const line = document.createElement('div');
+            line.className = 'absolute bg-white/10 origin-left';
+            line.style.height = '1px';
+            line.style.width = Math.random() * 100 + 100 + 'px';
+            line.style.left = Math.random() * 100 + '%';
+            line.style.top = Math.random() * 100 + '%';
+            line.style.transform = `rotate(${Math.random() * 360}deg)`;
+            constellation.appendChild(line);
+        }
+
+        // Simple click interaction for the button
+        document.querySelector('button').addEventListener('mousedown', function() {
+            this.style.backgroundColor = '#f0f0f0';
+        });
+        document.querySelector('button').addEventListener('mouseup', function() {
+            this.style.backgroundColor = '#ffffff';
+        });
+    </script>
+</body></html>

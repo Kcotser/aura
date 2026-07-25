@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006878",
+                    "primary-container": "#5a189a",
+                    "secondary-fixed-dim": "#58d6f1",
+                    "on-primary-fixed": "#2b0052",
+                    "surface-container-high": "#e4e9eb",
+                    "on-tertiary-container": "#54bf8e",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#cec3d4",
+                    "inverse-primary": "#dbb8ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4b4452",
+                    "surface": "#f5fafc",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#a7edff",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#001f25",
+                    "secondary-container": "#69e5ff",
+                    "on-surface": "#171c1e",
+                    "primary-fixed": "#efdbff",
+                    "on-primary-container": "#c896ff",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f5fafc",
+                    "tertiary-fixed": "#8df7c2",
+                    "outline": "#7d7483",
+                    "inverse-surface": "#2c3133",
+                    "surface-tint": "#7a3fbb",
+                    "on-background": "#171c1e",
+                    "on-secondary-fixed-variant": "#004e5b",
+                    "surface-dim": "#d6dbdd",
+                    "tertiary-fixed-dim": "#71daa7",
+                    "surface-variant": "#dee3e5",
+                    "surface-container-highest": "#dee3e5",
+                    "tertiary-container": "#004a30",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1f3",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary": "#00311f",
+                    "primary-fixed-dim": "#dbb8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#006575",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#eff4f6",
+                    "background": "#f5fafc",
+                    "on-primary-fixed-variant": "#6122a1",
+                    "primary": "#3f0075"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "44px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "button-height": "48px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "input-height": "52px",
+                    "list-item-height": "64px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "critical-data": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .bottom-sheet-transition {
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .radio-card-active {
+            border: 2px solid #5a189a;
+            background-color: rgba(90, 24, 154, 0.04);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-[844px] w-[390px] mx-auto relative overflow-hidden shadow-2xl">
+<!-- Top App Bar (Background Content) -->
+<header class="sticky top-0 w-full z-10 flex items-center justify-between px-4 h-[64px] bg-surface">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary p-2 hover:bg-surface-container rounded-full transition-colors">arrow_back</button>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary">SororIA</h1>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant p-2">more_vert</button>
+</header>
+<!-- Main Content Background (Settings view simulation) -->
+<main class="p-md space-y-md opacity-40">
+<section class="bg-surface-container-lowest rounded-xl p-md shadow-sm border border-outline-variant/20">
+<h2 class="font-headline-md text-headline-md-mobile mb-xs">Configuración de Seguridad</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Personaliza cómo interactúas con la app en momentos críticos.</p>
+</section>
+<div class="space-y-xs">
+<div class="h-[list-item-height] flex items-center justify-between px-md bg-surface-container-low rounded-lg">
+<span class="font-body-lg text-body-lg">Contactos de emergencia</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<div class="h-[list-item-height] flex items-center justify-between px-md bg-surface-container-low rounded-lg">
+<span class="font-body-lg text-body-lg">Modo Camuflaje</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</main>
+<!-- Bottom Sheet Backdrop -->
+<div class="fixed inset-0 bg-black/40 z-40 transition-opacity duration-300" id="backdrop"></div>
+<!-- Bottom Sheet 'Configurar Atajo Rápido' -->
+<div class="fixed bottom-0 left-0 right-0 h-[55%] bg-surface-container-lowest rounded-t-[28px] z-50 shadow-[0px_-8px_24px_rgba(0,0,0,0.12)] bottom-sheet-transition flex flex-col overflow-hidden" id="bottom-sheet">
+<!-- Handle -->
+<div class="w-full flex justify-center pt-3 pb-2">
+<div class="w-8 h-1 bg-outline-variant rounded-full"></div>
+</div>
+<div class="px-md pb-xl flex-1 flex flex-col">
+<h2 class="font-headline-lg text-headline-lg-mobile text-on-surface mb-md">Atajo de Activación Rápida</h2>
+<!-- Selection Area -->
+<div class="flex-1 space-y-sm overflow-y-auto pr-1">
+<!-- Radio Card 1 -->
+<label class="radio-card block relative group cursor-pointer h-[list-item-height] border border-outline-variant rounded-xl px-md transition-all active:scale-95">
+<input checked="" class="sr-only" name="shortcut" type="radio"/>
+<div class="flex items-center h-full gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">ads_click</span>
+</div>
+<div class="flex-1">
+<p class="font-body-lg text-body-lg font-semibold text-on-surface">Triple clic</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Presiona el botón de encendido 3 veces</p>
+</div>
+<div class="radio-indicator w-5 h-5 rounded-full border-2 border-primary-container flex items-center justify-center">
+<div class="w-2.5 h-2.5 bg-primary-container rounded-full"></div>
+</div>
+</div>
+</label>
+<!-- Radio Card 2 -->
+<label class="radio-card block relative group cursor-pointer h-[list-item-height] border border-outline-variant rounded-xl px-md transition-all active:scale-95">
+<input class="sr-only" name="shortcut" type="radio"/>
+<div class="flex items-center h-full gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">vibration</span>
+</div>
+<div class="flex-1">
+<p class="font-body-lg text-body-lg font-semibold text-on-surface">Agitar</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Agita tu teléfono con firmeza</p>
+</div>
+<div class="radio-indicator w-5 h-5 rounded-full border-2 border-outline-variant flex items-center justify-center">
+<div class="w-2.5 h-2.5 bg-transparent rounded-full"></div>
+</div>
+</div>
+</label>
+<!-- Radio Card 3 -->
+<label class="radio-card block relative group cursor-pointer h-[list-item-height] border border-outline-variant rounded-xl px-md transition-all active:scale-95">
+<input class="sr-only" name="shortcut" type="radio"/>
+<div class="flex items-center h-full gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">touch_app</span>
+</div>
+<div class="flex-1">
+<p class="font-body-lg text-body-lg font-semibold text-on-surface">Mantener botón</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Mantén presionado el botón lateral 2 seg</p>
+</div>
+<div class="radio-indicator w-5 h-5 rounded-full border-2 border-outline-variant flex items-center justify-center">
+<div class="w-2.5 h-2.5 bg-transparent rounded-full"></div>
+</div>
+</div>
+</label>
+</div>
+<!-- Actions -->
+<div class="mt-lg space-y-md">
+<button class="w-full h-[48px] bg-primary-container text-on-primary rounded-full font-body-lg font-semibold shadow-md active:scale-[0.98] transition-transform">
+                    Guardar cambios
+                </button>
+<div class="text-center">
+<a class="font-body-md text-primary-container font-medium hover:underline" href="#">Cancelar</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<!-- According to context: This is a top-level settings flow, so BottomNavBar is required. -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 h-[72px] bg-surface shadow-[0px_-4px_12px_rgba(0,0,0,0.05)]">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 transition-transform scale-95 active:scale-90">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md-mobile">Inicio</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 transition-transform scale-95 active:scale-90">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-md text-label-md-mobile">Historial</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 transition-transform scale-95 active:scale-90">
+<span class="material-symbols-outlined" data-icon="group_add">group_add</span>
+<span class="font-label-md text-label-md-mobile">Red de Apoyo</span>
+</div>
+<!-- Active Tab: Ajustes (nearest match to Configurar Atajo) -->
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 transition-transform scale-95 active:scale-90">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md-mobile">Ajustes</span>
+</div>
+</nav>
+<script>
+        // Micro-interactions for Radio Cards
+        const radioLabels = document.querySelectorAll('.radio-card');
+        
+        function updateUI() {
+            radioLabels.forEach(label => {
+                const input = label.querySelector('input');
+                const indicator = label.querySelector('.radio-indicator');
+                const dot = indicator.querySelector('div');
+
+                if (input.checked) {
+                    label.classList.add('border-primary-container', 'bg-primary-container/5');
+                    label.classList.remove('border-outline-variant');
+                    indicator.classList.add('border-primary-container');
+                    indicator.classList.remove('border-outline-variant');
+                    dot.classList.remove('bg-transparent');
+                    dot.classList.add('bg-primary-container');
+                } else {
+                    label.classList.remove('border-primary-container', 'bg-primary-container/5');
+                    label.classList.add('border-outline-variant');
+                    indicator.classList.remove('border-primary-container');
+                    indicator.classList.add('border-outline-variant');
+                    dot.classList.add('bg-transparent');
+                    dot.classList.remove('bg-primary-container');
+                }
+            });
+        }
+
+        radioLabels.forEach(label => {
+            label.addEventListener('click', () => {
+                setTimeout(updateUI, 10);
+            });
+        });
+
+        // Initialize UI state
+        updateUI();
+
+        // Simple sheet closing simulation
+        document.getElementById('backdrop').addEventListener('click', () => {
+            document.getElementById('bottom-sheet').style.transform = 'translateY(100%)';
+            document.getElementById('backdrop').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('backdrop').style.display = 'none';
+            }, 400);
+        });
+    </script>
+</body></html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#006878",
+                        "primary-container": "#5a189a",
+                        "secondary-fixed-dim": "#58d6f1",
+                        "on-primary-fixed": "#2b0052",
+                        "surface-container-high": "#e4e9eb",
+                        "on-tertiary-container": "#54bf8e",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#cec3d4",
+                        "inverse-primary": "#dbb8ff",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#4b4452",
+                        "surface": "#f5fafc",
+                        "on-tertiary-fixed-variant": "#005235",
+                        "secondary-fixed": "#a7edff",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#001f25",
+                        "secondary-container": "#69e5ff",
+                        "on-surface": "#171c1e",
+                        "primary-fixed": "#efdbff",
+                        "on-primary-container": "#c896ff",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f5fafc",
+                        "tertiary-fixed": "#8df7c2",
+                        "outline": "#7d7483",
+                        "inverse-surface": "#2c3133",
+                        "surface-tint": "#7a3fbb",
+                        "on-background": "#171c1e",
+                        "on-secondary-fixed-variant": "#004e5b",
+                        "surface-dim": "#d6dbdd",
+                        "tertiary-fixed-dim": "#71daa7",
+                        "surface-variant": "#dee3e5",
+                        "surface-container-highest": "#dee3e5",
+                        "tertiary-container": "#004a30",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#ecf1f3",
+                        "on-tertiary-fixed": "#002113",
+                        "tertiary": "#00311f",
+                        "primary-fixed-dim": "#dbb8ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#006575",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#eaeff1",
+                        "surface-container-low": "#eff4f6",
+                        "background": "#f5fafc",
+                        "on-primary-fixed-variant": "#6122a1",
+                        "primary": "#3f0075"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "44px",
+                        "xs": "8px",
+                        "lg": "24px",
+                        "sm": "12px",
+                        "button-height": "48px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "input-height": "52px",
+                        "list-item-height": "64px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "critical-data": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #EDF2F4;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ios-momentum {
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen text-on-surface">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 flex items-center justify-between px-4 h-[64px] bg-surface dark:bg-surface-dim">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary dark:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-container-high rounded-full p-2 transition-colors duration-200" data-icon="arrow_back">arrow_back</button>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary dark:text-inverse-primary">Red de Apoyo</h1>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant p-2" data-icon="more_vert">more_vert</button>
+</header>
+<!-- Content Canvas -->
+<main class="flex-1 px-4 py-6 mb-24 space-y-8 ios-momentum">
+<!-- Contactos SOS Section -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md-mobile text-on-surface">Contactos de Confianza</h2>
+<span class="bg-primary-container/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">3/5 Activos</span>
+</div>
+<!-- Bento Grid of Contacts -->
+<div class="grid grid-cols-1 gap-4">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-white/50 flex items-center justify-between group active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-14 h-14 rounded-full border-2 border-primary-container p-0.5">
+<img class="w-full h-full rounded-full object-cover" data-alt="A portrait of a kind, smiling middle-aged woman with warm eyes, captured in a soft-focus garden setting. She has graying hair and wears a violet scarf. The lighting is natural and gentle, emphasizing a sense of maternal safety and reliability. The visual style is modern, professional photography with a clean, high-key light mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfbx-JSkpsgF_i3Wwi8ui_h3RW-peqsl4uiC1vWsTR78bDzFikg_y7txUB_mfqwjcylGDjq71WniS-Io830wDRDUCYSZYRbWf_AP5qdBSaKVOMCJJz6cAFmCeoAaYrN9Yq-vjuUi10gpJAFMHa4OsGhxu4WJ3SXUQ8g6Px6bZtBKOS-JSVZTLj1LReBgIH7YdN3jVTSpifuaIkHZgL0T7nMg4aGpGyK7CtciOeN9mxHBy7DJo_PCGNNUQhjiIpWCuHuVywdNxLYkA"/>
+</div>
+<div class="absolute bottom-0 right-0 w-4 h-4 bg-on-tertiary-container border-2 border-surface rounded-full"></div>
+</div>
+<div>
+<p class="font-headline-md text-sm font-bold text-on-surface">Elena Valdivia</p>
+<p class="font-label-md text-on-surface-variant">Mamá • Contacto SOS</p>
+</div>
+</div>
+<a class="w-11 h-11 flex items-center justify-center bg-primary text-on-primary rounded-full shadow-lg hover:opacity-90 active:scale-90 transition-all" href="tel:5550123">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</a>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-white/50 flex items-center justify-between group active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-14 h-14 rounded-full border-2 border-secondary-fixed-dim p-0.5">
+<img class="w-full h-full rounded-full object-cover" data-alt="A studio portrait of a young professional woman in her late 20s with a confident and supportive expression. She has short black hair and is wearing a sleek, dark violet blazer. The background is a clean, minimalist off-white studio. The image is crisp, modern, and conveys high reliability and strength, fitting a corporate modern femtech design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8FANm7UF6McJQR5iBHlxQjLb8bONmoV4gOvKjYmsQpplimcDgAgZVYQ02sLeoiftHUL79r4kb_A_wGcaWCIK9lLH__jBqYsVjk_oZoJFWCbqbqtKdoG3m1KpSbrk5CRuNZk9KARtRra0T5ye_B9rqTG1Ve3xsoKDrTFP3Rj9xhfMiEsR_KhurWtKoyFrCr9UIxYO7UFmE9d-vs4w4OfmmZqa-c6soF8LcQut5naE-rG0sAlAdHpLnogto2iwvOG2aIeXrl7bw_Nw"/>
+</div>
+<div class="absolute bottom-0 right-0 w-4 h-4 bg-on-tertiary-container border-2 border-surface rounded-full"></div>
+</div>
+<div>
+<p class="font-headline-md text-sm font-bold text-on-surface">Lucía Ferreyra</p>
+<p class="font-label-md text-on-surface-variant">Mejor Amiga • Contacto SOS</p>
+</div>
+</div>
+<a class="w-11 h-11 flex items-center justify-center bg-primary text-on-primary rounded-full shadow-lg hover:opacity-90 active:scale-90 transition-all" href="tel:5550124">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</a>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-white/50 flex items-center justify-between group active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-14 h-14 rounded-full border-2 border-outline-variant p-0.5">
+<img class="w-full h-full rounded-full object-cover" data-alt="A professional portrait of a calm and protective-looking man in his early 30s. He has a friendly, trustworthy face and is wearing a simple white shirt against a neutral grey background. The lighting is professional and soft, emphasizing security and empowerment. The aesthetic is clean and modern, consistent with a high-reliability safety application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-nLQoi4zpzwYIM151O2lByyWReHnvh0hqs1lkZZI-0ODHIG3Jo5_xJjILt79H_jfhlajGe4BDevMdlK91-WxclaE0HoWieNniJ7Sh52tNH_-QlXXFyJ1Oie-P5Pz8jik_tdLIutN3amtoAK1xXOm6B3gNy8vIUun5oikcWMuFSZDhUtdTdjygTDZUrEUfV619Mn8JBJ-SeyMSAP40zUt9Seda5Inmd19KxeBIb2uDBXeQ9cSUQUC2RGS14wvWfOoYsyObuh8jikc"/>
+</div>
+<div class="absolute bottom-0 right-0 w-4 h-4 bg-on-tertiary-container border-2 border-surface rounded-full"></div>
+</div>
+<div>
+<p class="font-headline-md text-sm font-bold text-on-surface">Carlos Ruiz</p>
+<p class="font-label-md text-on-surface-variant">Hermano • Contacto SOS</p>
+</div>
+</div>
+<a class="w-11 h-11 flex items-center justify-center bg-primary text-on-primary rounded-full shadow-lg hover:opacity-90 active:scale-90 transition-all" href="tel:5550125">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</a>
+</div>
+<!-- Add Contact Button -->
+<button class="w-full h-16 border-2 border-dashed border-outline-variant rounded-xl flex items-center justify-center gap-2 text-primary font-bold hover:bg-primary-container/5 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span class="font-body-md font-bold">Agregar contacto</span>
+</button>
+</div>
+</section>
+<!-- Directorio Institucional Section -->
+<section class="space-y-4">
+<h2 class="font-headline-md text-headline-md-mobile text-on-surface">Directorio Institucional</h2>
+<div class="space-y-3">
+<!-- Linea 100 -->
+<div class="bg-surface-container shadow-sm rounded-xl p-4 flex items-center gap-4">
+<div class="w-12 h-12 bg-on-primary-fixed rounded-xl flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+</div>
+<div class="flex-1">
+<h3 class="font-body-lg font-bold text-on-surface">Línea 100</h3>
+<p class="font-label-md text-on-surface-variant">Violencia familiar y sexual</p>
+</div>
+<button class="px-5 py-2 bg-secondary text-on-secondary rounded-full font-bold text-sm shadow-md active:scale-95 transition-transform">Llamar</button>
+</div>
+<!-- PNP -->
+<div class="bg-surface-container shadow-sm rounded-xl p-4 flex items-center gap-4">
+<div class="w-12 h-12 bg-on-primary-fixed rounded-xl flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" data-icon="policy">policy</span>
+</div>
+<div class="flex-1">
+<h3 class="font-body-lg font-bold text-on-surface">PNP</h3>
+<p class="font-label-md text-on-surface-variant">Emergencias policiales (105)</p>
+</div>
+<button class="px-5 py-2 bg-secondary text-on-secondary rounded-full font-bold text-sm shadow-md active:scale-95 transition-transform">Llamar</button>
+</div>
+<!-- Serenazgo -->
+<div class="bg-surface-container shadow-sm rounded-xl p-4 flex items-center gap-4">
+<div class="w-12 h-12 bg-on-primary-fixed rounded-xl flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" data-icon="shield">shield</span>
+</div>
+<div class="flex-1">
+<h3 class="font-body-lg font-bold text-on-surface">Serenazgo</h3>
+<p class="font-label-md text-on-surface-variant">Seguridad ciudadana local</p>
+</div>
+<button class="px-5 py-2 bg-secondary text-on-secondary rounded-full font-bold text-sm shadow-md active:scale-95 transition-transform">Llamar</button>
+</div>
+</div>
+</section>
+<!-- Tip/Info Card -->
+<div class="p-4 bg-tertiary-fixed rounded-xl border border-tertiary-container/10 flex gap-3 items-start">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant" data-icon="info">info</span>
+<p class="font-body-md text-on-tertiary-fixed-variant">Tu Red de Apoyo recibirá una alerta inmediata con tu ubicación en tiempo real si activas el modo SOS.</p>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 h-[72px] bg-surface dark:bg-inverse-surface shadow-[0px_-4px_12px_rgba(0,0,0,0.05)]">
+<!-- Inicio -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:opacity-80 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md-mobile">Inicio</span>
+</div>
+<!-- Historial -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:opacity-80 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-md text-label-md-mobile">Historial</span>
+</div>
+<!-- Red de Apoyo (ACTIVE) -->
+<div class="flex flex-col items-center justify-center bg-primary-container dark:bg-secondary text-on-primary-container dark:text-on-secondary rounded-full px-4 py-1 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="group_add" style="font-variation-settings: 'FILL' 1;">group_add</span>
+<span class="font-label-md text-label-md-mobile">Red de Apoyo</span>
+</div>
+<!-- Ajustes -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:opacity-80 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md-mobile">Ajustes</span>
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for calling buttons
+        document.querySelectorAll('button:contains("Llamar")').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.add('animate-pulse');
+                setTimeout(() => this.classList.remove('animate-pulse'), 500);
+            });
+        });
+        
+        // Custom ripple effect for the add contact button
+        const addBtn = document.querySelector('button.border-dashed');
+        addBtn.addEventListener('mousedown', function(e) {
+            const ripple = document.createElement('div');
+            ripple.classList.add('absolute', 'bg-primary/20', 'rounded-full', 'pointer-events-none');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+            ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+            this.appendChild(ripple);
+            ripple.animate([{ transform: 'scale(0)', opacity: 1 }, { transform: 'scale(2)', opacity: 0 }], { duration: 600 });
+            setTimeout(() => ripple.remove(), 600);
+        });
+    </script>
+</body></html>

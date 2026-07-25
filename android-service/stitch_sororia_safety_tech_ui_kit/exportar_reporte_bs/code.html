@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006878",
+                    "primary-container": "#5a189a",
+                    "secondary-fixed-dim": "#58d6f1",
+                    "on-primary-fixed": "#2b0052",
+                    "surface-container-high": "#e4e9eb",
+                    "on-tertiary-container": "#54bf8e",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#cec3d4",
+                    "inverse-primary": "#dbb8ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4b4452",
+                    "surface": "#f5fafc",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#a7edff",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#001f25",
+                    "secondary-container": "#69e5ff",
+                    "on-surface": "#171c1e",
+                    "primary-fixed": "#efdbff",
+                    "on-primary-container": "#c896ff",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f5fafc",
+                    "tertiary-fixed": "#8df7c2",
+                    "outline": "#7d7483",
+                    "inverse-surface": "#2c3133",
+                    "surface-tint": "#7a3fbb",
+                    "on-background": "#171c1e",
+                    "on-secondary-fixed-variant": "#004e5b",
+                    "surface-dim": "#d6dbdd",
+                    "tertiary-fixed-dim": "#71daa7",
+                    "surface-variant": "#dee3e5",
+                    "surface-container-highest": "#dee3e5",
+                    "tertiary-container": "#004a30",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1f3",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary": "#00311f",
+                    "primary-fixed-dim": "#dbb8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#006575",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#eff4f6",
+                    "background": "#f5fafc",
+                    "on-primary-fixed-variant": "#6122a1",
+                    "primary": "#3f0075"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "44px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "button-height": "48px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "input-height": "52px",
+                    "list-item-height": "64px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "critical-data": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bottom-sheet-overlay {
+            animation: fadeIn 0.3s ease-out;
+        }
+        .bottom-sheet-content {
+            animation: slideUp 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col overflow-hidden">
+<!-- Top App Bar (Shared Component) -->
+<header class="sticky top-0 w-full z-40 flex items-center justify-between px-4 h-[64px] bg-surface">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md-mobile text-headline-md-mobile font-bold text-primary">SororIA</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center hover:bg-surface-container rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
+</button>
+</header>
+<!-- Main Content (Faded Background Content) -->
+<main class="flex-1 px-4 py-6 overflow-y-auto">
+<div class="space-y-6 opacity-40">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 bg-secondary-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">verified_user</span>
+</div>
+<div>
+<h2 class="font-headline-md-mobile text-headline-md-mobile text-on-surface">Reporte de Incidente #842</h2>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Fecha: 24 Oct, 2023</p>
+</div>
+</div>
+<div class="h-32 w-full rounded-lg bg-surface-container-high animate-pulse"></div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white p-4 rounded-xl border border-outline-variant aspect-square flex flex-col justify-end">
+<span class="material-symbols-outlined text-primary mb-2">location_on</span>
+<span class="font-body-md text-body-md">Ubicación</span>
+</div>
+<div class="bg-white p-4 rounded-xl border border-outline-variant aspect-square flex flex-col justify-end">
+<span class="material-symbols-outlined text-primary mb-2">description</span>
+<span class="font-body-md text-body-md">Narrativa</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Sheet Overlay -->
+<div class="fixed inset-0 bg-on-surface/40 z-50 flex items-end bottom-sheet-overlay">
+<!-- Bottom Sheet Wrapper -->
+<div class="w-full bg-surface-container-lowest rounded-t-[28px] h-[530px] flex flex-col shadow-[0px_-8px_24px_rgba(0,0,0,0.15)] bottom-sheet-content">
+<!-- Handle -->
+<div class="w-full flex justify-center py-4">
+<div class="w-8 h-1 bg-outline-variant rounded-full"></div>
+</div>
+<!-- Title & Header -->
+<div class="px-6 mb-4">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Exportar Reporte</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Selecciona el medio para compartir el informe de seguridad.</p>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto px-6 space-y-4">
+<!-- Informative Box -->
+<div class="bg-primary-container/10 border border-primary-container/20 p-4 rounded-xl flex items-start gap-4">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1">info</span>
+<p class="font-body-md text-body-md text-primary-fixed-variant">
+                        Incluye reporte narrativo y enlace cifrado para acceso seguro.
+                    </p>
+</div>
+<!-- Export List -->
+<div class="space-y-2">
+<!-- Item 1: PDF -->
+<button class="w-full h-[64px] flex items-center justify-between px-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors active:scale-[0.98] duration-200">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-error-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1">picture_as_pdf</span>
+</div>
+<span class="font-body-lg text-body-lg font-medium text-on-surface">Descargar PDF</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+<!-- Item 2: WhatsApp -->
+<button class="w-full h-[64px] flex items-center justify-between px-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors active:scale-[0.98] duration-200">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-on-tertiary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container">chat_bubble</span>
+</div>
+<span class="font-body-lg text-body-lg font-medium text-on-surface">WhatsApp</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+<!-- Item 3: Correo -->
+<button class="w-full h-[64px] flex items-center justify-between px-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors active:scale-[0.98] duration-200">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">mail</span>
+</div>
+<span class="font-body-lg text-body-lg font-medium text-on-surface">Correo electrónico</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+<!-- Item 4: Autoridad -->
+<button class="w-full h-[64px] flex items-center justify-between px-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors active:scale-[0.98] duration-200">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container">gavel</span>
+</div>
+<span class="font-body-lg text-body-lg font-medium text-on-surface">Enviar a Autoridad</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="p-6 pt-2">
+<button class="w-full h-[48px] flex items-center justify-center rounded-full bg-surface-variant text-on-surface-variant font-body-lg text-body-lg font-semibold hover:bg-outline-variant transition-colors active:scale-95 duration-200" onclick="window.history.back()">
+                    Cancelar
+                </button>
+</div>
+</div>
+</div>
+<!-- No Bottom Navigation as per prompt instructions -->
+<script>
+        // Micro-interaction for the list items
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                let ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.width = '100px';
+                ripple.style.height = '100px';
+                ripple.style.background = 'rgba(255,255,255,0.3)';
+                ripple.style.borderRadius = '50%';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.transform = 'translate(-50%, -50%) scale(0)';
+                ripple.style.animation = 'ripple 0.6s linear';
+                ripple.style.pointerEvents = 'none';
+                
+                btn.style.position = 'relative';
+                btn.style.overflow = 'hidden';
+                btn.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Add keyframe for ripple
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes ripple {
+                to {
+                    transform: translate(-50%, -50%) scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body></html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006878",
+                    "primary-container": "#5a189a",
+                    "secondary-fixed-dim": "#58d6f1",
+                    "on-primary-fixed": "#2b0052",
+                    "surface-container-high": "#e4e9eb",
+                    "on-tertiary-container": "#54bf8e",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#cec3d4",
+                    "inverse-primary": "#dbb8ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4b4452",
+                    "surface": "#f5fafc",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#a7edff",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#001f25",
+                    "secondary-container": "#69e5ff",
+                    "on-surface": "#171c1e",
+                    "primary-fixed": "#efdbff",
+                    "on-primary-container": "#c896ff",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f5fafc",
+                    "tertiary-fixed": "#8df7c2",
+                    "outline": "#7d7483",
+                    "inverse-surface": "#2c3133",
+                    "surface-tint": "#7a3fbb",
+                    "on-background": "#171c1e",
+                    "on-secondary-fixed-variant": "#004e5b",
+                    "surface-dim": "#d6dbdd",
+                    "tertiary-fixed-dim": "#71daa7",
+                    "surface-variant": "#dee3e5",
+                    "surface-container-highest": "#dee3e5",
+                    "tertiary-container": "#004a30",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1f3",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary": "#00311f",
+                    "primary-fixed-dim": "#dbb8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#006575",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#eff4f6",
+                    "background": "#f5fafc",
+                    "on-primary-fixed-variant": "#6122a1",
+                    "primary": "#3f0075"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "44px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "button-height": "48px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "input-height": "52px",
+                    "list-item-height": "64px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "critical-data": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5fafc;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .contact-slot {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .contact-slot:active {
+            transform: scale(0.98);
+            background-color: rgba(90, 24, 154, 0.05);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen text-on-surface">
+<!-- Top Navigation Bar (Back and Title) -->
+<header class="sticky top-0 w-full z-50 flex items-center justify-between px-4 h-[64px] bg-surface">
+<button class="flex items-center justify-center w-10 h-10 hover:bg-surface-container rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<span class="font-headline-md text-headline-md-mobile font-bold text-primary">SororIA</span>
+<div class="w-10"></div> <!-- Spacer for balance -->
+</header>
+<main class="flex-grow flex flex-col px-4 pt-6 pb-xl max-w-md mx-auto w-full">
+<!-- Header Section -->
+<div class="mb-xl">
+<h1 class="font-headline-lg text-headline-lg-mobile text-on-surface mb-xs">Elige a quién avisar</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                En caso de emergencia, estas personas recibirán tu ubicación y un audio en tiempo real.
+            </p>
+</div>
+<!-- Contact Slots Grid (Bento/Card Style) -->
+<div class="grid grid-cols-1 gap-md mb-lg">
+<!-- Slot 1 -->
+<button class="contact-slot flex flex-col items-center justify-center h-[120px] rounded-xl border-2 border-dashed border-primary-container bg-surface-container-low">
+<span class="material-symbols-outlined text-primary-container text-3xl mb-xs">person_add</span>
+<span class="font-label-md text-label-md text-primary-container uppercase tracking-wider">Añadir contacto 1</span>
+</button>
+<!-- Slot 2 -->
+<button class="contact-slot flex flex-col items-center justify-center h-[120px] rounded-xl border-2 border-dashed border-primary-container bg-surface-container-low">
+<span class="material-symbols-outlined text-primary-container text-3xl mb-xs">person_add</span>
+<span class="font-label-md text-label-md text-primary-container uppercase tracking-wider">Añadir contacto 2</span>
+</button>
+<!-- Slot 3 -->
+<button class="contact-slot flex flex-col items-center justify-center h-[120px] rounded-xl border-2 border-dashed border-primary-container bg-surface-container-low">
+<span class="material-symbols-outlined text-primary-container text-3xl mb-xs">person_add</span>
+<span class="font-label-md text-label-md text-primary-container uppercase tracking-wider">Añadir contacto 3</span>
+</button>
+</div>
+<!-- Secondary Action -->
+<button class="flex items-center justify-center h-button-height w-full rounded-full border border-secondary text-secondary font-label-md mb-xl hover:bg-secondary-container hover:bg-opacity-10 transition-all active:scale-95">
+<span class="material-symbols-outlined mr-xs text-[20px]">import_contacts</span>
+            Importar desde contactos
+        </button>
+<!-- Informative Privacy Chip -->
+<div class="flex items-center bg-surface-container-high p-md rounded-lg mb-xl">
+<span class="material-symbols-outlined text-secondary mr-sm">security</span>
+<p class="font-label-md text-label-md text-on-surface-variant leading-tight">
+                Tus contactos solo serán notificados si activas el modo SOS o una alerta de seguridad.
+            </p>
+</div>
+<!-- Footer Actions (Fixed or Bottom Align) -->
+<div class="mt-auto flex flex-col gap-sm">
+<button class="flex items-center justify-center h-button-height w-full rounded-full bg-primary-container text-on-primary font-label-md shadow-lg active:scale-95 transition-transform">
+                Guardar y continuar
+            </button>
+<a class="text-center py-xs font-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">
+                Configurar esto después
+            </a>
+</div>
+</main>
+<!-- Illustrative atmospheric element -->
+<div class="fixed -bottom-10 -right-10 w-48 h-48 bg-primary-container opacity-5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="fixed top-20 -left-10 w-32 h-32 bg-secondary opacity-5 rounded-full blur-2xl pointer-events-none"></div>
+<script>
+        // Micro-interaction: Ripple or press state for slots
+        document.querySelectorAll('.contact-slot').forEach(slot => {
+            slot.addEventListener('click', () => {
+                // Future implementation: Open contact picker bottom sheet
+                console.log('Opening contact selector...');
+            });
+        });
+    </script>
+</body></html>
