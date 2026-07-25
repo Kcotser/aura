@@ -17,26 +17,25 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.CloudDone
+import androidx.compose.material.icons.filled.CloudOff
+import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.VideoCall
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,9 +46,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.example.myapplication.AuraApplication
+import com.example.myapplication.capture.EstadoSubida
 import com.example.myapplication.capture.SosCaptureService
+import com.example.myapplication.ui.Tab
 import com.example.myapplication.ui.components.IconButtonSlot
+import com.example.myapplication.ui.components.PrimaryButton
 import com.example.myapplication.ui.components.StatusChip
 import com.example.myapplication.ui.nav.Nav
 import com.example.myapplication.ui.nav.Screen
@@ -72,11 +76,14 @@ fun TransicionActivandoScreen(nav: Nav) {
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         // Arranca la grabación real apenas se activa la protección; se corta en
-        // ProcesandoIncidenteScreen (fin del incidente) o si se cierra la app. La preferencia
+        // EnvioEvidenciaScreen (fin del incidente) o si se cierra la app. La preferencia
         // se lee acá y no dentro del servicio para no bloquear el arranque de la captura
         // leyendo DataStore en el hilo principal justo en el momento de la emergencia.
         val app = context.applicationContext as AuraApplication
         val dual = app.profileRepository.profile.first().grabacionDual
+        // Descarta el trabajo de la alerta anterior para que la pantalla de cierre no muestre
+        // el resultado de la subida pasada mientras esta todavía está grabando.
+        EstadoSubida.reiniciar()
         SosCaptureService.start(context, dual = dual)
         delay(1600)
         nav.push(Screen.ConfirmandoSOS)
@@ -212,7 +219,7 @@ fun ConfirmandoSOSScreen(nav: Nav) {
                     .background(ErrorColor)
                     .combinedClickable(
                         onClick = {},
-                        onLongClick = { nav.push(Screen.ProcesandoIncidente) }
+                        onLongClick = { nav.push(Screen.EnvioEvidencia) }
                     )
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -244,24 +251,80 @@ fun ConfirmandoSOSScreen(nav: Nav) {
 }
 
 /* =============================================================================
- * 3. PROCESANDO INCIDENTE (barra de progreso animada, avanza sola)
+ * 3. ENVÍO DE EVIDENCIA (cierre de la alerta)
  * ========================================================================== */
 
+/** En qué punto está la evidencia de la alerta que se acaba de cerrar. */
+private enum class FaseEnvio { GUARDANDO, ENVIANDO, ENVIADA, SIN_CUENTA, FALLO }
+
+/**
+ * Cierre de la alerta: corta la grabación y acompaña el envío de la evidencia al backend.
+ *
+ * Lo que se muestra es el estado real del trabajo de WorkManager que encoló
+ * [com.example.myapplication.capture.SosCaptureService], no una animación con temporizador. Por
+ * eso la pantalla no avanza sola: mientras haya algo subiendo, se queda; y si falla, lo dice en
+ * vez de fingir que salió bien.
+ *
+ * El botón de continuar está siempre habilitado a propósito. La subida sigue en segundo plano
+ * aunque se salga de acá, y obligar a alguien que acaba de pasar por una emergencia a mirar una
+ * barra de progreso sería exactamente la clase de fricción que esta pantalla no debería tener.
+ */
 @Composable
-fun ProcesandoIncidenteScreen(nav: Nav) {
+fun EnvioEvidenciaScreen(nav: Nav) {
     val context = LocalContext.current
-    var progresoEntorno by remember { mutableFloatStateOf(0f) }
+    val app = context.applicationContext as AuraApplication
+    val tieneCuenta = remember { app.authRepository.estaLogueado }
 
     LaunchedEffect(Unit) {
-        while (progresoEntorno < 1f) {
-            delay(60)
-            progresoEntorno = (progresoEntorno + 0.02f).coerceAtMost(1f)
-        }
-        delay(400)
-        // Fin del incidente: se corta la grabación acá (el archivo queda listo en
-        // AURA_SOS/); subirlo al backend es el siguiente paso, todavía no implementado.
+        // Fin del incidente: se corta la grabación. El servicio cierra los archivos, extrae el
+        // audio y recién ahí encola la subida, así que EstadoSubida.idTrabajo llega con retraso.
         SosCaptureService.stop(context)
-        nav.replace(Screen.FichaIncidente)
+    }
+
+    val idTrabajo = EstadoSubida.idTrabajo
+    val infoTrabajo by produceState<WorkInfo?>(initialValue = null, idTrabajo) {
+        val id = idTrabajo ?: return@produceState
+        WorkManager.getInstance(context).getWorkInfoByIdFlow(id).collect { value = it }
+    }
+
+    val fase = when {
+        idTrabajo == null -> FaseEnvio.GUARDANDO
+        infoTrabajo?.state == WorkInfo.State.SUCCEEDED -> FaseEnvio.ENVIADA
+        infoTrabajo?.state == WorkInfo.State.FAILED ||
+            infoTrabajo?.state == WorkInfo.State.CANCELLED ->
+            if (tieneCuenta) FaseEnvio.FALLO else FaseEnvio.SIN_CUENTA
+        else -> FaseEnvio.ENVIANDO
+    }
+
+    val (icono, tinte) = when (fase) {
+        FaseEnvio.GUARDANDO -> Icons.Filled.Save to MaterialTheme.colorScheme.primary
+        FaseEnvio.ENVIANDO -> Icons.Filled.CloudUpload to MaterialTheme.colorScheme.primary
+        FaseEnvio.ENVIADA -> Icons.Filled.CloudDone to Success
+        FaseEnvio.SIN_CUENTA, FaseEnvio.FALLO -> Icons.Filled.CloudOff to MaterialTheme.colorScheme.onSurfaceVariant
+    }
+
+    val titulo = when (fase) {
+        FaseEnvio.GUARDANDO -> "Guardando tu grabación"
+        FaseEnvio.ENVIANDO -> "Enviando tus datos"
+        FaseEnvio.ENVIADA -> "Tu evidencia está a salvo"
+        FaseEnvio.SIN_CUENTA -> "Guardado en tu teléfono"
+        FaseEnvio.FALLO -> "No se pudo enviar todavía"
+    }
+
+    val mensaje = when (fase) {
+        FaseEnvio.GUARDANDO ->
+            "Ya terminó la alerta. Estamos cerrando el video y el audio para que no se pierda nada."
+        FaseEnvio.ENVIANDO ->
+            "Estamos respaldando el video y el audio fuera de tu teléfono. Puedes cerrar esta " +
+                "pantalla: el envío continúa solo."
+        FaseEnvio.ENVIADA ->
+            "El video y el audio quedaron respaldados. Nadie puede borrarlos desde tu teléfono."
+        FaseEnvio.SIN_CUENTA ->
+            "La grabación quedó guardada en este dispositivo. Inicia sesión cuando puedas para " +
+                "respaldarla fuera de él."
+        FaseEnvio.FALLO ->
+            "Tu grabación está guardada en este dispositivo y no se perdió. Volveremos a " +
+                "intentar el envío cuando haya conexión."
     }
 
     Column(
@@ -292,86 +355,57 @@ fun ProcesandoIncidenteScreen(nav: Nav) {
                 .fillMaxWidth()
                 .padding(horizontal = Spacing.md)
         ) {
-            Spacer(Modifier.height(Spacing.lg))
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                StatusChip(
-                    text = "Audio Live",
-                    contentColor = Color.White,
-                    containerColor = MaterialTheme.colorScheme.secondary
-                )
-            }
-            Spacer(Modifier.height(Spacing.lg))
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.size(260.dp)) {
-                CircularProgressIndicator(
-                    progress = { progresoEntorno },
-                    modifier = Modifier.size(260.dp),
-                    strokeWidth = 6.dp,
-                    color = MaterialTheme.colorScheme.primary,
-                    trackColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                )
+            Spacer(Modifier.weight(1f))
+
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.size(200.dp)) {
+                if (fase == FaseEnvio.GUARDANDO || fase == FaseEnvio.ENVIANDO) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(200.dp),
+                        strokeWidth = 5.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        trackColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    )
+                }
                 Box(
-                    Modifier
-                        .size(210.dp)
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .size(160.dp)
                         .clip(CircleShape)
-                        .background(Color.White)
-                )
+                        .background(PrimaryContainer.copy(alpha = 0.18f))
+                ) {
+                    Icon(icono, null, tint = tinte, modifier = Modifier.size(72.dp))
+                }
             }
-            Spacer(Modifier.height(Spacing.lg))
-            StatusChip(
-                text = "Cifrado AES-256",
-                contentColor = Color.White,
-                containerColor = MaterialTheme.colorScheme.primary
-            )
+
             Spacer(Modifier.height(Spacing.lg))
             Text(
-                "Analizando tu incidente...",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface
+                titulo,
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
             )
+            Spacer(Modifier.height(Spacing.xs))
             Text(
-                "Estamos procesando los datos capturados para brindarte la mejor asistencia inmediata.",
-                style = MaterialTheme.typography.bodyMedium,
+                mensaje,
+                style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
-            Spacer(Modifier.height(Spacing.lg))
-
-            ProcesoItem("Transcribiendo audio", 1f)
-            Spacer(Modifier.height(Spacing.sm))
-            ProcesoItem("Analizando entorno", progresoEntorno)
-            Spacer(Modifier.height(Spacing.sm))
-            ProcesoItem("Generando reporte", 0f)
 
             Spacer(Modifier.weight(1f))
-            Row(horizontalArrangement = Arrangement.spacedBy(Spacing.sm), modifier = Modifier.fillMaxWidth()) {
-                InfoPill(Icons.Filled.Shield, "Procesado de forma cifrada", Modifier.weight(1f))
-            }
-            Spacer(Modifier.height(Spacing.sm))
-            InfoPill(Icons.Filled.VisibilityOff, "Modo Discreto Activado", Modifier.fillMaxWidth())
+
+            InfoPill(Icons.Filled.Shield, "La grabación está guardada en tu teléfono", Modifier.fillMaxWidth())
             Spacer(Modifier.height(Spacing.md))
         }
-    }
-}
 
-@Composable
-private fun ProcesoItem(label: String, progress: Float) {
-    Column(Modifier.fillMaxWidth()) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(label, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
-            Text(
-                "${(progress * 100).toInt()}%",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
+        Column(Modifier.padding(horizontal = Spacing.md)) {
+            PrimaryButton(
+                text = "Continuar",
+                onClick = { nav.popToMain(Tab.Historial) }
             )
+            Spacer(Modifier.height(Spacing.lg))
         }
-        Spacer(Modifier.height(4.dp))
-        LinearProgressIndicator(
-            progress = { progress },
-            modifier = Modifier.fillMaxWidth().height(6.dp).clip(Shapes.chip),
-            color = MaterialTheme.colorScheme.primary,
-            trackColor = MaterialTheme.colorScheme.surfaceContainerHigh
-        )
     }
 }
 
@@ -410,6 +444,6 @@ private fun ConfirmandoPreview() {
 
 @Preview(showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
-private fun ProcesandoPreview() {
-    AuraTheme { ProcesandoIncidenteScreen(rememberNav()) }
+private fun EnvioEvidenciaPreview() {
+    AuraTheme { EnvioEvidenciaScreen(rememberNav()) }
 }

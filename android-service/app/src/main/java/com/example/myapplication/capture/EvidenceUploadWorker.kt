@@ -153,6 +153,7 @@ class EvidenceUploadWorker(
                 .build()
 
             WorkManager.getInstance(context).enqueue(solicitud)
+            EstadoSubida.idTrabajo = solicitud.id
             Log.i(TAG, "Subida de evidencia encolada")
         }
 

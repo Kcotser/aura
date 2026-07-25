@@ -66,7 +66,8 @@ Para agregar una pantalla nueva: (1) añadir el `object` a `Screen` o `Sheet`, (
 - **`ProfileRepository`** (DataStore) — nombre, `onboardingCompletado`, `permisosSolicitados`, `metodoAcceso` (`PIN` | `BIOMETRICO`).
 - **`PinRepository`** (EncryptedSharedPreferences) — PIN como hash SHA-256 + salt, nunca en texto plano. `setPin()` usa `commit()` (no `apply()`) a propósito, para garantizar que quedó en disco antes de navegar.
 - **`SessionState`** (objeto en memoria, `mutableStateOf`) — `tabsUnlocked`: si ya se autenticó para ver más allá de Inicio, en esta sesión. Se resetea a `false` al relockear (2 min en background) o al "Cerrar sesión".
-- **`AuraApplication`** expone `profileRepository` y `pinRepository` como singletons; se obtienen vía `LocalContext.current.applicationContext as AuraApplication`.
+- **`AuthRepository`** (EncryptedSharedPreferences) — la única cuenta **no** local: sesión contra el backend (`/api/v1/auth`). Guarda access + refresh token y renueva solo cuando hace falta. El backend **rota** el refresh token en cada `/auth/refresh`, así que hay que guardar el par nuevo cada vez. `accessTokenValido()` es bloqueante y está sincronizado: la subida de evidencia corre en un worker en paralelo a la UI.
+- **`AuraApplication`** expone `profileRepository`, `pinRepository` y `authRepository` como singletons; se obtienen vía `LocalContext.current.applicationContext as AuraApplication`.
 
 **Flujo de onboarding** (`NombrePerfilScreen` → `PermisosEsencialesScreen` → `AccesoBiometricoScreen` → `CrearPinScreen` → `CalibracionGestoRapidoScreen` → `OnboardingCompletadoScreen`): el PIN se configura **siempre**, sea o no el método principal — sirve de respaldo si falla la biometría. Recién en `OnboardingCompletadoScreen` se marca `onboardingCompletado = true`.
 
@@ -81,6 +82,18 @@ Presionar subir y bajar volumen, 3 veces cada uno, dispara la alerta SOS **sin a
 - **`MainActivity`** se muestra sobre la pantalla de bloqueo (`setShowWhenLocked`/`setTurnScreenOn`) solo cuando `SosTrigger.pending` está activo al crearse/recibir el intent; limpia esos flags en `onPause` para que abrir la app normalmente siga pidiendo PIN.
 - **`DebugNotifier`** — notificaciones de debug (visibles en pantalla de bloqueo) con el conteo en vivo del gesto y aviso cuando se dispara. Pensado para diagnosticar, no para producción.
 - Config: `res/xml/accessibility_service_config.xml`, registrado en el Manifest con `foregroundServiceType="specialUse"`. Se activa/gestiona desde el sheet **Configurar Atajo** (`ConfigurarAtajoSheetContent`), que linkea a Ajustes de Accesibilidad del sistema.
+
+## Captura y envío de evidencia (`capture/`, `network/`)
+
+Lo que pasa entre que arranca la alerta y que la evidencia queda en el backend:
+
+- **`SosCaptureService`** — foreground service (`camera|microphone`) que graba mientras dura la alerta. Modo simple (trasera + audio) o dual (frontal con audio + trasera), según la preferencia `grabacionDual`; el dual depende del hardware, ver `DualCameraSupport`. Los archivos van a `Movies/AURA/` vía MediaStore.
+- **`AudioExtractor`** — saca la pista de audio del video a un `.m4a` aparte (remux, sin recodificar), porque el backend espera el audio como una parte propia.
+- **`EvidenceUploadWorker`** — sube la evidencia con WorkManager, **no** dentro del servicio: el servicio muere apenas cierra los archivos, y subir dos videos puede tardar minutos y fallar. Abre el incidente (`/incidents/activate`) y sube el multipart (`/incidents/{id}/evidence`). El `incidentId` se memoriza en disco entre reintentos: sin eso cada reintento dejaría un incidente huérfano.
+- **`EstadoSubida`** — objeto en memoria con el id del trabajo encolado, para que `EnvioEvidenciaScreen` muestre el estado real. Si el proceso muere se pierde el progreso en pantalla, no la subida.
+- **`network/AuraApi`** — cliente OkHttp. El multipart va en streaming desde el `content://`; cargar los videos en memoria sería un OOM justo al subir la evidencia. La URL base es `BuildConfig.AURA_BASE_URL`, configurable con `-PauraBaseUrl=` o `gradle.properties`.
+
+Mapeo a las partes que espera el backend: dual → `frontCamera` + `backCamera` + `ambientAudio`; simple → `backCamera` + `ambientAudio`. El backend solo emite `AllEvidenceUploadedEvent` con las tres, así que en modo simple el incidente no avanza de estado solo.
 
 ## Sistema de diseño (`ui/theme/`)
 
@@ -110,12 +123,13 @@ Pantallas de pila completa (`Screen`), por archivo:
 
 | Archivo | Screens que contiene |
 |---|---|
-| `SplashScreen.kt` | `Splash` (un solo CTA "Comenzar", sin login) |
+| `SplashScreen.kt` | `Splash` (un solo CTA "Comenzar" → `Login`) |
+| `LoginScreen.kt` | `Login` (real) — login y registro contra el backend en el mismo formulario |
 | `NombrePerfilScreen.kt` | `NombrePerfil` (pide el nombre, real) |
 | `CrearPinScreen.kt` | `CrearPin` (real) |
 | `LockScreen.kt` | Candado reutilizable (real) — ya **no** es un `Screen` de la pila, ver "Perfil local y acceso" |
 | `OnboardingScreens.kt` | `PermisosEsenciales` (permisos reales), `AccesoBiometrico` (real), `CalibracionGesto` (gesto real de volumen), `OnboardingCompletado` |
-| `SosFlowScreens.kt` | `TransicionActivando`, `ConfirmandoSOS`, `ProcesandoIncidente` (maqueta visual; el trigger externo sí es real, la captura de datos no) |
+| `SosFlowScreens.kt` | `TransicionActivando` (arranca la captura real), `ConfirmandoSOS`, `EnvioEvidencia` (real: corta la grabación y muestra el estado del trabajo de subida; "Continuar" va a Historial) |
 | `IncidenteScreens.kt` | `DetalleDeCaso`, `FichaIncidente`, `EditarIncidente`, `VisorMultimedia` (maqueta) |
 | `AjustesAvanzadosScreens.kt` | `AjustesBiometrico` (real: cambiar método/PIN), `CalibracionAV`, `PoliticasAutodestruccion` (maqueta) |
 | `CamuflajeScreens.kt` | `SelectorCamuflaje`, `AjustesCamuflaje` (maqueta) |
@@ -132,8 +146,9 @@ Bottom sheets (`ui/sheets/BottomSheets.kt`, todas `Sheet`): `AgregarContacto`, `
 **Sigue siendo maqueta** (sin ViewModel, sin persistencia, sin validación real):
 - Red de Apoyo: contactos hardcodeados, no hay CRUD real ni llamadas reales.
 - Historial / Incidentes: datos de ejemplo, sin persistencia.
-- SOS: el *trigger* es real, pero la captura (cámara/mic/GPS), el envío a contactos y el cifrado son solo visuales.
+- SOS: el trigger, la captura (cámara + audio) y la subida al backend son reales. Siguen siendo visuales el envío a contactos y el cifrado.
+- GPS: el incidente se abre con coordenadas placeholder (`AuraApi.LAT_PLACEHOLDER`/`LNG_PLACEHOLDER`); el backend exige lat/lng para activar, pero todavía no se manda la ubicación real.
 - Camuflaje: no cambia el ícono/nombre real de la app.
 - Falta cargar la fuente Inter real (actualmente usa la fuente del sistema).
 - El paquete/applicationId no se ha migrado de `com.example.myapplication` a algo con "aura".
-- Sin backend/sincronización — todo lo persistente vive solo en el dispositivo (DataStore + EncryptedSharedPreferences).
+- Backend: solo está conectado el flujo de auth + subida de evidencia. Historial, Red de Apoyo y el resto siguen viviendo solo en el dispositivo (DataStore + EncryptedSharedPreferences).

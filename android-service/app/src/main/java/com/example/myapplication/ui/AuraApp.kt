@@ -71,8 +71,8 @@ import com.example.myapplication.ui.screens.LoginScreen
 import com.example.myapplication.ui.screens.NombrePerfilScreen
 import com.example.myapplication.ui.screens.OnboardingCompletadoScreen
 import com.example.myapplication.ui.screens.PermisosEsencialesScreen
+import com.example.myapplication.ui.screens.EnvioEvidenciaScreen
 import com.example.myapplication.ui.screens.PoliticasAutodestruccionScreen
-import com.example.myapplication.ui.screens.ProcesandoIncidenteScreen
 import com.example.myapplication.ui.screens.RedApoyoScreen
 import com.example.myapplication.ui.screens.SelectorCamuflajeScreen
 import com.example.myapplication.ui.screens.SplashScreen
@@ -118,7 +118,7 @@ private val onboardingFlowScreens = setOf(
 private val sosFlowScreens = setOf(
     Screen.TransicionActivando,
     Screen.ConfirmandoSOS,
-    Screen.ProcesandoIncidente
+    Screen.EnvioEvidencia
 )
 
 private const val RELOCK_THRESHOLD_MS = 2 * 60 * 1000L
@@ -209,7 +209,7 @@ fun AuraApp() {
             Screen.Main -> MainShell(nav)
             Screen.TransicionActivando -> TransicionActivandoScreen(nav)
             Screen.ConfirmandoSOS -> ConfirmandoSOSScreen(nav)
-            Screen.ProcesandoIncidente -> ProcesandoIncidenteScreen(nav)
+            Screen.EnvioEvidencia -> EnvioEvidenciaScreen(nav)
             Screen.DetalleDeCaso -> DetalleDeCasoScreen(nav)
             Screen.FichaIncidente -> FichaIncidenteScreen(nav)
             Screen.EditarIncidente -> EditarIncidenteScreen(nav)
@@ -264,6 +264,20 @@ private fun MainShell(nav: Nav) {
         if (!SessionState.tabsUnlocked) {
             currentTab = Tab.Inicio
             tabPendiente = null
+        }
+    }
+
+    // Alguien pidió abrir el shell en una pestaña concreta (por ejemplo, "Continuar" al cerrar
+    // una alerta manda a Historial). Pasa por el mismo filtro que tocarla a mano: si está
+    // bloqueada, se muestra el candado en vez de saltárselo.
+    LaunchedEffect(nav.tabSolicitada) {
+        val pedida = nav.tabSolicitada ?: return@LaunchedEffect
+        nav.tabSolicitada = null
+        if (pedida == Tab.Inicio || SessionState.tabsUnlocked) {
+            currentTab = pedida
+            tabPendiente = null
+        } else {
+            tabPendiente = pedida
         }
     }
 
