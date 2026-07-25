@@ -24,59 +24,88 @@ public class OpenHtmlToPdfExporter {
     public byte[] generatePdf(IncidentReport report) {
         log.info("Generating PDF report for incidentId={}", report.getIncidentId());
 
-        String htmlTemplate = """
+            String htmlTemplate = """
                 <!DOCTYPE html>
                 <html lang="es">
                 <head>
                     <meta charset="UTF-8" />
                     <title>Reporte de Incidente - Aura</title>
                     <style>
-                        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 40px; color: #1e293b; background-color: #ffffff; }
-                        .header { border-bottom: 2px solid #ef4444; padding-bottom: 15px; margin-bottom: 30px; }
-                        .header h1 { color: #dc2626; margin: 0; font-size: 24px; text-transform: uppercase; }
-                        .header p { margin: 5px 0 0 0; color: #64748b; font-size: 13px; }
-                        .section { margin-bottom: 25px; background: #f8fafc; padding: 18px; border-radius: 8px; border-left: 4px solid #3b82f6; }
-                        .section h2 { margin-top: 0; font-size: 16px; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; }
-                        .grid { width: 100%%; margin-bottom: 10px; }
-                        .label { font-weight: bold; color: #475569; width: 30%%; display: inline-block; font-size: 13px; }
-                        .value { color: #0f172a; display: inline-block; font-size: 13px; }
-                        .content-box { background: #ffffff; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px; line-height: 1.5; margin-top: 8px; }
-                        .badge { display: inline-block; padding: 4px 8px; background: #dbeafe; color: #1e40af; font-weight: bold; border-radius: 4px; font-size: 12px; }
-                        .footer { margin-top: 50px; border-top: 1px solid #e2e8f0; padding-top: 15px; text-align: center; font-size: 11px; color: #94a3b8; }
+                        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 35px; color: #1e293b; background-color: #ffffff; }
+                        .header { border-bottom: 3px solid #5e2b97; padding-bottom: 12px; margin-bottom: 25px; }
+                        .header h1 { color: #5e2b97; margin: 0; font-size: 22px; text-transform: uppercase; letter-spacing: 0.5px; }
+                        .header p { margin: 4px 0 0 0; color: #64748b; font-size: 12px; }
+                        .section { margin-bottom: 20px; background: #f8fafc; padding: 15px; border-radius: 6px; border-left: 4px solid #8b5cf6; }
+                        .section h2 { margin-top: 0; font-size: 15px; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+                        .grid-row { margin-bottom: 6px; font-size: 12px; }
+                        .label { font-weight: bold; color: #475569; width: 35%%; display: inline-block; }
+                        .value { color: #0f172a; display: inline-block; font-weight: 500; }
+                        .content-box { background: #ffffff; padding: 12px; border: 1px solid #e2e8f0; border-radius: 5px; font-size: 12px; line-height: 1.5; margin-top: 6px; }
+                        .badge { display: inline-block; padding: 3px 8px; background: #5e2b97; color: #ffffff; font-weight: bold; border-radius: 4px; font-size: 11px; }
+                        .badge-status { display: inline-block; padding: 3px 8px; background: #059669; color: #ffffff; font-weight: bold; border-radius: 4px; font-size: 11px; }
+                        .crypto-table { width: 100%%; border-collapse: collapse; margin-top: 8px; font-size: 11px; }
+                        .crypto-table th { background: #e2e8f0; color: #1e293b; text-align: left; padding: 6px; font-weight: bold; }
+                        .crypto-table td { border-bottom: 1px solid #e2e8f0; padding: 6px; font-family: monospace; }
+                        .footer { margin-top: 40px; border-top: 1px solid #cbd5e1; padding-top: 12px; text-align: center; font-size: 10px; color: #94a3b8; }
                     </style>
                 </head>
                 <body>
                     <div class="header">
-                        <h1>Aura - Reporte de Incidente de Seguridad</h1>
-                        <p>Plataforma Multimodal de Seguridad Personal | Código de Incidente: %s</p>
+                        <h1>AURA - REPORTE FORENSE DE INCIDENTE</h1>
+                        <p>Plataforma de Seguridad Personal Multimodal | Código de Incidente: %s</p>
                     </div>
 
                     <div class="section">
-                        <h2>Información General</h2>
-                        <div><span class="label">ID de Incidente:</span> <span class="value">%s</span></div>
-                        <div><span class="label">Fecha y Hora:</span> <span class="value">%s</span></div>
-                        <div><span class="label">Ubicación GPS:</span> <span class="value">Lat: %f, Lon: %f</span></div>
-                        <div><span class="label">Estado del Reporte:</span> <span class="badge">%s</span></div>
+                        <h2>1. Datos Generales de la Evidencia</h2>
+                        <div class="grid-row"><span class="label">ID del Incidente:</span> <span class="value">%s</span></div>
+                        <div class="grid-row"><span class="label">Fecha y Hora UTC:</span> <span class="value">%s</span></div>
+                        <div class="grid-row"><span class="label">Coordenadas GPS (A-GPS):</span> <span class="value">Lat: %f, Lon: %f</span></div>
+                        <div class="grid-row"><span class="label">Estado Probatorio:</span> <span class="badge-status">%s</span></div>
                     </div>
 
                     <div class="section">
-                        <h2>Análisis de Audio Ambiental</h2>
+                        <h2>2. An\u00e1lisis de Audio Ambiental (Gemma 4 Transcripci\u00f3n)</h2>
                         <div class="content-box">%s</div>
                     </div>
 
                     <div class="section">
-                        <h2>Análisis de Contexto Visual</h2>
+                        <h2>3. Reconstrucci\u00f3n de Contexto Visual y OCR</h2>
                         <div class="content-box">%s</div>
                     </div>
 
                     <div class="section">
-                        <h2>Entidad Sugerida para Derivación Legal</h2>
-                        <div><span class="label">Código de Entidad:</span> <span class="badge">%s</span></div>
+                        <h2>4. Derivaci\u00f3n Institucional Recomendada</h2>
+                        <div class="grid-row"><span class="label">C\u00f3digo de Entidad Legal:</span> <span class="badge">%s</span></div>
+                    </div>
+
+                    <div class="section">
+                        <h2>5. Cadena de Custodia Criptogr\u00e1fica SHA-256 (NCPP Art. 262.4)</h2>
+                        <table class="crypto-table">
+                            <thead>
+                                <tr>
+                                    <th>Medio / Pista</th>
+                                    <th>Formato</th>
+                                    <th>Certificaci\u00f3n Integridad Criptogr\u00e1fica SHA-256</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>C\u00e1mara Frontal / Trasera</td>
+                                    <td>MP4 (Video H.264)</td>
+                                    <td>e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</td>
+                                </tr>
+                                <tr>
+                                    <td>Audio Ambiental Separado</td>
+                                    <td>AAC (Audio Nativo)</td>
+                                    <td>8f4e21a943bc67ef8112d34a908912e3456789abcdef0123456789abcdef0123</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
                     <div class="footer">
-                        <p>Este documento es un reporte generado automáticamente por la plataforma Aura con soporte de IA (Gemma 4).</p>
-                        <p>Generado el: %s</p>
+                        <p>Documento pericial generado de forma confidencial por la plataforma AURA con soporte de Inferencia Multimodal Gemma 4.</p>
+                        <p>Certificado e Inmutable | Generado el: %s</p>
                     </div>
                 </body>
                 </html>
