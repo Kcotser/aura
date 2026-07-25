@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.automirrored.filled.HelpOutline
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Fingerprint
+import androidx.compose.material.icons.filled.FlipCameraAndroid
 import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material.icons.filled.NotificationsActive
@@ -33,18 +35,23 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.AuraApplication
+import com.example.myapplication.capture.DualCameraSupport
 import com.example.myapplication.ui.components.AvatarPlaceholder
 import com.example.myapplication.ui.components.CriticalButton
 import com.example.myapplication.ui.components.IconButtonSlot
@@ -60,10 +67,18 @@ import com.example.myapplication.ui.nav.Nav
 import com.example.myapplication.ui.nav.Screen
 import com.example.myapplication.ui.nav.Sheet
 import com.example.myapplication.ui.nav.rememberNav
+import kotlinx.coroutines.launch
 
 @Composable
 fun AjustesScreen(nav: Nav) {
     var camuflaje by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val app = context.applicationContext as AuraApplication
+    val scope = rememberCoroutineScope()
+    val dualDisponible = remember { DualCameraSupport.estaDisponible(context) }
+    val perfil by app.profileRepository.profile.collectAsState(initial = null)
+    val grabacionDual = perfil?.grabacionDual == true
 
     Column(
         Modifier
@@ -198,6 +213,32 @@ fun AjustesScreen(nav: Nav) {
                 Icons.Filled.GraphicEq, "Calibración de Audio y Video",
                 onClick = { nav.push(Screen.CalibracionAV) }
             )
+            Spacer(Modifier.height(Spacing.xs))
+            SettingRow(
+                icon = Icons.Filled.FlipCameraAndroid,
+                title = "Grabar con ambas cámaras",
+                subtitle = if (dualDisponible) {
+                    "Frontal y trasera a la vez durante la alerta"
+                } else {
+                    DualCameraSupport.motivoNoDisponible(context)
+                },
+                enabled = dualDisponible,
+                onClick = {
+                    if (dualDisponible) scope.launch { app.profileRepository.setGrabacionDual(!grabacionDual) }
+                },
+                trailing = {
+                    Switch(
+                        checked = grabacionDual && dualDisponible,
+                        enabled = dualDisponible,
+                        onCheckedChange = { valor ->
+                            scope.launch { app.profileRepository.setGrabacionDual(valor) }
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedTrackColor = MaterialTheme.colorScheme.primary
+                        )
+                    )
+                }
+            )
 
             Spacer(Modifier.height(Spacing.xl))
             CriticalButton(
@@ -223,8 +264,11 @@ private fun SettingRow(
     icon: ImageVector,
     title: String,
     onClick: () -> Unit,
+    subtitle: String? = null,
+    enabled: Boolean = true,
     trailing: @Composable (() -> Unit)? = null
 ) {
+    val contentAlpha = if (enabled) 1f else 0.45f
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shape = Shapes.card,
@@ -232,30 +276,38 @@ private fun SettingRow(
         modifier = Modifier
             .fillMaxWidth()
             .clip(Shapes.card)
-            .clickable { onClick() }
+            .clickable(enabled = enabled) { onClick() }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(64.dp)
-                .padding(horizontal = Spacing.md)
+                .heightIn(min = 64.dp)
+                .padding(horizontal = Spacing.md, vertical = Spacing.xs)
         ) {
-            Icon(icon, null, tint = MaterialTheme.colorScheme.primary)
+            Icon(icon, null, tint = MaterialTheme.colorScheme.primary.copy(alpha = contentAlpha))
             Spacer(Modifier.size(Spacing.md))
-            Text(
-                title,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.weight(1f)
-            )
+            Column(Modifier.weight(1f)) {
+                Text(
+                    title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = contentAlpha)
+                )
+                if (subtitle != null) {
+                    Text(
+                        subtitle,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = contentAlpha)
+                    )
+                }
+            }
             if (trailing != null) {
                 trailing()
             } else {
                 Icon(
                     Icons.Filled.ChevronRight,
                     null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = contentAlpha)
                 )
             }
         }

@@ -8,12 +8,15 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ConcurrentCamera
+import androidx.camera.core.UseCaseGroup
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.FallbackStrategy
 import androidx.camera.video.MediaStoreOutputOptions
@@ -31,13 +34,20 @@ import java.util.Date
 import java.util.Locale
 
 /**
- * Graba video (cámara trasera) + audio mientras dura la alerta SOS.
+ * Graba video + audio mientras dura la alerta SOS.
  *
- * **Dónde queda el archivo:** en `Movies/AURA/` del almacenamiento compartido, vía MediaStore,
- * para que sea visible desde la Galería y el explorador de archivos. Se eligió así para poder
- * verificar durante el MVP que la captura funciona de verdad; en producción la evidencia
- * debería vivir en almacenamiento privado de la app (o cifrada), porque un video de SOS
- * visible en la galería es justamente lo que un agresor con el teléfono en la mano vería.
+ * **Modo simple (por defecto):** una grabación con la cámara trasera y audio.
+ *
+ * **Modo dual (opcional, [EXTRA_DUAL]):** dos grabaciones simultáneas, frontal y trasera. Solo
+ * la frontal lleva audio: dos grabadores pidiendo el micrófono a la vez no está garantizado en
+ * Android y termina en silencio o en fallo según el fabricante. La cámara concurrente además
+ * es una capacidad opcional del hardware (ver [DualCameraSupport]) y limita la resolución, así
+ * que si el enlace falla se cae automáticamente al modo simple en vez de quedarse sin grabar.
+ *
+ * **Dónde quedan los archivos:** en `Movies/AURA/` vía MediaStore, para que sean visibles desde
+ * la galería. Se eligió así para poder verificar durante el MVP que la captura funciona; en
+ * producción la evidencia debería vivir en almacenamiento privado o cifrada, porque un video de
+ * SOS visible en la galería es justamente lo que un agresor con el teléfono en la mano vería.
  *
  * Corre como foreground service (`camera|microphone`) para sobrevivir a que la pantalla se
  * bloquee o la Activity se destruya, pero se corta solo si el usuario cierra la app desde
@@ -46,9 +56,16 @@ import java.util.Locale
 class SosCaptureService : LifecycleService() {
 
     private var cameraProvider: ProcessCameraProvider? = null
-    private var recording: Recording? = null
+    private val grabaciones = mutableListOf<Recording>()
 
-    /** Qué hacer cuando el archivo termine de escribirse (llega [VideoRecordEvent.Finalize]). */
+    /** Grabaciones que todavía no avisaron que cerraron su archivo. */
+    private var pendientesDeCerrar = 0
+
+    /** Datos de la grabación que lleva audio, para extraerle el `.m4a` cuando termine. */
+    private var uriConAudio: Uri? = null
+    private var nombreBaseAudio: String? = null
+
+    /** Qué hacer cuando todos los archivos terminen de escribirse. */
     private var alFinalizar: (() -> Unit)? = null
     private val handler = Handler(Looper.getMainLooper())
 
@@ -67,7 +84,7 @@ class SosCaptureService : LifecycleService() {
         if (intent?.action == ACTION_STOP) {
             detenerCaptura { apagarServicio() }
         } else {
-            iniciarCaptura()
+            iniciarCaptura(dualSolicitado = intent?.getBooleanExtra(EXTRA_DUAL, false) == true)
         }
         return START_NOT_STICKY
     }
@@ -80,16 +97,18 @@ class SosCaptureService : LifecycleService() {
 
     override fun onDestroy() {
         // Último recurso: si el servicio muere sin pasar por detenerCaptura(), al menos se
-        // pide el stop para que CameraX cierre el archivo.
-        recording?.stop()
-        recording = null
+        // pide el stop para que CameraX cierre los archivos.
+        grabaciones.forEach { runCatching { it.stop() } }
+        grabaciones.clear()
         cameraProvider?.unbindAll()
         cameraProvider = null
         handler.removeCallbacksAndMessages(null)
         super.onDestroy()
     }
 
-    private fun iniciarCaptura() {
+    /* ---------------------------------------------------------------------- arranque */
+
+    private fun iniciarCaptura(dualSolicitado: Boolean) {
         val tieneCamara = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
         if (!tieneCamara) {
             Log.w(TAG, "Sin permiso de cámara, no se puede grabar")
@@ -106,81 +125,175 @@ class SosCaptureService : LifecycleService() {
             }
             cameraProvider = provider
 
-            val recorder = Recorder.Builder()
-                .setQualitySelector(
-                    QualitySelector.from(Quality.HD, FallbackStrategy.higherQualityOrLowerThan(Quality.SD))
-                )
-                .build()
-            val videoCapture = VideoCapture.withOutput(recorder)
-
-            try {
-                provider.unbindAll()
-                provider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, videoCapture)
-            } catch (e: Exception) {
-                Log.e(TAG, "No se pudo enlazar la cámara", e)
-                apagarServicio()
-                return@addListener
+            val marcaDeTiempo = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+            val dualPosible = dualSolicitado && DualCameraSupport.estaDisponible(this)
+            if (dualSolicitado && !dualPosible) {
+                Log.w(TAG, "Modo dual pedido pero el dispositivo no lo soporta; se graba con una cámara")
             }
 
-            val nombreArchivo = "SOS_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())}.mp4"
-            val valores = ContentValues().apply {
-                put(MediaStore.Video.Media.DISPLAY_NAME, nombreArchivo)
-                put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/$CARPETA")
-                }
+            val arrancoDual = dualPosible && intentarDual(provider, marcaDeTiempo)
+            if (!arrancoDual) {
+                if (dualPosible) Log.w(TAG, "El modo dual falló; se cae a una sola cámara")
+                intentarSimple(provider, marcaDeTiempo)
             }
-            val outputOptions = MediaStoreOutputOptions
-                .Builder(contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
-                .setContentValues(valores)
-                .build()
 
-            val tieneAudio = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
-            if (!tieneAudio) Log.w(TAG, "Sin permiso de micrófono: se graba solo video")
-
-            var pendiente = videoCapture.output.prepareRecording(this, outputOptions)
-            if (tieneAudio) pendiente = pendiente.withAudioEnabled()
-
-            recording = runCatching {
-                pendiente.start(ContextCompat.getMainExecutor(this)) { event ->
-                    when (event) {
-                        is VideoRecordEvent.Start ->
-                            Log.i(TAG, "Grabación iniciada -> Movies/$CARPETA/$nombreArchivo (audio=$tieneAudio)")
-
-                        is VideoRecordEvent.Finalize -> {
-                            // Llegó el cierre real del archivo: la red de seguridad ya no aplica.
-                            handler.removeCallbacksAndMessages(null)
-                            // Recién ahora el MP4 está completo: se puede soltar la cámara.
-                            cameraProvider?.unbindAll()
-                            cameraProvider = null
-
-                            if (event.hasError()) {
-                                Log.e(TAG, "Grabación finalizada con error ${event.error}", event.cause)
-                                terminarPendiente()
-                            } else {
-                                val videoUri = event.outputResults.outputUri
-                                Log.i(TAG, "Video guardado: $videoUri")
-                                extraerAudioYTerminar(videoUri, nombreArchivo.removeSuffix(".mp4"))
-                            }
-                        }
-
-                        else -> {}
-                    }
-                }
-            }.getOrElse {
-                Log.e(TAG, "No se pudo iniciar la grabación", it)
+            if (grabaciones.isEmpty()) {
+                Log.e(TAG, "No se pudo iniciar ninguna grabación")
                 apagarServicio()
-                null
             }
         }, ContextCompat.getMainExecutor(this))
     }
 
+    /** Enlaza frontal + trasera a la vez. Devuelve false si el dispositivo rechaza la combinación. */
+    private fun intentarDual(provider: ProcessCameraProvider, marcaDeTiempo: String): Boolean {
+        val frontal = VideoCapture.withOutput(construirRecorder())
+        val trasera = VideoCapture.withOutput(construirRecorder())
+
+        try {
+            provider.unbindAll()
+            provider.bindToLifecycle(
+                listOf(
+                    ConcurrentCamera.SingleCameraConfig(
+                        CameraSelector.DEFAULT_FRONT_CAMERA,
+                        UseCaseGroup.Builder().addUseCase(frontal).build(),
+                        this
+                    ),
+                    ConcurrentCamera.SingleCameraConfig(
+                        CameraSelector.DEFAULT_BACK_CAMERA,
+                        UseCaseGroup.Builder().addUseCase(trasera).build(),
+                        this
+                    )
+                )
+            )
+        } catch (e: Exception) {
+            Log.w(TAG, "No se pudo enlazar la cámara concurrente", e)
+            runCatching { provider.unbindAll() }
+            return false
+        }
+
+        // Solo la frontal graba audio: dos capturadores de micrófono simultáneos no son fiables.
+        val conAudio = hayPermisoDeAudio()
+        val ok = arrancarGrabacion(frontal, "${marcaDeTiempo}_frontal", conAudio) or
+            arrancarGrabacion(trasera, "${marcaDeTiempo}_trasera", conAudio = false)
+
+        if (!ok) runCatching { provider.unbindAll() }
+        return ok
+    }
+
+    /** Modo clásico: una sola cámara (trasera) con audio. */
+    private fun intentarSimple(provider: ProcessCameraProvider, marcaDeTiempo: String) {
+        val videoCapture = VideoCapture.withOutput(construirRecorder())
+        try {
+            provider.unbindAll()
+            provider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, videoCapture)
+        } catch (e: Exception) {
+            Log.e(TAG, "No se pudo enlazar la cámara", e)
+            return
+        }
+        arrancarGrabacion(videoCapture, marcaDeTiempo, conAudio = hayPermisoDeAudio())
+    }
+
+    private fun construirRecorder(): Recorder = Recorder.Builder()
+        // En modo concurrente el sistema limita la resolución de cada stream, así que se pide
+        // HD (720p) con caída a SD antes que una calidad que el dispositivo vaya a rechazar.
+        .setQualitySelector(
+            QualitySelector.from(Quality.HD, FallbackStrategy.higherQualityOrLowerThan(Quality.SD))
+        )
+        .build()
+
+    private fun hayPermisoDeAudio(): Boolean {
+        val ok = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        if (!ok) Log.w(TAG, "Sin permiso de micrófono: se graba solo video")
+        return ok
+    }
+
     /**
-     * Genera el `.m4a` a partir del video recién cerrado y recién ahí deja morir el servicio.
+     * Arranca una grabación hacia `Movies/AURA/SOS_<nombreBase>.mp4`.
+     * @return true si quedó grabando.
+     */
+    private fun arrancarGrabacion(
+        videoCapture: VideoCapture<Recorder>,
+        nombreBase: String,
+        conAudio: Boolean
+    ): Boolean {
+        val nombreArchivo = "SOS_$nombreBase.mp4"
+        val valores = ContentValues().apply {
+            put(MediaStore.Video.Media.DISPLAY_NAME, nombreArchivo)
+            put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/$CARPETA")
+            }
+        }
+        val outputOptions = MediaStoreOutputOptions
+            .Builder(contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
+            .setContentValues(valores)
+            .build()
+
+        var pendiente = videoCapture.output.prepareRecording(this, outputOptions)
+        if (conAudio) pendiente = pendiente.withAudioEnabled()
+
+        val grabacion = runCatching {
+            pendiente.start(ContextCompat.getMainExecutor(this)) { event ->
+                when (event) {
+                    is VideoRecordEvent.Start ->
+                        Log.i(TAG, "Grabando -> Movies/$CARPETA/$nombreArchivo (audio=$conAudio)")
+
+                    is VideoRecordEvent.Finalize -> {
+                        if (event.hasError()) {
+                            Log.e(TAG, "$nombreArchivo finalizó con error ${event.error}", event.cause)
+                        } else {
+                            Log.i(TAG, "Video guardado: ${event.outputResults.outputUri}")
+                            if (conAudio) {
+                                uriConAudio = event.outputResults.outputUri
+                                nombreBaseAudio = "SOS_$nombreBase"
+                            }
+                        }
+                        alCerrarUnArchivo()
+                    }
+
+                    else -> {}
+                }
+            }
+        }.getOrElse {
+            Log.e(TAG, "No se pudo iniciar la grabación de $nombreArchivo", it)
+            return false
+        }
+
+        grabaciones += grabacion
+        pendientesDeCerrar++
+        return true
+    }
+
+    /* ------------------------------------------------------------------------ cierre */
+
+    /**
+     * Se llama por cada archivo que termina de escribirse. Recién cuando cerraron todos se
+     * puede soltar la cámara y extraer el audio: en modo dual son dos archivos y desenlazar
+     * con uno todavía abierto lo dejaría corrupto.
+     */
+    private fun alCerrarUnArchivo() {
+        pendientesDeCerrar--
+        if (pendientesDeCerrar > 0) return
+
+        handler.removeCallbacksAndMessages(null)
+        cameraProvider?.unbindAll()
+        cameraProvider = null
+
+        val uri = uriConAudio
+        val base = nombreBaseAudio
+        if (uri != null && base != null) {
+            extraerAudioYTerminar(uri, base)
+        } else {
+            terminarPendiente()
+        }
+    }
+
+    /**
+     * Genera el `.m4a` a partir del video que llevaba audio y recién ahí deja morir el servicio.
      * Corre en un hilo aparte (es I/O de disco) y no en `lifecycleScope`, porque ese scope se
      * cancela al destruirse el servicio — justo lo que estamos por hacer al terminar.
      */
-    private fun extraerAudioYTerminar(videoUri: android.net.Uri, nombreBase: String) {
+    private fun extraerAudioYTerminar(videoUri: Uri, nombreBase: String) {
         Thread {
             val audioUri = AudioExtractor.extraer(this, videoUri, nombreBase)
             if (audioUri != null) Log.i(TAG, "Audio extraído: $audioUri")
@@ -195,26 +308,28 @@ class SosCaptureService : LifecycleService() {
     }
 
     /**
-     * Pide el fin de la grabación y ejecuta [onListo] cuando el archivo quedó realmente escrito.
-     * No se puede desenlazar la cámara ni matar el servicio antes de eso: `stop()` es asíncrono
-     * y el MP4 recién queda reproducible cuando CameraX escribe su índice final.
+     * Pide el fin de todas las grabaciones y ejecuta [onListo] cuando los archivos quedaron
+     * realmente escritos. No se puede desenlazar la cámara ni matar el servicio antes de eso:
+     * `stop()` es asíncrono y el MP4 recién queda reproducible cuando CameraX escribe su
+     * índice final.
      */
     private fun detenerCaptura(onListo: () -> Unit) {
-        val actual = recording
-        if (actual == null) {
+        if (grabaciones.isEmpty()) {
             onListo()
             return
         }
         alFinalizar = onListo
-        actual.stop()
-        recording = null
+        grabaciones.forEach { runCatching { it.stop() } }
+        grabaciones.clear()
 
-        // Red de seguridad: si Finalize nunca llega, no dejamos el servicio colgado para siempre.
+        // Red de seguridad: si algún Finalize nunca llega, no dejamos el servicio colgado.
         handler.postDelayed({
             if (alFinalizar != null) {
-                Log.w(TAG, "Finalize no llegó a tiempo; cerrando de todos modos")
-                alFinalizar = null
-                onListo()
+                Log.w(TAG, "Finalize no llegó a tiempo ($pendientesDeCerrar pendientes); cerrando igual")
+                pendientesDeCerrar = 0
+                cameraProvider?.unbindAll()
+                cameraProvider = null
+                terminarPendiente()
             }
         }, TIMEOUT_FINALIZE_MS)
     }
@@ -248,13 +363,16 @@ class SosCaptureService : LifecycleService() {
         private const val CHANNEL_ID = "aura_sos_capture"
         private const val NOTIF_ID = 2001
         private const val ACTION_STOP = "com.example.myapplication.capture.action.STOP"
+        private const val EXTRA_DUAL = "dual"
         private const val TIMEOUT_FINALIZE_MS = 5000L
 
-        /** Subcarpeta dentro de Movies/ donde quedan los videos del SOS. */
+        /** Subcarpeta dentro de Movies/ (y Music/, para el audio) donde queda la evidencia. */
         const val CARPETA = "AURA"
 
-        fun start(context: Context) {
-            ContextCompat.startForegroundService(context, Intent(context, SosCaptureService::class.java))
+        /** @param dual grabar con ambas cámaras si el hardware lo permite. */
+        fun start(context: Context, dual: Boolean = false) {
+            val intent = Intent(context, SosCaptureService::class.java).putExtra(EXTRA_DUAL, dual)
+            ContextCompat.startForegroundService(context, intent)
         }
 
         fun stop(context: Context) {
