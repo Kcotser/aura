@@ -69,6 +69,12 @@ class EvidenceUploadWorker(
                 Log.i(TAG, "Incidente abierto en el backend: $it")
             }
 
+            // Se vincula antes de subir, no después: si la subida falla y no se reintenta más,
+            // el incidente igual existe y conviene poder consultarlo desde Historial.
+            inputData.getString(KEY_ALERTA)?.let { alertaId ->
+                VinculoIncidentes.guardar(applicationContext, alertaId, incidentId)
+            }
+
             AuraApi.subirEvidencia(
                 context = applicationContext,
                 accessToken = token,
@@ -123,19 +129,24 @@ class EvidenceUploadWorker(
         private const val KEY_FRONTAL = "frontal"
         private const val KEY_TRASERA = "trasera"
         private const val KEY_AUDIO = "audio"
+        private const val KEY_ALERTA = "alerta"
 
         /**
-         * Encola la subida de lo que se haya grabado. Los parámetros son opcionales porque no
-         * siempre hay tres archivos: en modo simple no hay cámara frontal, y sin permiso de
-         * micrófono no hay audio.
+         * Encola la subida de lo que se haya grabado. Los archivos son opcionales porque no
+         * siempre hay tres: en modo simple no hay cámara frontal, y sin permiso de micrófono no
+         * hay audio.
+         *
+         * @param alertaId marca de tiempo que identifica la alerta en el dispositivo; se usa para
+         *   guardar a qué incidente del backend corresponde (ver [VinculoIncidentes]).
          */
-        fun encolar(context: Context, frontal: Uri?, trasera: Uri?, audio: Uri?) {
+        fun encolar(context: Context, alertaId: String, frontal: Uri?, trasera: Uri?, audio: Uri?) {
             if (frontal == null && trasera == null && audio == null) {
                 Log.w(TAG, "No se encola nada: la captura no dejó archivos")
                 return
             }
 
             val datos = Data.Builder()
+                .putString(KEY_ALERTA, alertaId)
                 .putString(KEY_FRONTAL, frontal?.toString())
                 .putString(KEY_TRASERA, trasera?.toString())
                 .putString(KEY_AUDIO, audio?.toString())

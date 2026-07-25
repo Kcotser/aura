@@ -23,6 +23,7 @@ public class AllEvidenceUploadedListener {
         this.requestAnalysisUseCase = requestAnalysisUseCase;
     }
 
+    @EventListener
     @ApplicationModuleListener
     public void onAllEvidenceUploaded(AllEvidenceUploadedEvent event) {
         log.info("Received AllEvidenceUploadedEvent for incidentId={}. Initiating automatic AI analysis.", event.incidentId());

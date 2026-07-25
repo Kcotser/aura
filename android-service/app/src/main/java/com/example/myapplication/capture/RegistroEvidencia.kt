@@ -33,7 +33,9 @@ data class AlertaGrabada(
     /** Marca de tiempo del nombre de archivo (`20260725_143012`); identifica la alerta. */
     val id: String,
     val instante: Long,
-    val archivos: List<ArchivoEvidencia>
+    val archivos: List<ArchivoEvidencia>,
+    /** Incidente del backend al que se subió, o null si nunca llegó a subirse. */
+    val incidentId: String? = null
 ) {
     val bytesTotales: Long get() = archivos.sumOf { it.bytes }
 
@@ -80,7 +82,8 @@ object RegistroEvidencia {
                 AlertaGrabada(
                     id = id,
                     instante = instanteDe(id),
-                    archivos = archivos.sortedBy { it.tipo.ordinal }
+                    archivos = archivos.sortedBy { it.tipo.ordinal },
+                    incidentId = VinculoIncidentes.incidentIdDe(context, id)
                 )
             }
             .sortedByDescending { it.instante }

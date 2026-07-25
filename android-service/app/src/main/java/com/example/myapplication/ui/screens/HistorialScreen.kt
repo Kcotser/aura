@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.PlayCircleOutline
@@ -51,18 +52,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.AuraApplication
 import com.example.myapplication.capture.AlertaGrabada
 import com.example.myapplication.capture.ArchivoEvidencia
 import com.example.myapplication.capture.RegistroEvidencia
 import com.example.myapplication.capture.TipoEvidencia
+import com.example.myapplication.network.AnalisisIncidente
+import com.example.myapplication.network.AuraApi
 import com.example.myapplication.ui.components.AuraTopBar
 import com.example.myapplication.ui.components.IconButtonSlot
+import com.example.myapplication.ui.components.StatusChip
 import com.example.myapplication.ui.nav.Nav
 import com.example.myapplication.ui.nav.rememberNav
 import com.example.myapplication.ui.theme.AuraTheme
 import com.example.myapplication.ui.theme.PrimaryContainer
 import com.example.myapplication.ui.theme.Shapes
 import com.example.myapplication.ui.theme.Spacing
+import com.example.myapplication.ui.theme.Success
+import com.example.myapplication.ui.theme.Warning
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -79,11 +88,33 @@ import java.util.Locale
 @Composable
 fun HistorialScreen(nav: Nav) {
     val context = LocalContext.current
+    val app = context.applicationContext as AuraApplication
     var alertas by remember { mutableStateOf<List<AlertaGrabada>?>(null) }
+    var analisis by remember { mutableStateOf<Map<String, EstadoAnalisis>>(emptyMap()) }
     var recarga by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(recarga) {
-        alertas = RegistroEvidencia.listarAlertas(context)
+        val lista = RegistroEvidencia.listarAlertas(context)
+        alertas = lista
+
+        // El análisis se pide después de pintar los archivos, y por alerta: son llamadas de red
+        // que pueden tardar (o fallar), y no deberían retrasar lo que ya está en el dispositivo.
+        val conIncidente = lista.filter { it.incidentId != null }
+        if (conIncidente.isEmpty()) return@LaunchedEffect
+
+        analisis = conIncidente.associate { it.id to EstadoAnalisis.Cargando }
+        conIncidente.forEach { alerta ->
+            val estado = withContext(Dispatchers.IO) {
+                runCatching {
+                    val token = app.authRepository.accessTokenValido()
+                    AuraApi.analisis(token, alerta.incidentId!!)
+                }.fold(
+                    onSuccess = { it?.let(EstadoAnalisis::Listo) ?: EstadoAnalisis.NoDisponible },
+                    onFailure = { EstadoAnalisis.Error }
+                )
+            }
+            analisis = analisis + (alerta.id to estado)
+        }
     }
 
     Column(
@@ -120,7 +151,11 @@ fun HistorialScreen(nav: Nav) {
             ) {
                 item { Resumen(lista) }
                 items(lista, key = { it.id }) { alerta ->
-                    AlertaCard(alerta, onAbrir = { abrirArchivo(context, it) })
+                    AlertaCard(
+                        alerta = alerta,
+                        analisis = analisis[alerta.id],
+                        onAbrir = { abrirArchivo(context, it) }
+                    )
                 }
             }
         }
@@ -183,8 +218,25 @@ private fun SinGrabaciones() {
     }
 }
 
+/** En qué punto está la consulta del análisis de una alerta. */
+private sealed interface EstadoAnalisis {
+    object Cargando : EstadoAnalisis
+
+    /** El backend todavía no generó un análisis para ese incidente (404). */
+    object NoDisponible : EstadoAnalisis
+
+    /** No se pudo consultar: sin red o sesión vencida. Distinto de "no hay análisis". */
+    object Error : EstadoAnalisis
+
+    data class Listo(val analisis: AnalisisIncidente) : EstadoAnalisis
+}
+
 @Composable
-private fun AlertaCard(alerta: AlertaGrabada, onAbrir: (ArchivoEvidencia) -> Unit) {
+private fun AlertaCard(
+    alerta: AlertaGrabada,
+    analisis: EstadoAnalisis?,
+    onAbrir: (ArchivoEvidencia) -> Unit
+) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shape = Shapes.card,
@@ -224,9 +276,118 @@ private fun AlertaCard(alerta: AlertaGrabada, onAbrir: (ArchivoEvidencia) -> Uni
                 alerta.archivos.forEach { archivo ->
                     ArchivoRow(archivo, onClick = { onAbrir(archivo) })
                 }
+
+                if (analisis != null) {
+                    HorizontalDivider(color = MaterialTheme.colorScheme.surfaceContainerHigh)
+                    Spacer(Modifier.height(Spacing.sm))
+                    SeccionAnalisis(analisis)
+                }
             }
         }
     }
+}
+
+/** Lo que devolvió el análisis multimodal del backend para esta alerta. */
+@Composable
+private fun SeccionAnalisis(estado: EstadoAnalisis) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            Icons.Filled.AutoAwesome,
+            null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(18.dp)
+        )
+        Spacer(Modifier.size(6.dp))
+        Text(
+            "Análisis de AURA",
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.weight(1f)
+        )
+        if (estado is EstadoAnalisis.Listo && estado.analisis.nivelAmenaza != null) {
+            ChipAmenaza(estado.analisis.nivelAmenaza!!)
+        }
+    }
+    Spacer(Modifier.height(Spacing.xs))
+
+    when (estado) {
+        EstadoAnalisis.Cargando -> TextoTenue("Consultando el análisis...")
+
+        EstadoAnalisis.NoDisponible -> TextoTenue(
+            "Esta alerta todavía no tiene análisis. Solo se genera cuando llegan los tres " +
+                "archivos (ambas cámaras y el audio)."
+        )
+
+        EstadoAnalisis.Error -> TextoTenue(
+            "No se pudo consultar el análisis. Revisa tu conexión y vuelve a actualizar."
+        )
+
+        is EstadoAnalisis.Listo -> {
+            val a = estado.analisis
+            when {
+                a.fallido -> TextoTenue("El análisis falló en el servidor.")
+
+                !a.completado -> TextoTenue("El servidor está analizando esta alerta...")
+
+                else -> {
+                    if (a.transcripcion != null) {
+                        BloqueAnalisis("Qué se escuchó", a.transcripcion)
+                    }
+                    if (a.contextoVisual != null) {
+                        if (a.transcripcion != null) Spacer(Modifier.height(Spacing.sm))
+                        BloqueAnalisis("Qué se vio", a.contextoVisual)
+                    }
+                    if (a.transcripcion == null && a.contextoVisual == null) {
+                        TextoTenue("El análisis terminó sin contenido.")
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BloqueAnalisis(titulo: String, texto: String) {
+    Column {
+        Text(
+            titulo,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.SemiBold
+        )
+        Text(
+            texto,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Composable
+private fun TextoTenue(texto: String) {
+    Text(
+        texto,
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+}
+
+@Composable
+private fun ChipAmenaza(nivel: String) {
+    // Se compara en mayúsculas y con varias formas porque el nivel lo redacta un modelo, no un
+    // enum del backend: cualquier valor inesperado cae al color neutro en vez de romper.
+    val color = when (nivel.uppercase()) {
+        "HIGH", "ALTO", "CRITICAL", "CRITICO", "CRÍTICO" -> MaterialTheme.colorScheme.error
+        "MEDIUM", "MEDIO", "MODERATE" -> Warning
+        "LOW", "BAJO", "NONE", "NINGUNO" -> Success
+        else -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
+    StatusChip(
+        text = nivel.uppercase(),
+        contentColor = color,
+        containerColor = color.copy(alpha = 0.14f)
+    )
 }
 
 @Composable

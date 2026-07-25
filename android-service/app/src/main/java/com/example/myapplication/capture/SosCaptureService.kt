@@ -77,6 +77,9 @@ class SosCaptureService : LifecycleService() {
     /** La subida se encola una sola vez, aunque el Finalize y el timeout de cierre se pisen. */
     private var subidaEncolada = false
 
+    /** Marca de tiempo que identifica esta alerta; es la que agrupa sus archivos en Historial. */
+    private var alertaId: String? = null
+
     /** Qué hacer cuando todos los archivos terminen de escribirse. */
     private var alFinalizar: (() -> Unit)? = null
     private val handler = Handler(Looper.getMainLooper())
@@ -137,7 +140,12 @@ class SosCaptureService : LifecycleService() {
             }
             cameraProvider = provider
 
-            val marcaDeTiempo = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+            // Locale.US y no getDefault(): en locales con dígitos no arábigos (árabe, hindi) el
+            // formato produciría caracteres que ni el nombre de archivo ni RegistroEvidencia
+            // saben volver a leer, y la alerta quedaría huérfana en Historial.
+            val marcaDeTiempo = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+            alertaId = marcaDeTiempo
+
             val dualPosible = dualSolicitado && DualCameraSupport.estaDisponible(this)
             if (dualSolicitado && !dualPosible) {
                 Log.w(TAG, "Modo dual pedido pero el dispositivo no lo soporta; se graba con una cámara")
@@ -335,8 +343,9 @@ class SosCaptureService : LifecycleService() {
         // que un Finalize tardío (tras el timeout de cierre) alcance a subir lo que sí quedó.
         if (uriFrontal == null && uriTrasera == null && uriAudio == null) return
 
+        val id = alertaId ?: return
         subidaEncolada = true
-        EvidenceUploadWorker.encolar(this, uriFrontal, uriTrasera, uriAudio)
+        EvidenceUploadWorker.encolar(this, id, uriFrontal, uriTrasera, uriAudio)
     }
 
     /** Ejecuta (una sola vez) lo que haya quedado pendiente para el cierre del servicio. */
