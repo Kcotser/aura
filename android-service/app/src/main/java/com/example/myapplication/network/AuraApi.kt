@@ -147,6 +147,26 @@ object AuraApi {
         }
     }
 
+    /**
+     * Análisis multimodal que el backend genera cuando recibe la evidencia completa.
+     *
+     * @return null si todavía no existe un análisis para ese incidente. El backend responde 404
+     *   en ese caso, que no es un error: el análisis se dispara solo cuando llegaron los **tres**
+     *   archivos, así que una alerta grabada con una sola cámara nunca lo tendrá.
+     */
+    fun analisis(accessToken: String, incidentId: String): AnalisisIncidente? {
+        val request = Request.Builder()
+            .url(baseUrl.newBuilder().addPathSegments("api/v1/incidents/$incidentId/analysis").build())
+            .header("Authorization", "Bearer $accessToken")
+            .get()
+            .build()
+
+        return ejecutar(request).use { respuesta ->
+            if (respuesta.code == 404) return@use null
+            AnalisisIncidente.desde(dataObject(respuesta))
+        }
+    }
+
     /* ---------------------------------------------------------------- evidencia */
 
     /**
@@ -229,6 +249,39 @@ object AuraApi {
         }
         return sobre.optJSONObject("data")
             ?: throw AuraApiException(respuesta.code, sobre.optString("message", "El servidor no devolvió datos"))
+    }
+}
+
+/**
+ * Resultado del análisis de una alerta.
+ *
+ * Los campos de contenido son nulos mientras [estado] no sea `COMPLETED`: el backend crea el
+ * trabajo primero y lo completa después.
+ */
+data class AnalisisIncidente(
+    /** `REQUESTED` | `IN_PROGRESS` | `COMPLETED` | `FAILED`. */
+    val estado: String,
+    val transcripcion: String?,
+    val contextoVisual: String?,
+    val nivelAmenaza: String?
+) {
+    val completado: Boolean get() = estado == "COMPLETED"
+    val fallido: Boolean get() = estado == "FAILED"
+
+    companion object {
+        fun desde(json: JSONObject): AnalisisIncidente {
+            val resultado = json.optJSONObject("result")
+            return AnalisisIncidente(
+                estado = json.optString("status", "REQUESTED"),
+                transcripcion = resultado?.textoONulo("audioTranscriptSummary"),
+                contextoVisual = resultado?.textoONulo("visualContextDescription"),
+                nivelAmenaza = resultado?.textoONulo("threatLevel")
+            )
+        }
+
+        /** `optString` devuelve "" y "null" en vez de null; acá interesa distinguir "sin dato". */
+        private fun JSONObject.textoONulo(clave: String): String? =
+            if (isNull(clave)) null else optString(clave).takeIf { it.isNotBlank() }
     }
 }
 

@@ -96,6 +96,7 @@ Lo que pasa entre que arranca la alerta y que la evidencia queda en el backend:
 - **`EstadoSubida`** — objeto en memoria con el id del trabajo encolado, para que `EnvioEvidenciaScreen` muestre el estado real. Si el proceso muere se pierde el progreso en pantalla, no la subida.
 - **`network/AuraApi`** — cliente OkHttp. El multipart va en streaming desde el `content://`; cargar los videos en memoria sería un OOM justo al subir la evidencia. La URL base es `BuildConfig.AURA_BASE_URL`, configurable con `-PauraBaseUrl=` o `gradle.properties`.
 - **`RegistroEvidencia`** — el camino de vuelta: consulta MediaStore por `DISPLAY_NAME LIKE 'SOS_%'` y reconstruye las alertas agrupando por la marca de tiempo del nombre. Es lo que alimenta Historial. No hay base de datos propia a propósito: MediaStore ya es la fuente de verdad y un registro paralelo se desincronizaría al borrar archivos desde la galería.
+- **`VinculoIncidentes`** — puente entre los dos mundos: en el teléfono una alerta se identifica por su marca de tiempo, en el backend por un `incidentId` que solo existe tras subirla. Guarda ese par (SharedPreferences) para poder pedir después el análisis del video correcto. **No se borra nunca**: es lo que permite consultar el análisis mucho después de que el trabajo de subida desapareciera de WorkManager.
 
 Convención de nombres de la que depende ese agrupamiento — **cambiarla rompe Historial**:
 ```
@@ -105,7 +106,9 @@ SOS_<yyyyMMdd_HHmmss>_trasera.mp4    dual   → cámara trasera
 SOS_<yyyyMMdd_HHmmss>[_frontal].m4a         → audio extraído
 ```
 
-Mapeo a las partes que espera el backend: dual → `frontCamera` + `backCamera` + `ambientAudio`; simple → `backCamera` + `ambientAudio`. El backend solo emite `AllEvidenceUploadedEvent` con las tres, así que en modo simple el incidente no avanza de estado solo.
+Mapeo a las partes que espera el backend: dual → `frontCamera` + `backCamera` + `ambientAudio`; simple → `backCamera` + `ambientAudio`.
+
+⚠️ El backend solo emite `AllEvidenceUploadedEvent` cuando llegan **las tres** partes, y ese evento es lo único que dispara el análisis multimodal (`AllEvidenceUploadedListener` → `RequestAnalysisUseCase`). Consecuencia práctica: **una alerta grabada con una sola cámara nunca tendrá transcripción**. Para verla hay que tener activado "Grabar con ambas cámaras" en Ajustes (y que el hardware lo soporte).
 
 ## Sistema de diseño (`ui/theme/`)
 
@@ -135,7 +138,7 @@ Shell principal (`Screen.Main`, 4 tabs — bottom nav propio, no pasa por `Nav`)
 | Tab | Archivo | Función |
 |---|---|---|
 | Inicio | `InicioScreen.kt` | Saludo con el nombre real de la cuenta + botón circular de activación (long-press → `TransicionActivando`). Único tab sin candado. |
-| Historial | `HistorialScreen.kt` | **Real**: una tarjeta por alerta con sus archivos (fecha, duración, tamaño), leídos de MediaStore vía `RegistroEvidencia`. Tocar un archivo lo abre en el reproductor del sistema. |
+| Historial | `HistorialScreen.kt` | **Real**: una tarjeta por alerta con sus archivos (fecha, duración, tamaño), leídos de MediaStore vía `RegistroEvidencia`, más el análisis del backend (transcripción, contexto visual, nivel de amenaza) para las alertas que se subieron. Tocar un archivo lo abre en el reproductor del sistema. |
 | Red de Apoyo | `RedApoyoScreen.kt` | **Real**: CRUD de contactos de confianza persistido en `ContactosRepository` (alta/edición/borrado desde los sheets, tope de 5). Los botones de llamar abren el marcador (`ACTION_DIAL`, sin permiso `CALL_PHONE`). El directorio institucional sigue hardcodeado, pero sus números marcan de verdad. |
 | Ajustes | `AjustesScreen.kt` | Perfil, estado del sistema, links a ajustes avanzados, cerrar sesión |
 
