@@ -25,7 +25,6 @@ public class AnalysisEventsListener {
         this.incidentRepository = incidentRepository;
     }
 
-    @EventListener
     @ApplicationModuleListener
     public void onAnalysisRequested(AnalysisRequestedEvent event) {
         log.info("EmergencyActivation received AnalysisRequestedEvent for incidentId={}", event.incidentId());
@@ -37,7 +36,6 @@ public class AnalysisEventsListener {
         });
     }
 
-    @EventListener
     @ApplicationModuleListener
     public void onAnalysisCompleted(AnalysisCompletedEvent event) {
         log.info("EmergencyActivation received AnalysisCompletedEvent for incidentId={}", event.incidentId());
