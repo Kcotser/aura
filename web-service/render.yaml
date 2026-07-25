@@ -29,13 +29,9 @@ services:
       - key: GEMMA_API_KEY
         sync: false # Set Google AI Studio Gemma API Key in Render UI
 
-      # Percepcion multimodal (audio + video) — solo Gemini acepta audio.
-      - key: GEMINI_API_URL
-        value: https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash
-
-      # Triage de texto sobre lo que percibio Gemini.
+      # Modelo de Inteligencia Artificial Multimodal
       - key: GEMMA_API_URL
-        value: https://generativelanguage.googleapis.com/v1beta/models/gemma-4-31b-it
+        value: https://generativelanguage.googleapis.com/v1beta/models/gemma-4-31b
 
       - key: JWT_SECRET
         generateValue: true # Render auto-generates a secure cryptographically random 256-bit key
