@@ -42,10 +42,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.capture.SosCaptureService
 import com.example.myapplication.ui.components.IconButtonSlot
 import com.example.myapplication.ui.components.StatusChip
 import com.example.myapplication.ui.nav.Nav
@@ -65,7 +67,11 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun TransicionActivandoScreen(nav: Nav) {
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
+        // Arranca la grabación real (video trasero + audio) apenas se activa la protección;
+        // se corta en ProcesandoIncidenteScreen (fin del incidente) o si se cierra la app.
+        SosCaptureService.start(context)
         delay(1600)
         nav.push(Screen.ConfirmandoSOS)
     }
@@ -237,6 +243,7 @@ fun ConfirmandoSOSScreen(nav: Nav) {
 
 @Composable
 fun ProcesandoIncidenteScreen(nav: Nav) {
+    val context = LocalContext.current
     var progresoEntorno by remember { mutableFloatStateOf(0f) }
 
     LaunchedEffect(Unit) {
@@ -245,6 +252,9 @@ fun ProcesandoIncidenteScreen(nav: Nav) {
             progresoEntorno = (progresoEntorno + 0.02f).coerceAtMost(1f)
         }
         delay(400)
+        // Fin del incidente: se corta la grabación acá (el archivo queda listo en
+        // AURA_SOS/); subirlo al backend es el siguiente paso, todavía no implementado.
+        SosCaptureService.stop(context)
         nav.replace(Screen.FichaIncidente)
     }
 
