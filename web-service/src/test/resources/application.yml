@@ -8,8 +8,8 @@ spring:
 
 aura:
   gemma:
-    api-url: ${GEMMA_API_URL}
-    api-key: ${GEMMA_API_KEY}
+    api-url: ${GEMMA_API_URL:https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash}
+    api-key: ${GEMMA_API_KEY:}
 
   jwt:
     secret: ZGV2LW9ubHktc2VjcmV0LWZvci1hdXJhLWRvLW5vdC11c2UtaW4tcHJvZA==
