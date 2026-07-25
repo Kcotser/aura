@@ -40,6 +40,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.ui.theme.ErrorColor
@@ -317,17 +319,31 @@ fun AppTextField(
     label: String,
     modifier: Modifier = Modifier,
     isPhone: Boolean = false,
+    isEmail: Boolean = false,
+    isPassword: Boolean = false,
     singleLine: Boolean = true,
-    minLines: Int = 1
+    minLines: Int = 1,
+    enabled: Boolean = true,
+    isError: Boolean = false
 ) {
+    val keyboardType = when {
+        isPhone -> KeyboardType.Phone
+        isEmail -> KeyboardType.Email
+        isPassword -> KeyboardType.Password
+        else -> KeyboardType.Text
+    }
+
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(label) },
         singleLine = singleLine,
         minLines = minLines,
+        enabled = enabled,
+        isError = isError,
         shape = Shapes.input,
-        keyboardOptions = if (isPhone) KeyboardOptions(keyboardType = KeyboardType.Phone) else KeyboardOptions.Default,
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,

@@ -67,6 +67,7 @@ import com.example.myapplication.ui.screens.FichaIncidenteScreen
 import com.example.myapplication.ui.screens.HistorialScreen
 import com.example.myapplication.ui.screens.InicioScreen
 import com.example.myapplication.ui.screens.LockScreen
+import com.example.myapplication.ui.screens.LoginScreen
 import com.example.myapplication.ui.screens.NombrePerfilScreen
 import com.example.myapplication.ui.screens.OnboardingCompletadoScreen
 import com.example.myapplication.ui.screens.PermisosEsencialesScreen
@@ -104,6 +105,7 @@ enum class Tab(val label: String, val icon: ImageVector) {
 /** Pantallas del flujo de onboarding/acceso: mientras estemos aquí, no se dispara el relock. */
 private val onboardingFlowScreens = setOf(
     Screen.Splash,
+    Screen.Login,
     Screen.NombrePerfil,
     Screen.PermisosEsenciales,
     Screen.AccesoBiometrico,
@@ -128,6 +130,7 @@ fun AuraApp() {
     val app = context.applicationContext as AuraApplication
     val nav = rememberNav(Screen.Splash)
     var rutaResuelta by remember { mutableStateOf(false) }
+    var onboardingCompletado by remember { mutableStateOf(false) }
 
     // Decide el punto de entrada real al arrancar en frío: onboarding, alerta SOS (si el gesto de
     // volumen se disparó estando la app cerrada/bloqueada) o directo a Main. Inicio (el botón de
@@ -136,12 +139,16 @@ fun AuraApp() {
     // independientes (uno para el perfil, otro para el gesto) causaba una carrera de navegación.
     LaunchedEffect(Unit) {
         val perfil = app.profileRepository.profile.first()
+        onboardingCompletado = perfil.onboardingCompletado
         when {
             SosTrigger.pending -> {
                 SosTrigger.pending = false
                 nav.replace(Screen.TransicionActivando)
             }
-            perfil.onboardingCompletado -> nav.replace(Screen.Main)
+            perfil.onboardingCompletado && app.authRepository.estaLogueado -> nav.replace(Screen.Main)
+            // Onboarding hecho pero sin sesión (expiró o se cerró): se pide login de nuevo sin
+            // hacerle repetir todo el alta.
+            perfil.onboardingCompletado -> nav.replace(Screen.Login)
         }
         rutaResuelta = true
     }
@@ -187,7 +194,12 @@ fun AuraApp() {
 
     Box(Modifier.fillMaxSize()) {
         when (val screen = nav.current) {
-            Screen.Splash -> SplashScreen(onComenzar = { nav.push(Screen.NombrePerfil) })
+            Screen.Splash -> SplashScreen(onComenzar = { nav.push(Screen.Login) })
+            Screen.Login -> LoginScreen(
+                onListo = {
+                    if (onboardingCompletado) nav.popToMain() else nav.replace(Screen.NombrePerfil)
+                }
+            )
             Screen.NombrePerfil -> NombrePerfilScreen(nav)
             Screen.CrearPin -> CrearPinScreen(nav)
             Screen.PermisosEsenciales -> PermisosEsencialesScreen(nav)

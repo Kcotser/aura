@@ -65,6 +65,18 @@ class SosCaptureService : LifecycleService() {
     private var uriConAudio: Uri? = null
     private var nombreBaseAudio: String? = null
 
+    /**
+     * Archivos finales de la alerta, ya mapeados a las partes que espera el backend
+     * (`frontCamera` / `backCamera` / `ambientAudio`). En modo simple [uriFrontal] queda en null,
+     * y sin permiso de micrófono queda en null [uriAudio].
+     */
+    private var uriFrontal: Uri? = null
+    private var uriTrasera: Uri? = null
+    private var uriAudio: Uri? = null
+
+    /** La subida se encola una sola vez, aunque el Finalize y el timeout de cierre se pisen. */
+    private var subidaEncolada = false
+
     /** Qué hacer cuando todos los archivos terminen de escribirse. */
     private var alFinalizar: (() -> Unit)? = null
     private val handler = Handler(Looper.getMainLooper())
@@ -173,8 +185,8 @@ class SosCaptureService : LifecycleService() {
 
         // Solo la frontal graba audio: dos capturadores de micrófono simultáneos no son fiables.
         val conAudio = hayPermisoDeAudio()
-        val ok = arrancarGrabacion(frontal, "${marcaDeTiempo}_frontal", conAudio) or
-            arrancarGrabacion(trasera, "${marcaDeTiempo}_trasera", conAudio = false)
+        val ok = arrancarGrabacion(frontal, "${marcaDeTiempo}_frontal", conAudio, esFrontal = true) or
+            arrancarGrabacion(trasera, "${marcaDeTiempo}_trasera", conAudio = false, esFrontal = false)
 
         if (!ok) runCatching { provider.unbindAll() }
         return ok
@@ -190,7 +202,7 @@ class SosCaptureService : LifecycleService() {
             Log.e(TAG, "No se pudo enlazar la cámara", e)
             return
         }
-        arrancarGrabacion(videoCapture, marcaDeTiempo, conAudio = hayPermisoDeAudio())
+        arrancarGrabacion(videoCapture, marcaDeTiempo, conAudio = hayPermisoDeAudio(), esFrontal = false)
     }
 
     private fun construirRecorder(): Recorder = Recorder.Builder()
@@ -209,12 +221,16 @@ class SosCaptureService : LifecycleService() {
 
     /**
      * Arranca una grabación hacia `Movies/AURA/SOS_<nombreBase>.mp4`.
+     *
+     * @param esFrontal de qué cámara sale, para saber si el archivo va como `frontCamera` o
+     *   como `backCamera` al subirlo. En modo simple siempre es la trasera.
      * @return true si quedó grabando.
      */
     private fun arrancarGrabacion(
         videoCapture: VideoCapture<Recorder>,
         nombreBase: String,
-        conAudio: Boolean
+        conAudio: Boolean,
+        esFrontal: Boolean
     ): Boolean {
         val nombreArchivo = "SOS_$nombreBase.mp4"
         val valores = ContentValues().apply {
@@ -242,9 +258,11 @@ class SosCaptureService : LifecycleService() {
                         if (event.hasError()) {
                             Log.e(TAG, "$nombreArchivo finalizó con error ${event.error}", event.cause)
                         } else {
-                            Log.i(TAG, "Video guardado: ${event.outputResults.outputUri}")
+                            val uri = event.outputResults.outputUri
+                            Log.i(TAG, "Video guardado: $uri")
+                            if (esFrontal) uriFrontal = uri else uriTrasera = uri
                             if (conAudio) {
-                                uriConAudio = event.outputResults.outputUri
+                                uriConAudio = uri
                                 nombreBaseAudio = "SOS_$nombreBase"
                             }
                         }
@@ -284,6 +302,7 @@ class SosCaptureService : LifecycleService() {
         if (uri != null && base != null) {
             extraerAudioYTerminar(uri, base)
         } else {
+            encolarSubida()
             terminarPendiente()
         }
     }
@@ -297,8 +316,27 @@ class SosCaptureService : LifecycleService() {
         Thread {
             val audioUri = AudioExtractor.extraer(this, videoUri, nombreBase)
             if (audioUri != null) Log.i(TAG, "Audio extraído: $audioUri")
-            handler.post { terminarPendiente() }
+            handler.post {
+                uriAudio = audioUri
+                encolarSubida()
+                terminarPendiente()
+            }
         }.start()
+    }
+
+    /**
+     * Manda la evidencia al backend. Es un encolado, no una subida: [EvidenceUploadWorker] la
+     * hace cuando haya red y reintenta si falla, porque este servicio está a punto de morir y
+     * una subida a medias moriría con él.
+     */
+    private fun encolarSubida() {
+        if (subidaEncolada) return
+        // Sin ningún archivo todavía no hay nada que mandar, y marcarlo como encolado impediría
+        // que un Finalize tardío (tras el timeout de cierre) alcance a subir lo que sí quedó.
+        if (uriFrontal == null && uriTrasera == null && uriAudio == null) return
+
+        subidaEncolada = true
+        EvidenceUploadWorker.encolar(this, uriFrontal, uriTrasera, uriAudio)
     }
 
     /** Ejecuta (una sola vez) lo que haya quedado pendiente para el cierre del servicio. */
@@ -329,6 +367,7 @@ class SosCaptureService : LifecycleService() {
                 pendientesDeCerrar = 0
                 cameraProvider?.unbindAll()
                 cameraProvider = null
+                encolarSubida()
                 terminarPendiente()
             }
         }, TIMEOUT_FINALIZE_MS)

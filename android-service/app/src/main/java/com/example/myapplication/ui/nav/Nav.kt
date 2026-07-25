@@ -16,6 +16,9 @@ import androidx.compose.runtime.toMutableStateList
 sealed class Screen {
     object Splash : Screen()
 
+    /** Cuenta del backend (la única que no es local): sin ella no se puede subir evidencia. */
+    object Login : Screen()
+
     // Perfil local / acceso
     object NombrePerfil : Screen()
     object CrearPin : Screen()
