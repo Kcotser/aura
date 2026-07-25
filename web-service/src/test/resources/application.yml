@@ -7,6 +7,10 @@ spring:
       database: aura_test
 
 aura:
+  gemma:
+    api-url: ${GEMMA_API_URL}
+    api-key: ${GEMMA_API_KEY}
+
   jwt:
     secret: ZGV2LW9ubHktc2VjcmV0LWZvci1hdXJhLWRvLW5vdC11c2UtaW4tcHJvZA==
     access-token-expiration-minutes: 15

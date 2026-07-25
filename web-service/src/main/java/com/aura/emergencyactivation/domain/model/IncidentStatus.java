@@ -37,10 +37,10 @@ public enum IncidentStatus {
         }
 
         return switch (this) {
-            case ACTIVATED -> targetStatus == RECORDING || targetStatus == UPLOADED;
-            case RECORDING -> targetStatus == UPLOADED;
-            case UPLOADED -> targetStatus == PROCESSING;
-            case PROCESSING -> targetStatus == DRAFT_READY;
+            case ACTIVATED -> targetStatus == RECORDING || targetStatus == UPLOADED || targetStatus == PROCESSING || targetStatus == DRAFT_READY;
+            case RECORDING -> targetStatus == UPLOADED || targetStatus == PROCESSING || targetStatus == DRAFT_READY;
+            case UPLOADED -> targetStatus == PROCESSING || targetStatus == DRAFT_READY;
+            case PROCESSING -> targetStatus == DRAFT_READY || targetStatus == APPROVED;
             case DRAFT_READY -> targetStatus == APPROVED;
             case APPROVED -> targetStatus == EXPORTED || targetStatus == CLOSED;
             case EXPORTED -> targetStatus == CLOSED;
