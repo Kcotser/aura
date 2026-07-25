@@ -6,6 +6,7 @@ services:
   - type: web
     name: aura-backend
     env: docker
+    rootDir: web-service # Blueprint lives in a subdirectory of the monorepo
     dockerfilePath: Dockerfile
     plan: free
     region: oregon
@@ -27,6 +28,9 @@ services:
 
       - key: GEMMA_API_KEY
         sync: false # Set Google AI Studio Gemma API Key in Render UI
+
+      - key: GEMMA_API_URL
+        value: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash
 
       - key: JWT_SECRET
         generateValue: true # Render auto-generates a secure cryptographically random 256-bit key

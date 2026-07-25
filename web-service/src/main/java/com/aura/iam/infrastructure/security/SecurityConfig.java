@@ -33,7 +33,7 @@ public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Value("${aura.security.cors.allowed-origins:http://localhost:3000}")
+    @Value("${aura.security.cors.allowed-origins:*}")
     private String allowedOrigins;
 
     @Value("${aura.rate-limit.login.capacity:10}")
@@ -76,13 +76,15 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // Allow CORS preflight OPTIONS requests for all endpoints
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // Public endpoints
                         .requestMatchers(
                                 "/api/v1/auth/register",
                                 "/api/v1/auth/login",
                                 "/api/v1/auth/refresh"
                         ).permitAll()
-                        // Swagger UI (dev only)
+                        // Swagger UI & OpenAPI Docs
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
@@ -106,14 +108,24 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
+        
+        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+        if (origins.contains("*")) {
+            config.addAllowedOriginPattern("*");
+        } else {
+            for (String origin : origins) {
+                config.addAllowedOrigin(origin.trim());
+            }
+        }
+
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Forwarded-For"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Authorization", "Content-Disposition"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", config);
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 }
