@@ -13,8 +13,10 @@ spring:
   # MongoDB — supports Render MONGODB_URI or local fallback
   data:
     mongodb:
+      # La base va en el propio URI. No declarar 'database' aqui: esa propiedad
+      # pisa a la del URI, y con el default 'aura_dev' Render terminaba usando
+      # aura_dev aunque MONGODB_URI apuntara a aura_prod.
       uri: ${MONGODB_URI:mongodb://localhost:27017/aura_dev}
-      database: ${MONGODB_DATABASE:aura_dev}
 
   # Disable Spring Security default password logging
   security:
