@@ -36,8 +36,6 @@ server:
 # AURA Platform Configuration
 aura:
   gemma:
-    # Defaults required: Render only injects GEMMA_API_KEY, so a placeholder without
-    # a fallback aborts startup with "Could not resolve placeholder 'GEMMA_API_URL'".
     api-url: ${GEMMA_API_URL}
     api-key: ${GEMMA_API_KEY}
 
