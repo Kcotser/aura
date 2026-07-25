@@ -6,6 +6,7 @@ services:
   - type: web
     name: aura-backend
     env: docker
+    rootDir: web-service
     dockerfilePath: Dockerfile
     plan: free
     region: oregon
@@ -13,17 +14,13 @@ services:
     # Render health check endpoint
     healthCheckPath: /actuator/health
 
-    # Native Build Commands (reference if deploying without Docker):
-    # buildCommand: mvn clean package -DskipTests
-    # startCommand: java -Dserver.port=$PORT -jar target/aura-backend-0.1.0-SNAPSHOT.jar
-
     envVars:
       - key: PORT
         value: 10000
 
       # Sensitive Environment Variables — configured securely via Render Dashboard UI
       - key: MONGODB_URI
-        sync: false # Set MongoDB Atlas URI in Render UI (e.g., mongodb+srv://<user>:<password>@cluster.mongodb.net/aura_prod)
+        sync: false # Set MongoDB Atlas URI in Render UI
 
       - key: GEMMA_API_KEY
         sync: false # Set Google AI Studio Gemma API Key in Render UI
@@ -32,4 +29,4 @@ services:
         generateValue: true # Render auto-generates a secure cryptographically random 256-bit key
 
       - key: CORS_ALLOWED_ORIGINS
-        value: "*" # Customize with frontend production URL in Render UI (e.g., https://aura-app.vercel.app)
+        value: "*"

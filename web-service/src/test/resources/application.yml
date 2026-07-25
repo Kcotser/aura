@@ -8,8 +8,8 @@ spring:
 
 aura:
   gemma:
-    api-url: ${GEMMA_API_URL}
-    api-key: ${GEMMA_API_KEY}
+    api-url:
+    api-key:
 
   jwt:
     secret: ZGV2LW9ubHktc2VjcmV0LWZvci1hdXJhLWRvLW5vdC11c2UtaW4tcHJvZA==
