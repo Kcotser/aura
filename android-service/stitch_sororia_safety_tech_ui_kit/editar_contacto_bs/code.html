@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006878",
+                    "primary-container": "#5a189a",
+                    "secondary-fixed-dim": "#58d6f1",
+                    "on-primary-fixed": "#2b0052",
+                    "surface-container-high": "#e4e9eb",
+                    "on-tertiary-container": "#54bf8e",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#cec3d4",
+                    "inverse-primary": "#dbb8ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4b4452",
+                    "surface": "#f5fafc",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#a7edff",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#001f25",
+                    "secondary-container": "#69e5ff",
+                    "on-surface": "#171c1e",
+                    "primary-fixed": "#efdbff",
+                    "on-primary-container": "#c896ff",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f5fafc",
+                    "tertiary-fixed": "#8df7c2",
+                    "outline": "#7d7483",
+                    "inverse-surface": "#2c3133",
+                    "surface-tint": "#7a3fbb",
+                    "on-background": "#171c1e",
+                    "on-secondary-fixed-variant": "#004e5b",
+                    "surface-dim": "#d6dbdd",
+                    "tertiary-fixed-dim": "#71daa7",
+                    "surface-variant": "#dee3e5",
+                    "surface-container-highest": "#dee3e5",
+                    "tertiary-container": "#004a30",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1f3",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary": "#00311f",
+                    "primary-fixed-dim": "#dbb8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#006575",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#eff4f6",
+                    "background": "#f5fafc",
+                    "on-primary-fixed-variant": "#6122a1",
+                    "primary": "#3f0075"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "44px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "button-height": "48px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "input-height": "52px",
+                    "list-item-height": "64px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "critical-data": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .bottom-sheet-transition {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .scrim-fade {
+            transition: opacity 0.4s ease;
+        }
+        /* Custom input floating label behavior */
+        .input-container input:focus ~ label,
+        .input-container input:not(:placeholder-shown) ~ label {
+            transform: translateY(-26px) scale(0.85);
+            color: #3f0075;
+            background-color: white;
+            padding: 0 4px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col items-center justify-start overflow-hidden">
+<!-- Main Content Canvas (Network Background) -->
+<main class="w-full max-w-[390px] h-[844px] relative bg-surface-container overflow-hidden shadow-2xl">
+<!-- TopAppBar Predicted Component Structure -->
+<header class="sticky top-0 w-full z-10 flex items-center justify-between px-4 h-[64px] bg-surface">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary p-2 hover:bg-surface-container-high rounded-full transition-colors">arrow_back</button>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary">SororIA</h1>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed">
+<img class="w-full h-full object-cover" data-alt="A professional and friendly portrait of a young woman smiling warmly, set against a soft blurred lavender background. The lighting is natural and high-key, reflecting a sense of safety and empowerment. The visual style is modern, clean, and corporate, consistent with a high-end femtech safety application using a violet-themed color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC99VJGciBoDZJUX5y4IfznLvDJ1W1j5M44dkx6jmE789ItRpvVyBqAA_lkBNVKzV-wo4bOheTMS50GOF5_DiiCTxc1wK7LBAcaLWxX6kHyqUqYUEsjSyJNVIFs8zCc_8o1hCW_jQH-HyV3I4ELfz8taywut8lpWPTF7ZUKmMTDV--5fzejroF7yyshXNR7mUt0I5gVeRwiCRm3d51p26_f_HRG_QMTXfTV8jgWVhdTTpnHxr_Ju85xgK6x_37UoK91LTmRHPRuq8"/>
+</div>
+</header>
+<!-- Background Content (Support Network View) -->
+<div class="p-md space-y-md">
+<h2 class="font-headline-md text-headline-md-mobile text-on-surface mb-2">Red de Apoyo</h2>
+<div class="grid grid-cols-1 gap-sm">
+<!-- User Card 1 -->
+<div class="bg-surface-container-lowest p-md rounded-xl flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold">ML</div>
+<div>
+<p class="font-body-lg text-on-surface font-semibold">María López</p>
+<p class="text-label-md text-on-surface-variant">Confianza Nivel 1</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">edit</span>
+</div>
+<!-- User Card 2 (Target for Edit) -->
+<div class="bg-surface-container-lowest p-md rounded-xl flex items-center justify-between shadow-sm border border-primary/20">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary font-bold">EA</div>
+<div>
+<p class="font-body-lg text-on-surface font-semibold">Elena Aguilar</p>
+<p class="text-label-md text-on-surface-variant">Contacto de Emergencia</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary">edit</span>
+</div>
+</div>
+</div>
+<!-- Scrim / Backdrop -->
+<div class="absolute inset-0 bg-black/40 z-40 scrim-fade opacity-100" id="scrim"></div>
+<!-- Bottom Sheet 'Editar Contacto' -->
+<div class="absolute bottom-0 left-0 right-0 h-[55%] bg-surface-container-lowest rounded-t-[28px] z-50 bottom-sheet-transition translate-y-0 flex flex-col shadow-[0px_-8px_24px_rgba(0,0,0,0.15)]" id="bottomSheet">
+<!-- Drag Handle -->
+<div class="w-full flex justify-center py-3">
+<div class="w-8 h-1 bg-outline-variant rounded-full"></div>
+</div>
+<!-- Content Container -->
+<div class="px-xl flex-1 flex flex-col">
+<header class="mb-xl">
+<h2 class="font-headline-lg text-headline-lg-mobile text-on-surface">Editar Contacto</h2>
+<p class="font-body-md text-on-surface-variant mt-1">Modifica los detalles de tu contacto de confianza.</p>
+</header>
+<form class="flex-1 space-y-lg overflow-y-auto">
+<!-- Floating Label Input: Name -->
+<div class="relative input-container h-input-height">
+<input class="peer w-full h-full border border-outline rounded-lg px-md pt-2 focus:border-primary focus:ring-0 outline-none transition-all" id="name" placeholder=" " type="text" value="Elena Aguilar"/>
+<label class="absolute left-md top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant transition-all pointer-events-none" for="name">Nombre completo</label>
+</div>
+<!-- Floating Label Input: Phone -->
+<div class="relative input-container h-input-height">
+<input class="peer w-full h-full border border-outline rounded-lg px-md pt-2 focus:border-primary focus:ring-0 outline-none transition-all" id="phone" placeholder=" " type="tel" value="+34 600 000 000"/>
+<label class="absolute left-md top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant transition-all pointer-events-none" for="phone">Teléfono móvil</label>
+</div>
+<!-- Actions Stack -->
+<div class="flex flex-col gap-sm pt-md">
+<button class="w-full h-button-height bg-primary text-on-primary font-body-lg font-bold rounded-full shadow-lg active:scale-95 transition-transform" type="submit">
+                            Actualizar contacto
+                        </button>
+<button class="w-full h-button-height flex items-center justify-center gap-xs text-error font-body-md font-semibold hover:bg-error-container/20 rounded-full transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">person_remove</span>
+                            Eliminar de mi Red de Apoyo
+                        </button>
+<button class="w-full h-button-height flex items-center justify-center text-primary font-body-md font-medium hover:underline" onclick="closeSheet()" type="button">
+                            Cancelar
+                        </button>
+</div>
+</form>
+</div>
+<!-- Safe Area Spacer -->
+<div class="h-8"></div>
+</div>
+</main>
+<script>
+        function closeSheet() {
+            const sheet = document.getElementById('bottomSheet');
+            const scrim = document.getElementById('scrim');
+            
+            sheet.style.transform = 'translateY(100%)';
+            scrim.style.opacity = '0';
+            
+            setTimeout(() => {
+                scrim.style.display = 'none';
+            }, 400);
+        }
+
+        // Handle micro-interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if(this.innerText.includes('Actualizar')) {
+                    // Logic for visual feedback on update
+                    const originalText = this.innerText;
+                    this.innerText = 'Actualizado ✓';
+                    this.classList.replace('bg-primary', 'bg-on-tertiary-container');
+                    setTimeout(() => {
+                        this.innerText = originalText;
+                        this.classList.replace('bg-on-tertiary-container', 'bg-primary');
+                        closeSheet();
+                    }, 1000);
+                }
+            });
+        });
+    </script>
+</body></html>

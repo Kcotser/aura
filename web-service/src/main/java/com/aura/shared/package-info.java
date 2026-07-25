@@ -8,5 +8,8 @@
  * <p><strong>Rule:</strong> This module must not contain any business logic.
  * It provides purely technical building blocks.
  */
-@org.springframework.modulith.ApplicationModule(displayName = "Shared Kernel")
+@org.springframework.modulith.ApplicationModule(
+        displayName = "Shared Kernel",
+        type = org.springframework.modulith.ApplicationModule.Type.OPEN
+)
 package com.aura.shared;

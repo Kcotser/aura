@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006878",
+                    "primary-container": "#5a189a",
+                    "secondary-fixed-dim": "#58d6f1",
+                    "on-primary-fixed": "#2b0052",
+                    "surface-container-high": "#e4e9eb",
+                    "on-tertiary-container": "#54bf8e",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#cec3d4",
+                    "inverse-primary": "#dbb8ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4b4452",
+                    "surface": "#f5fafc",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#a7edff",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#001f25",
+                    "secondary-container": "#69e5ff",
+                    "on-surface": "#171c1e",
+                    "primary-fixed": "#efdbff",
+                    "on-primary-container": "#c896ff",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f5fafc",
+                    "tertiary-fixed": "#8df7c2",
+                    "outline": "#7d7483",
+                    "inverse-surface": "#2c3133",
+                    "surface-tint": "#7a3fbb",
+                    "on-background": "#171c1e",
+                    "on-secondary-fixed-variant": "#004e5b",
+                    "surface-dim": "#d6dbdd",
+                    "tertiary-fixed-dim": "#71daa7",
+                    "surface-variant": "#dee3e5",
+                    "surface-container-highest": "#dee3e5",
+                    "tertiary-container": "#004a30",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1f3",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary": "#00311f",
+                    "primary-fixed-dim": "#dbb8ff",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#eff4f6",
+                    "background": "#f5fafc",
+                    "on-primary-fixed-variant": "#6122a1",
+                    "primary": "#3f0075"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "44px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "button-height": "48px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "input-height": "52px",
+                    "list-item-height": "64px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "critical-data": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f5fafc;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .floating-label-container:focus-within label {
+            transform: translateY(-24px) scale(0.85);
+            color: #3f0075;
+        }
+        .floating-label-container label {
+            transition: all 0.2s ease-out;
+            pointer-events: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Bar (Mapping TopAppBar) -->
+<header class="sticky top-0 w-full z-50 flex items-center justify-between px-4 h-[64px] bg-surface dark:bg-surface-dim transition-colors duration-200">
+<button aria-label="Volver" class="flex items-center gap-1 hover:bg-surface-container dark:hover:bg-surface-container-high rounded-full transition-colors duration-200 p-2 text-on-surface-variant dark:text-surface-variant">
+<span class="material-symbols-outlined">arrow_back</span>
+<span class="font-label-md text-label-md-mobile">Volver</span>
+</button>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary dark:text-inverse-primary">Editar Incidente</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<main class="max-w-[390px] mx-auto pb-32 px-4 pt-4 hide-scrollbar">
+<!-- Section: Time & Date -->
+<div class="mb-6">
+<div class="relative h-[52px] w-full bg-surface-container-low rounded-lg px-3 border-b-2 border-outline flex items-center floating-label-container">
+<input class="w-full bg-transparent border-none focus:ring-0 pt-4 text-on-surface font-body-lg" id="datetime" type="datetime-local" value="2023-10-27T22:30"/>
+<label class="absolute left-3 top-4 text-on-surface-variant font-label-md" for="datetime">Fecha y Hora</label>
+</div>
+</div>
+<!-- Section: Location (Map) -->
+<div class="mb-6">
+<p class="font-label-md text-on-surface-variant mb-2 px-1">Ubicación del Incidente</p>
+<div class="relative rounded-xl overflow-hidden shadow-[0px_4px_12px_rgba(0,0,0,0.05)] h-48 border border-outline-variant">
+<div class="w-full h-full bg-cover bg-center" data-alt="A highly detailed aerial map view of a modern urban neighborhood in Madrid at twilight. The map shows street grids, subtle building outlines, and a prominent red location pin indicating a specific point of interest. The lighting is soft and professional, utilizing a color palette of cool grays, deep violets, and navy blues to maintain a clean, high-tech femtech safety app aesthetic." data-location="Madrid, Spain" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCJIjjKIP2AeVeMtE6kz_EFqwmYWPxZW2v0FWuVuNBb1EbbNQ9GUBk7sp1U4qn2EmOniI1ql8wzV9eQgl7DVnDSM7Bw9tvEZ8Bd5G2mBpB4-diHeG6tscxj1wSPxaJ7A431vrw9F9POUfRcw55HWItGvNWoOsbMi7WC9RB7OhPJfSvs5KDEoeiZWKy9EjyQoRT1sO-cZuVJBUAukqDplUv9v_40n1_bday983gLzSMDnf7hn1Fz0pPU6GRftkdj3gNEbZzgLmhjnkA')"></div>
+<div class="absolute bottom-3 left-3 right-3 bg-surface/90 backdrop-blur-sm p-2 rounded-lg border border-outline-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">location_on</span>
+<span class="text-body-md truncate">Calle de la Princesa, 25, Madrid</span>
+</div>
+<button class="absolute top-3 right-3 bg-surface p-2 rounded-full shadow-lg text-primary active:scale-90 transition-transform">
+<span class="material-symbols-outlined">edit_location_alt</span>
+</button>
+</div>
+</div>
+<!-- Section: Transcription (Editable) -->
+<div class="mb-6 space-y-4">
+<div class="relative w-full bg-surface-container-low rounded-lg px-3 pt-6 pb-2 border-b-2 border-outline floating-label-container">
+<textarea class="w-full bg-transparent border-none focus:ring-0 text-on-surface font-body-md resize-none" id="transcription" rows="4">"Me sentí seguida por un hombre de chaqueta oscura desde la salida del metro. El entorno estaba poco iluminado y no había mucha gente alrededor."</textarea>
+<label class="absolute left-3 top-4 text-on-surface-variant font-label-md" for="transcription">Transcripción de voz (AI)</label>
+<div class="absolute right-3 top-3 flex gap-2">
+<span class="material-symbols-outlined text-secondary text-base">auto_awesome</span>
+</div>
+</div>
+</div>
+<!-- Section: Entorno (Editable Chips/Text) -->
+<div class="mb-6">
+<div class="relative w-full bg-surface-container-low rounded-lg px-3 pt-6 pb-3 border-b-2 border-outline floating-label-container">
+<input class="w-full bg-transparent border-none focus:ring-0 text-on-surface font-body-md" id="environment" type="text" value="Poca iluminación, zona solitaria, salida de metro"/>
+<label class="absolute left-3 top-4 text-on-surface-variant font-label-md" for="environment">Entorno y Detalles</label>
+</div>
+<div class="flex flex-wrap gap-2 mt-3">
+<span class="px-3 py-1 bg-secondary/10 text-on-secondary-container rounded-full text-label-md font-label-md border border-secondary/20">Calle solitaria</span>
+<span class="px-3 py-1 bg-secondary/10 text-on-secondary-container rounded-full text-label-md font-label-md border border-secondary/20">Noche</span>
+<span class="px-3 py-1 bg-secondary/10 text-on-secondary-container rounded-full text-label-md font-label-md border border-secondary/20">Acoso</span>
+</div>
+</div>
+<!-- Section: Suggested Entity Dropdown -->
+<div class="mb-8">
+<p class="font-label-md text-on-surface-variant mb-2 px-1">Entidad Sugerida para Reporte</p>
+<div class="relative">
+<select class="w-full h-[52px] bg-surface-container-low border-none border-b-2 border-outline rounded-lg px-3 appearance-none font-body-lg text-on-surface focus:ring-2 focus:ring-primary-container/20">
+<option value="policia">Policía Nacional - Unidad de Atención a la Familia (UFAM)</option>
+<option value="centro_mujer">Centro de Emergencia para Mujeres</option>
+<option value="ayuntamiento">Servicios Sociales Ayuntamiento de Madrid</option>
+<option value="ong">Red de Apoyo Vecinal</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3.5 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+<p class="mt-2 text-[11px] text-on-surface-variant leading-tight px-1 italic">
+                * SororIA sugiere estas entidades basándose en la gravedad y naturaleza del incidente detectado.
+            </p>
+</div>
+</main>
+<!-- Fixed Footer Actions -->
+<footer class="fixed bottom-0 left-0 right-0 max-w-[390px] mx-auto bg-surface/80 backdrop-blur-md p-4 pb-8 flex gap-3 shadow-[0px_-4px_12px_rgba(0,0,0,0.05)] z-50">
+<button class="flex-1 h-[48px] rounded-full border border-outline text-on-surface-variant font-headline-md text-body-lg hover:bg-surface-container transition-colors active:scale-95 duration-200">
+            Descartar
+        </button>
+<button class="flex-[1.5] h-[48px] rounded-full bg-primary-container text-on-primary font-headline-md text-body-lg shadow-lg hover:opacity-90 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">save</span>
+            Guardar cambios
+        </button>
+</footer>
+<script>
+        // Simple ripple effect and interaction handling
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (this.innerText.includes('Guardar')) {
+                    // Feedback visual for saving
+                    const originalText = this.innerHTML;
+                    this.innerHTML = `<span class="material-symbols-outlined animate-spin text-[20px]">sync</span> Guardando...`;
+                    this.disabled = true;
+                    setTimeout(() => {
+                        this.innerHTML = `<span class="material-symbols-outlined text-[20px]">check_circle</span> Guardado`;
+                        this.classList.replace('bg-primary-container', 'bg-tertiary-container');
+                        this.classList.replace('text-on-primary', 'text-on-tertiary-container');
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.classList.replace('bg-tertiary-container', 'bg-primary-container');
+                            this.classList.replace('text-on-tertiary-container', 'text-on-primary');
+                            this.disabled = false;
+                        }, 2000);
+                    }, 1500);
+                }
+            });
+        });
+
+        // Dynamic input interaction for floating labels
+        const textInputs = document.querySelectorAll('input, textarea, select');
+        textInputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('border-primary');
+                input.parentElement.classList.remove('border-outline');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.classList.remove('border-primary');
+                input.parentElement.classList.add('border-outline');
+            });
+        });
+    </script>
+</body></html>

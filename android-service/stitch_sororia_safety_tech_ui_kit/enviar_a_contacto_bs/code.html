@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006878",
+                    "primary-container": "#5a189a",
+                    "secondary-fixed-dim": "#58d6f1",
+                    "on-primary-fixed": "#2b0052",
+                    "surface-container-high": "#e4e9eb",
+                    "on-tertiary-container": "#54bf8e",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#cec3d4",
+                    "inverse-primary": "#dbb8ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4b4452",
+                    "surface": "#f5fafc",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#a7edff",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#001f25",
+                    "secondary-container": "#69e5ff",
+                    "on-surface": "#171c1e",
+                    "primary-fixed": "#efdbff",
+                    "on-primary-container": "#c896ff",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f5fafc",
+                    "tertiary-fixed": "#8df7c2",
+                    "outline": "#7d7483",
+                    "inverse-surface": "#2c3133",
+                    "surface-tint": "#7a3fbb",
+                    "on-background": "#171c1e",
+                    "on-secondary-fixed-variant": "#004e5b",
+                    "surface-dim": "#d6dbdd",
+                    "tertiary-fixed-dim": "#71daa7",
+                    "surface-variant": "#dee3e5",
+                    "surface-container-highest": "#dee3e5",
+                    "tertiary-container": "#004a30",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1f3",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary": "#00311f",
+                    "primary-fixed-dim": "#dbb8ff",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#eff4f6",
+                    "background": "#f5fafc",
+                    "on-primary-fixed-variant": "#6122a1",
+                    "primary": "#3f0075"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "44px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "button-height": "48px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "input-height": "52px",
+                    "list-item-height": "64px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "critical-data": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5fafc;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for clean UI */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #dee3e5;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex items-center justify-center min-h-screen">
+<!-- Mobile Viewport Container -->
+<div class="relative w-[390px] h-[844px] bg-background shadow-2xl overflow-hidden flex flex-col">
+<!-- TopAppBar (Suppressed Nav, showing context) -->
+<header class="sticky top-0 w-full z-40 flex items-center justify-between px-4 h-[64px] bg-surface text-primary">
+<button class="w-10 h-10 flex items-center justify-center hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-md-mobile text-headline-md-mobile font-bold text-primary">SororIA</h1>
+<div class="w-10"></div> <!-- Spacer for balance -->
+</header>
+<!-- Main Content (Faded/Background State) -->
+<main class="flex-1 px-4 py-6 overflow-y-auto space-y-6 filter blur-[2px] pointer-events-none">
+<div class="p-6 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="security">security</span>
+</div>
+<div>
+<h2 class="font-headline-md-mobile text-headline-md-mobile text-on-surface">Escudo Activo</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Protección en tiempo real habilitada.</p>
+</div>
+</div>
+<div class="h-40 rounded-lg overflow-hidden relative">
+<div class="absolute inset-0 bg-surface-dim" data-alt="A professional high-fidelity digital map interface showing a safe urban neighborhood at night. The map utilizes a soft violet and blue color palette to maintain the SororIA brand identity, with glowing indicators for safe zones. High-end minimalist design with smooth topography lines and elegant iconography." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCirL0x-hCd5kh74VVeKhXUS-S-FxQYiECAypGP2ervm3mv1KxHxQEyxut1XRHMDkfosrtD7Y-Upd4bKW97id05on1B6aYvY8GRY05-NiAUDn_OSHqltnOmYf33gb6xNSfS4GRk9X2dJpWaSieqOb-OmuzdijP4JAjJF5RI3ddBfCTTQASa8_crp2JKED5J6z7xBw_ToBhv3utknzGbYmGAu8ar4qRyHEHdVM_RgTRtmOb9hD8bwDt_wgOEAFMEV_myzku4kuP5X7U')"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="aspect-square bg-surface-container rounded-xl flex flex-col items-center justify-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="location_on">location_on</span>
+<span class="font-label-md text-label-md text-on-surface">Ubicación</span>
+</div>
+<div class="aspect-square bg-surface-container rounded-xl flex flex-col items-center justify-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="record_voice_over">record_voice_over</span>
+<span class="font-label-md text-label-md text-on-surface">Audio</span>
+</div>
+</div>
+</main>
+<!-- Bottom Sheet Backdrop -->
+<div class="absolute inset-0 bg-black/40 z-[45] transition-opacity duration-300"></div>
+<!-- Bottom Sheet: Enviar a Contacto (65% height) -->
+<div class="absolute bottom-0 left-0 right-0 h-[65%] bg-surface-container-lowest rounded-t-[28px] z-50 shadow-[0px_-8px_24px_rgba(0,0,0,0.12)] flex flex-col overflow-hidden animate-slide-up">
+<!-- Pull Handle -->
+<div class="w-full flex justify-center py-3">
+<div class="w-8 h-1 bg-outline-variant rounded-full"></div>
+</div>
+<!-- Content Container -->
+<div class="flex-1 px-6 pb-6 overflow-y-auto flex flex-col">
+<div class="mb-6">
+<h2 class="font-headline-md-mobile text-headline-md-mobile text-on-surface font-bold">Enviar a Contacto</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Selecciona a quién notificar tu estado actual.</p>
+</div>
+<!-- SOS Contacts List -->
+<div class="space-y-2 mb-8">
+<!-- Contact 1 -->
+<label class="flex items-center justify-between h-[64px] px-4 bg-surface rounded-xl border border-outline-variant/30 active:scale-[0.98] transition-transform cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-dim">
+<img class="w-full h-full object-cover" data-alt="A professional close-up portrait of a supportive woman in her 40s, looking friendly and reliable. The lighting is soft and natural, emphasizing a calm and safe atmosphere. Minimalist background with subtle violet hues to match the corporate femtech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHkvNjRFRh0O0QnYBCOAhbb9RIzX1NhigOUxwerT4zXRZAvjE9_oRr_jlWNoXVnqEaS74k_A0-LaCU4aWSFbGtpQtmMZCyoQnX97c9rjB7W6AneDAsLw003phVRfsH5t49dCSpRMsDO9ad5yU2hj3YO1g7Tot92AdGqFXVySyym8-q4DFLnG-RXmn8AMlzVWdW2d8bMJfuuIq4HqV2o2HhNxAlGVO3--AbAXWnyz16Cg8ZQOxYyrhe4GSyW_R_1LX24qumGja-Iyo"/>
+</div>
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg text-on-surface font-medium">Elena García</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Confianza • Círculo Cercano</span>
+</div>
+</div>
+<input checked="" class="w-6 h-6 rounded-lg text-primary-container border-outline-variant focus:ring-primary-container" type="checkbox"/>
+</label>
+<!-- Contact 2 -->
+<label class="flex items-center justify-between h-[64px] px-4 bg-surface rounded-xl border border-outline-variant/30 active:scale-[0.98] transition-transform cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-dim">
+<img class="w-full h-full object-cover" data-alt="A portrait of a young professional woman with a calm and determined expression. She wears modern, simple clothing. High-end corporate digital art style with soft studio lighting and a clean, safe-feeling aesthetic aligned with protective technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6AIvcb1xwwpcLUjXYPR4aUxxTPZ1YlSiBk1d3LKKJheitRribncY0u4pE8k78ocMF0TKZM1YUwxB_qG_8L4fmLSuWR-nCH8VhiPW_-5Q0_nS0A0C7BWrlXMiPSp3a0-qvHbOzkluZPL4_toQrTF2SmPyMZmfcn-kGncW4hxQRnT8FO3SmhsmlBxXDVhxBsyl4BbafNGxpjESZx0ke9EP6RrX3sMcIVfbK_OsjjPN80N_m1KZB0VdePiahCmJqyntWqwv7rrggRQM"/>
+</div>
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg text-on-surface font-medium">Marta Ruiz</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Hermana • Red de Apoyo</span>
+</div>
+</div>
+<input checked="" class="w-6 h-6 rounded-lg text-primary-container border-outline-variant focus:ring-primary-container" type="checkbox"/>
+</label>
+<!-- Contact 3 -->
+<label class="flex items-center justify-between h-[64px] px-4 bg-surface rounded-xl border border-outline-variant/30 active:scale-[0.98] transition-transform cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-dim">
+<img class="w-full h-full object-cover" data-alt="A studio portrait of a woman smiling subtly, conveying peace and reliability. The lighting is warm and high-key. The visual style is crisp and professional, using a minimalist color palette with soft purple accents characteristic of an empowerment app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqGaKQ7gryxRtqDuW3qwhM0R0jHByhRdybYalP7DIfGysA30_1Bh8DLQaY7wUy5FjtdW3eRcVndPW4hOVsavoFPQzAqjbbvp3h6ZdhSIbk_dpqSlM4Q8l8c5SyLoZhWtG0RAYTzeF-I5yLt9UMNieDvMccIROVW4B8F9N2hPtFhHaq2h8Ag5KsnXAK5XxjGG5S8NEqBLa7Ek-8VIhbzwDoJFJfNQccCctJEswqVHLPb07h0-XVA5gN-XNqh0lou3wwlQNaq3o9wZ8"/>
+</div>
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg text-on-surface font-medium">Carla Soto</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Amiga • Contacto SOS</span>
+</div>
+</div>
+<input class="w-6 h-6 rounded-lg text-primary-container border-outline-variant focus:ring-primary-container" type="checkbox"/>
+</label>
+</div>
+<!-- Message Preview -->
+<div class="mb-auto">
+<span class="font-label-md text-label-md text-on-surface-variant block mb-2 px-1">Previsualización del mensaje</span>
+<div class="p-4 bg-surface-dim/40 rounded-xl border border-dashed border-outline">
+<p class="font-body-md text-body-md text-on-surface-variant italic">
+                            "Hola, estoy usando SororIA. Mi ubicación actual es compartida contigo por seguridad. Todo está bien, solo quiero que estés al tanto."
+                        </p>
+</div>
+</div>
+<!-- Action Button -->
+<div class="mt-8">
+<button class="w-full h-[48px] bg-primary-container text-on-primary rounded-full font-headline-md-mobile text-headline-md-mobile flex items-center justify-center gap-2 shadow-lg shadow-primary-container/20 active:scale-[0.96] transition-transform">
+<span class="material-symbols-outlined" data-icon="send">send</span>
+                        Enviar ahora
+                    </button>
+<button class="w-full h-[48px] mt-2 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container rounded-full transition-colors">
+                        Cancelar
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<style>
+        @keyframes slide-up {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up {
+            animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    </style>
+<script>
+        // Simple micro-interaction for checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const parent = this.closest('label');
+                if (this.checked) {
+                    parent.classList.add('border-primary-container/40', 'bg-primary-fixed/5');
+                } else {
+                    parent.classList.remove('border-primary-container/40', 'bg-primary-fixed/5');
+                }
+            });
+            // Init state
+            if (checkbox.checked) {
+                checkbox.closest('label').classList.add('border-primary-container/40', 'bg-primary-fixed/5');
+            }
+        });
+    </script>
+</body></html>

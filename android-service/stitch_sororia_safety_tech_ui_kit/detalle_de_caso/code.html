@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006878",
+                    "primary-container": "#5a189a",
+                    "secondary-fixed-dim": "#58d6f1",
+                    "on-primary-fixed": "#2b0052",
+                    "surface-container-high": "#e4e9eb",
+                    "on-tertiary-container": "#54bf8e",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#cec3d4",
+                    "inverse-primary": "#dbb8ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4b4452",
+                    "surface": "#f5fafc",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#a7edff",
+                    "error": "#ba1a1a",
+                    "on-surface": "#171c1e",
+                    "primary-fixed": "#efdbff",
+                    "on-primary-container": "#c896ff",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f5fafc",
+                    "tertiary-fixed": "#8df7c2",
+                    "outline": "#7d7483",
+                    "inverse-surface": "#2c3133",
+                    "surface-tint": "#7a3fbb",
+                    "on-background": "#171c1e",
+                    "on-secondary-fixed-variant": "#004e5b",
+                    "surface-dim": "#d6dbdd",
+                    "tertiary-fixed-dim": "#71daa7",
+                    "surface-variant": "#dee3e5",
+                    "surface-container-highest": "#dee3e5",
+                    "tertiary-container": "#004a30",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1f3",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary": "#00311f",
+                    "primary-fixed-dim": "#dbb8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#006575",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#eff4f6",
+                    "background": "#f5fafc",
+                    "on-primary-fixed-variant": "#6122a1",
+                    "primary": "#3f0075"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "44px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "button-height": "48px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "input-height": "52px",
+                    "list-item-height": "64px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "critical-data": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        -webkit-tap-highlight-color: transparent;
+        font-family: 'Inter', sans-serif;
+        background-color: #f5fafc;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .waveform-bar {
+        transition: height 0.3s ease;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-xl">
+<!-- Top Navigation Anchor -->
+<header class="sticky top-0 w-full z-50 flex items-center justify-between px-4 h-[64px] bg-surface dark:bg-surface-dim transition-colors duration-200">
+<div class="flex items-center gap-2">
+<button class="h-10 w-10 flex items-center justify-center hover:bg-surface-container dark:hover:bg-surface-container-high rounded-full transition-colors" onclick="history.back()">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<span class="font-headline-md text-headline-md-mobile font-bold text-primary">Historial</span>
+</div>
+<span class="font-label-md text-label-md-mobile text-on-surface-variant">Caso #0047</span>
+</header>
+<main class="px-md mt-4 max-w-md mx-auto space-y-md">
+<!-- Case Summary Card -->
+<section class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-surface-variant/50">
+<div class="flex justify-between items-start mb-sm">
+<div>
+<h1 class="font-headline-md text-headline-md-mobile text-on-surface">Detalle de Incidente</h1>
+<p class="font-body-md text-on-surface-variant">14 Octubre 2023 • 22:15</p>
+</div>
+<span class="bg-on-tertiary-container/10 text-on-tertiary-container px-3 py-1 rounded-full font-label-md text-label-md-mobile flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                    Exportado
+                </span>
+</div>
+<div class="flex items-center gap-2 mt-4 text-secondary">
+<span class="material-symbols-outlined text-[20px]">location_on</span>
+<span class="font-body-md">Av. Insurgentes Sur 1450, CDMX</span>
+</div>
+</section>
+<!-- Video Evidence Section -->
+<section class="space-y-sm">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md-mobile text-on-surface">Grabaciones de Video</h2>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded font-label-md text-[10px] uppercase tracking-wider">Evidencia cruda</span>
+</div>
+<div class="grid grid-cols-2 gap-sm">
+<!-- Front Camera -->
+<div class="relative group aspect-[9/16] rounded-xl overflow-hidden bg-surface-dim">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A POV smartphone camera recording of a dark urban street at night, with streetlights reflecting on wet asphalt. The scene is shot in a cinematic documentary style with deep purples and high-reliability safety app interface elements overlaid. Low light photography with high contrast and sharp focus on the surroundings." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAmIjx3RH6wr5XlvvlbW1VswwRClxmiLuETGFpefsfWZDoyM5NIy-aJNG62jYrh-IUW4LNC81ozZUgGePqAkbMvkmJT46YhRPUrzdqY9jdr1ooTPyOqWEGxN8Ejlg1ZgqzKY63K1UgWklH-brjcbehKqpVPTQsQoGR1RCNnBzAMSH6JTO8pynNzSlH-hrT0Vg8m0Sl4ardXLet01gNoXX6z2EM5UfSsptiN6pS6aQ_atbalPoNN5WhQcg9p5Vwh-f-aA0IIJuNffM8')"></div>
+<div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+<div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 group-active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-white text-[32px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] text-white font-medium">CÁMARA FRONTAL</div>
+</div>
+<!-- Rear Camera -->
+<div class="relative group aspect-[9/16] rounded-xl overflow-hidden bg-surface-dim">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A wide-angle rear-facing smartphone camera shot showing a person walking down a sidewalk at night. The lighting is moody with cool blue tones and golden streetlamp glows. High-quality digital video capture style, capturing the texture of concrete and shadow movements to represent evidence collection for a safety application." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBYsTH8UlwXsJj95G6N9IaoXqsZa_h6IlKiMYyq0gxTr6Nv_QdVs293Go3ZDe1AvAwIRxHgK7SEN6c1g3E5mFzdy2nXJ2XFMOrInezIBqZAXP4XLZGyBfOP8UYN1XQLf-SkBY8neEJ_O2oTzMo_Tf3lYPqhz5iLr_dI6Y0df2dv-PeCF8W4s24MQ3h0ryWX18vfbnu2cSOYXAEeABR_VX1plnM_3eroq4FbUMzDqt_snx7i84FTHsNLl25Kl1mj-CxKxgl4iI068gM')"></div>
+<div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+<div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 group-active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-white text-[32px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] text-white font-medium">CÁMARA TRASERA</div>
+</div>
+</div>
+</section>
+<!-- Audio Evidence Card -->
+<section class="space-y-sm">
+<h2 class="font-headline-md text-headline-md-mobile text-on-surface">Registro de Audio</h2>
+<div class="bg-surface-container-lowest rounded-xl p-md border border-surface-variant/50 shadow-sm">
+<div class="flex items-center gap-md">
+<button class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-on-primary shadow-lg active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex-1 space-y-1">
+<div class="flex items-end gap-[3px] h-8" id="waveform">
+<!-- Dynamic bars -->
+<div class="waveform-bar w-[3px] bg-outline rounded-full h-2"></div>
+<div class="waveform-bar w-[3px] bg-primary rounded-full h-4"></div>
+<div class="waveform-bar w-[3px] bg-primary rounded-full h-6"></div>
+<div class="waveform-bar w-[3px] bg-primary rounded-full h-3"></div>
+<div class="waveform-bar w-[3px] bg-primary rounded-full h-5"></div>
+<div class="waveform-bar w-[3px] bg-outline rounded-full h-2"></div>
+<div class="waveform-bar w-[3px] bg-outline rounded-full h-4"></div>
+<div class="waveform-bar w-[3px] bg-outline rounded-full h-6"></div>
+<div class="waveform-bar w-[3px] bg-outline rounded-full h-3"></div>
+<div class="waveform-bar w-[3px] bg-outline rounded-full h-5"></div>
+<div class="waveform-bar w-[3px] bg-outline rounded-full h-2"></div>
+<div class="waveform-bar w-[3px] bg-outline rounded-full h-4"></div>
+<div class="waveform-bar w-[3px] bg-outline rounded-full h-6"></div>
+<div class="waveform-bar w-[3px] bg-outline rounded-full h-3"></div>
+<div class="waveform-bar w-[3px] bg-outline rounded-full h-5"></div>
+</div>
+<div class="flex justify-between font-label-md text-[10px] text-on-surface-variant">
+<span>0:00</span>
+<span>0:42</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Documents Section -->
+<section class="space-y-sm">
+<h2 class="font-headline-md text-headline-md-mobile text-on-surface">Documentos</h2>
+<div class="bg-surface-container rounded-xl p-sm flex items-center justify-between group active:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 bg-error-container text-on-error-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">picture_as_pdf</span>
+</div>
+<div>
+<p class="font-body-lg font-semibold text-on-surface">Reporte_Caso_0047.pdf</p>
+<p class="font-label-md text-on-surface-variant">Generado automáticamente • 1.2 MB</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+</section>
+<!-- Critical Actions -->
+<section class="pt-lg pb-xl flex flex-col gap-sm">
+<button class="w-full h-button-height bg-primary text-on-primary rounded-full font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 transition-transform">
+<span class="material-symbols-outlined">download</span>
+                Descargar Todo el Paquete
+            </button>
+<button class="w-full h-button-height bg-error text-on-error rounded-full font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">delete_forever</span>
+                Solicitar eliminación
+            </button>
+<p class="text-center font-label-md text-on-surface-variant px-xl">
+                La eliminación es irreversible una vez aprobada por el sistema de seguridad.
+            </p>
+</section>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        // Simple waveform animation simulation
+        const bars = document.querySelectorAll('.waveform-bar');
+        setInterval(() => {
+            bars.forEach(bar => {
+                const randomHeight = Math.floor(Math.random() * 20) + 4;
+                bar.style.height = `${randomHeight}px`;
+            });
+        }, 150);
+
+        // Active state navigation logic - No bottom nav rendered per request
+        // but keeping structure for shell logic compliance.
+    </script>
+</body></html>

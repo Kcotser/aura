@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006878",
+                    "primary-container": "#5a189a",
+                    "secondary-fixed-dim": "#58d6f1",
+                    "on-primary-fixed": "#2b0052",
+                    "surface-container-high": "#e4e9eb",
+                    "on-tertiary-container": "#54bf8e",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#cec3d4",
+                    "inverse-primary": "#dbb8ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4b4452",
+                    "surface": "#f5fafc",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#a7edff",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#001f25",
+                    "secondary-container": "#69e5ff",
+                    "on-surface": "#171c1e",
+                    "primary-fixed": "#efdbff",
+                    "on-primary-container": "#c896ff",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f5fafc",
+                    "tertiary-fixed": "#8df7c2",
+                    "outline": "#7d7483",
+                    "inverse-surface": "#2c3133",
+                    "surface-tint": "#7a3fbb",
+                    "on-background": "#171c1e",
+                    "on-secondary-fixed-variant": "#004e5b",
+                    "surface-dim": "#d6dbdd",
+                    "tertiary-fixed-dim": "#71daa7",
+                    "surface-variant": "#dee3e5",
+                    "surface-container-highest": "#dee3e5",
+                    "tertiary-container": "#004a30",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1f3",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary": "#00311f",
+                    "primary-fixed-dim": "#dbb8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#006575",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#eff4f6",
+                    "background": "#f5fafc",
+                    "on-primary-fixed-variant": "#6122a1",
+                    "primary": "#3f0075"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "44px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "button-height": "48px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "input-height": "52px",
+                    "list-item-height": "64px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "critical-data": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .video-container {
+            height: calc(100vh - 128px);
+        }
+        .backdrop-blur-video {
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.4);
+        }
+        .custom-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            outline: none;
+        }
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col h-screen w-full bg-black">
+<!-- Header Transparente -->
+<header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-md h-[64px] backdrop-gradient-to-b from-black/60 to-transparent">
+<button class="flex items-center gap-xs text-white active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+<span class="font-body-lg text-body-lg-mobile">Volver</span>
+</button>
+<div class="flex flex-col items-center">
+<h1 class="font-headline-md text-headline-md-mobile text-white leading-tight">Evidencia_20231024</h1>
+</div>
+<div class="w-[84px] flex justify-end">
+<button class="p-xs text-white">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</header>
+<!-- Main Content: Immersive Video Viewer -->
+<main class="flex-1 flex items-center justify-center relative overflow-hidden">
+<!-- Background Ambient Blur -->
+<div class="absolute inset-0 opacity-30 pointer-events-none">
+<div class="w-full h-full bg-cover bg-center blur-3xl scale-110" data-alt="A dark and moody cinematic video frame captured in low light, featuring deep violet and cool blue tones. The scene shows blurred city lights reflecting on a rainy pavement, creating a sense of urban isolation and safety-focused surveillance. High contrast and cinematic grain provide a gritty, professional witness-account aesthetic consistent with a security application." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDTYvN0CyjQNgbVn1g5qnh_n1x38CiGGCcdc_uIO0q4fR4G2TCrIxvC3CK08Wunkt2WglcqJIE8gNGLdzZjnigAxwA3pEI3KXbM_Bia_hKF0QxIH_v38geiX58hmiObNlqLwvoIz9niEY4Hz563Tv-7Ph1qAQ2KwnYjpfp6V7GyRG3s_D5T8ukz0kEY7NODXk7Pan2c0XpJ8nPqVSu68oE-r0FkAuapczVOHv5mxvqkR7hbocSpdhGDu8QcEXIkK2rR_22Qishr448')"></div>
+</div>
+<!-- Video Player Canvas -->
+<div class="relative w-full aspect-video md:max-w-4xl bg-black flex items-center justify-center overflow-hidden z-10 shadow-2xl">
+<img class="w-full h-full object-contain" data-alt="A high-resolution video still showing a dimly lit urban street at night with focused visibility on a street corner. The lighting is cold, primarily from blueish streetlamps, highlighting textures of concrete and metal. The composition is centered and clear, maintaining a professional evidence-collection visual style with a slight cinematic violet tint to align with the brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmeKtAJgtzgWqvRCYdedyDraptu4hMcMospeVagQphgBPr5oY04gToQ-h3wf3Nr8dxaTRH5bwXQVD0UzftrGffVuuPzrkIrmZIZWa3pPtZvatTn95Q-Fs08W0PBABYEwtieu67cb6-Kr_bOlU89k8YAAzSJuzyyWR-m9eV-6KnsmjJZSk18H3SuDfHhD2b092nxNVjvi7o9FDNI8AFdrR9UZtTD3NJEmTf5e4sZFEX-J8V42N8EYE8Ek48UlxLct0-SAYw9ddZb-k"/>
+<!-- Play Overlay (Centered) -->
+<button class="absolute bg-white/10 backdrop-blur-md rounded-full w-20 h-20 flex items-center justify-center border border-white/20 active:scale-90 transition-transform" id="playToggle">
+<span class="material-symbols-outlined text-white text-[48px]" data-icon="play_arrow">play_arrow</span>
+</button>
+</div>
+<!-- Video Controls Container (Floating) -->
+<div class="absolute bottom-xl left-md right-md z-20 flex flex-col gap-sm">
+<!-- Progress Bar -->
+<div class="flex items-center gap-sm px-xs">
+<span class="font-label-md text-label-md-mobile text-white/70">01:24</span>
+<input class="custom-slider flex-1" type="range" value="45"/>
+<span class="font-label-md text-label-md-mobile text-white/70">03:12</span>
+</div>
+<!-- Control Actions -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-md">
+<button class="p-xs text-white active:opacity-60">
+<span class="material-symbols-outlined" data-icon="volume_up">volume_up</span>
+</button>
+<button class="p-xs text-white active:opacity-60">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-xs text-white active:opacity-60">
+<span class="material-symbols-outlined" data-icon="fullscreen">fullscreen</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Area -->
+<footer class="flex flex-col items-center gap-md pb-xl px-md z-30">
+<!-- Integrity Metadata -->
+<div class="flex flex-col items-center gap-base">
+<div class="flex items-center gap-xs text-white/60">
+<span class="material-symbols-outlined text-[14px]" data-icon="verified_user">verified_user</span>
+<span class="font-label-md text-label-md-mobile">Sin editar · Hash integridad</span>
+</div>
+<code class="text-[10px] text-white/40 font-mono tracking-widest">sha256: 8f92b...e4a1c</code>
+</div>
+<!-- Download Action -->
+<div class="w-full max-w-[340px]">
+<button class="w-full h-button-height border-2 border-white text-white rounded-lg font-body-lg text-body-lg-mobile flex items-center justify-center gap-sm active:bg-white active:text-black transition-all">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+                Descargar archivo original
+            </button>
+</div>
+</footer>
+<script>
+        // Simple micro-interaction for the play button
+        const playBtn = document.getElementById('playToggle');
+        let isPlaying = false;
+        
+        playBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            const icon = playBtn.querySelector('.material-symbols-outlined');
+            icon.textContent = isPlaying ? 'pause' : 'play_arrow';
+            icon.setAttribute('data-icon', isPlaying ? 'pause' : 'play_arrow');
+            
+            // Fade effect for the button when playing
+            if(isPlaying) {
+                playBtn.style.opacity = "0.2";
+            } else {
+                playBtn.style.opacity = "1";
+            }
+        });
+
+        // Hide controls after inactivity (simulated)
+        let timeout;
+        document.addEventListener('mousemove', () => {
+            const controls = document.querySelectorAll('header, footer, .z-20');
+            controls.forEach(el => el.style.opacity = "1");
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                if(isPlaying) {
+                    controls.forEach(el => el.style.opacity = "0");
+                }
+            }, 3000);
+        });
+    </script>
+</body></html>

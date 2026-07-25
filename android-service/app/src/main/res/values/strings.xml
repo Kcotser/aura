@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AURA</string>
+    <string name="accessibility_service_label">Atajo de activación AURA</string>
+    <string name="accessibility_service_description">Permite que AURA detecte el gesto de activación (subir y bajar volumen, 3 veces cada uno) aunque la app esté cerrada o la pantalla bloqueada.</string>
+</resources>

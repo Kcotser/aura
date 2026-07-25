@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .animate-pulse-ring {
+            animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .progress-segment {
+            transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        .status-dot {
+            transition: all 0.5s ease;
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#006878",
+                        "primary-container": "#5a189a",
+                        "secondary-fixed-dim": "#58d6f1",
+                        "on-primary-fixed": "#2b0052",
+                        "surface-container-high": "#e4e9eb",
+                        "on-tertiary-container": "#54bf8e",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#cec3d4",
+                        "inverse-primary": "#dbb8ff",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#4b4452",
+                        "surface": "#f5fafc",
+                        "on-tertiary-fixed-variant": "#005235",
+                        "secondary-fixed": "#a7edff",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#001f25",
+                        "secondary-container": "#69e5ff",
+                        "on-surface": "#171c1e",
+                        "primary-fixed": "#efdbff",
+                        "on-primary-container": "#c896ff",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f5fafc",
+                        "tertiary-fixed": "#8df7c2",
+                        "outline": "#7d7483",
+                        "inverse-surface": "#2c3133",
+                        "surface-tint": "#7a3fbb",
+                        "on-background": "#171c1e",
+                        "on-secondary-fixed-variant": "#004e5b",
+                        "surface-dim": "#d6dbdd",
+                        "tertiary-fixed-dim": "#71daa7",
+                        "surface-variant": "#dee3e5",
+                        "surface-container-highest": "#dee3e5",
+                        "tertiary-container": "#004a30",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#ecf1f3",
+                        "on-tertiary-fixed": "#002113",
+                        "tertiary": "#00311f",
+                        "primary-fixed-dim": "#dbb8ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#006575",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#eaeff1",
+                        "surface-container-low": "#eff4f6",
+                        "background": "#f5fafc",
+                        "on-primary-fixed-variant": "#6122a1",
+                        "primary": "#3f0075"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "44px",
+                        "xs": "8px",
+                        "lg": "24px",
+                        "sm": "12px",
+                        "button-height": "48px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "input-height": "52px",
+                        "list-item-height": "64px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "critical-data": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 w-full z-50 flex items-center justify-between px-4 h-[64px] bg-surface dark:bg-surface-dim">
+<div class="flex items-center">
+<button class="flex items-center justify-center w-10 h-10 hover:bg-surface-container dark:hover:bg-surface-container-high rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary" data-icon="arrow_back">arrow_back</span>
+</button>
+</div>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary dark:text-inverse-primary">SororIA</h1>
+<div class="w-10"></div> <!-- Spacer for balance -->
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col items-center justify-center px-lg relative">
+<!-- Animated Background/Visual Core -->
+<div class="absolute inset-0 pointer-events-none opacity-40">
+
+</div>
+<!-- Center Stage: Multimodal Analysis Visualization -->
+<div class="relative w-64 h-64 flex items-center justify-center mb-xl">
+<!-- Pulsing outer ring -->
+<div class="absolute w-full h-full rounded-full bg-primary/5 animate-pulse-ring"></div>
+<div class="absolute w-4/5 h-4/5 rounded-full bg-primary/10 animate-pulse-ring" style="animation-delay: 0.5s;"></div>
+<!-- Central Visual Asset -->
+<div class="z-10 w-48 h-48 rounded-full bg-surface-container-lowest shadow-lg flex items-center justify-center overflow-hidden border-2 border-primary/20">
+
+</div>
+<!-- Floating Micro-Indicators (Simulation of multimodal input) -->
+<div class="absolute -top-4 -right-2 bg-secondary text-on-secondary px-3 py-1 rounded-full text-label-md flex items-center gap-1 shadow-md fade-in-up">
+<span class="material-symbols-outlined text-[16px]" data-icon="mic" style="font-variation-settings: 'FILL' 1;">mic</span>
+<span class="font-label-md text-label-md-mobile">Audio Live</span>
+</div>
+<div class="absolute bottom-4 -left-6 bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-label-md flex items-center gap-1 shadow-md fade-in-up" style="animation-delay: 0.2s;">
+<span class="material-symbols-outlined text-[16px]" data-icon="security">security</span>
+<span class="font-label-md text-label-md-mobile">Cifrado AES-256</span>
+</div>
+</div>
+<!-- Typography & Titles -->
+<div class="text-center z-10 mb-xl px-4">
+<h2 class="font-headline-lg text-headline-lg-mobile text-on-surface mb-2 tracking-tight">Analizando tu incidente...</h2>
+<p class="font-body-md text-on-surface-variant max-w-[280px] mx-auto opacity-80">Estamos procesando los datos capturados para brindarte la mejor asistencia inmediata.</p>
+</div>
+<!-- Segmented Progress Bar Section -->
+<div class="w-full max-w-[320px] z-10 space-y-6">
+<div class="space-y-4">
+<!-- Segment 1: Audio -->
+<div class="flex items-center gap-4">
+<div class="status-dot w-3 h-3 rounded-full bg-primary shadow-[0_0_8px_rgba(63,0,117,0.4)]" id="dot-1"></div>
+<div class="flex-1">
+<div class="flex justify-between items-end mb-1">
+<span class="font-label-md text-label-md-mobile text-on-surface">Transcribiendo audio</span>
+<span class="font-label-md text-label-md-mobile text-primary" id="percent-1">100%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="progress-segment h-full bg-primary" id="bar-1" style="width: 100%"></div>
+</div>
+</div>
+</div>
+<!-- Segment 2: Environment -->
+<div class="flex items-center gap-4">
+<div class="status-dot w-3 h-3 rounded-full bg-primary shadow-[0_0_8px_rgba(63,0,117,0.4)] animate-pulse" id="dot-2"></div>
+<div class="flex-1">
+<div class="flex justify-between items-end mb-1">
+<span class="font-label-md text-label-md-mobile text-on-surface">Analizando entorno</span>
+<span class="font-label-md text-label-md-mobile text-primary" id="percent-2">45%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="progress-segment h-full bg-primary" id="bar-2" style="width: 45%"></div>
+</div>
+</div>
+</div>
+<!-- Segment 3: Report -->
+<div class="flex items-center gap-4 opacity-40 transition-opacity duration-500" id="step-3-container">
+<div class="status-dot w-3 h-3 rounded-full bg-surface-variant" id="dot-3"></div>
+<div class="flex-1">
+<div class="flex justify-between items-end mb-1">
+<span class="font-label-md text-label-md-mobile text-on-surface">Generando reporte</span>
+<span class="font-label-md text-label-md-mobile text-on-surface-variant" id="percent-3">0%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="progress-segment h-full bg-primary" id="bar-3" style="width: 0%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Encryption Footer -->
+<div class="flex items-center justify-center gap-2 bg-surface-container-low py-3 px-4 rounded-xl border border-outline-variant/30">
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="font-label-md text-label-md-mobile text-on-surface-variant">Procesado de forma cifrada</span>
+</div>
+</div>
+</main>
+<!-- Security Discreet Button (Placeholder for interaction) -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-[340px] px-4">
+<button class="w-full h-button-height bg-surface shadow-sm border border-outline-variant rounded-full font-label-md text-label-md-mobile text-on-surface-variant active:scale-95 transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="visibility_off">visibility_off</span>
+            Modo Discreto Activado
+        </button>
+</div>
+<script>
+        // Micro-interaction logic for simulated progress
+        document.addEventListener('DOMContentLoaded', () => {
+            let p2 = 45;
+            let p3 = 0;
+            const bar2 = document.getElementById('bar-2');
+            const perc2 = document.getElementById('percent-2');
+            const bar3 = document.getElementById('bar-3');
+            const perc3 = document.getElementById('percent-3');
+            const step3Cont = document.getElementById('step-3-container');
+            const dot3 = document.getElementById('dot-3');
+
+            const interval = setInterval(() => {
+                if (p2 < 100) {
+                    p2 += Math.floor(Math.random() * 5) + 1;
+                    if (p2 > 100) p2 = 100;
+                    bar2.style.width = p2 + '%';
+                    perc2.textContent = p2 + '%';
+                    
+                    if (p2 === 100) {
+                        document.getElementById('dot-2').classList.remove('animate-pulse');
+                        document.getElementById('dot-2').classList.add('shadow-[0_0_8px_rgba(63,0,117,0.4)]');
+                        step3Cont.classList.remove('opacity-40');
+                        dot3.classList.add('bg-primary', 'animate-pulse');
+                        dot3.classList.remove('bg-surface-variant');
+                    }
+                } else if (p3 < 100) {
+                    p3 += Math.floor(Math.random() * 8) + 2;
+                    if (p3 > 100) p3 = 100;
+                    bar3.style.width = p3 + '%';
+                    perc3.textContent = p3 + '%';
+                    perc3.classList.add('text-primary');
+                    perc3.classList.remove('text-on-surface-variant');
+
+                    if (p3 === 100) {
+                        dot3.classList.remove('animate-pulse');
+                        dot3.classList.add('shadow-[0_0_8px_rgba(63,0,117,0.4)]');
+                        clearInterval(interval);
+                        // Optional: trigger completion transition
+                    }
+                }
+            }, 300);
+        });
+    </script>
+</body></html>

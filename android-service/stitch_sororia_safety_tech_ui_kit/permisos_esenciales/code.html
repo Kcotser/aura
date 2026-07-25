@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#006878",
+                        "primary-container": "#5a189a",
+                        "secondary-fixed-dim": "#58d6f1",
+                        "on-primary-fixed": "#2b0052",
+                        "surface-container-high": "#e4e9eb",
+                        "on-tertiary-container": "#54bf8e",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#cec3d4",
+                        "inverse-primary": "#dbb8ff",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#4b4452",
+                        "surface": "#f5fafc",
+                        "on-tertiary-fixed-variant": "#005235",
+                        "secondary-fixed": "#a7edff",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#001f25",
+                        "secondary-container": "#69e5ff",
+                        "on-surface": "#171c1e",
+                        "primary-fixed": "#efdbff",
+                        "on-primary-container": "#c896ff",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f5fafc",
+                        "tertiary-fixed": "#8df7c2",
+                        "outline": "#7d7483",
+                        "inverse-surface": "#2c3133",
+                        "surface-tint": "#7a3fbb",
+                        "on-background": "#171c1e",
+                        "on-secondary-fixed-variant": "#004e5b",
+                        "surface-dim": "#d6dbdd",
+                        "tertiary-fixed-dim": "#71daa7",
+                        "surface-variant": "#dee3e5",
+                        "surface-container-highest": "#dee3e5",
+                        "tertiary-container": "#004a30",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#ecf1f3",
+                        "on-tertiary-fixed": "#002113",
+                        "tertiary": "#00311f",
+                        "primary-fixed-dim": "#dbb8ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#006575",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#eaeff1",
+                        "surface-container-low": "#eff4f6",
+                        "background": "#f5fafc",
+                        "on-primary-fixed-variant": "#6122a1",
+                        "primary": "#3f0075"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "44px",
+                        "xs": "8px",
+                        "lg": "24px",
+                        "sm": "12px",
+                        "button-height": "48px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "input-height": "52px",
+                        "list-item-height": "64px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "critical-data": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #EDF2F4;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .permission-card {
+            height: 90px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .permission-card:active {
+            transform: scale(0.98);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-[844px] max-w-[390px] mx-auto overflow-hidden relative">
+<!-- Top App Bar (Simplified for Onboarding) -->
+<header class="sticky top-0 w-full z-50 flex items-center justify-between px-4 h-[64px] bg-transparent">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<span class="font-headline-md text-headline-md-mobile font-bold text-primary">SororIA</span>
+<div class="w-10"></div> <!-- Spacer for symmetry -->
+</header>
+<main class="flex-1 px-4 pt-4 flex flex-col">
+<!-- Headline Section -->
+<div class="mb-8">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Para protegerte, necesitamos acceso a:</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Tu seguridad depende de nuestra capacidad para actuar rápido en situaciones críticas.</p>
+</div>
+<!-- Permission Cards Bento-ish Grid -->
+<div class="space-y-4 flex-1">
+<!-- Card 1: Cámara -->
+<div class="permission-card bg-surface-container-lowest rounded-xl p-4 flex items-center gap-4 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-surface-container">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-md-mobile text-[16px] text-on-surface font-semibold">Cámara</h3>
+<p class="font-body-md text-[12px] text-on-surface-variant">Para transmisiones de emergencia seguras.</p>
+</div>
+<div class="flex items-center">
+<input class="w-6 h-6 rounded-full border-outline text-primary-container focus:ring-primary-container" id="cam" type="checkbox"/>
+</div>
+</div>
+<!-- Card 2: Audio -->
+<div class="permission-card bg-surface-container-lowest rounded-xl p-4 flex items-center gap-4 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-surface-container">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">mic</span>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-md-mobile text-[16px] text-on-surface font-semibold">Audio</h3>
+<p class="font-body-md text-[12px] text-on-surface-variant">Detección de palabras clave de auxilio.</p>
+</div>
+<div class="flex items-center">
+<input class="w-6 h-6 rounded-full border-outline text-primary-container focus:ring-primary-container" id="aud" type="checkbox"/>
+</div>
+</div>
+<!-- Card 3: Ubicación -->
+<div class="permission-card bg-surface-container-lowest rounded-xl p-4 flex items-center gap-4 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-surface-container">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-md-mobile text-[16px] text-on-surface font-semibold">Ubicación</h3>
+<p class="font-body-md text-[12px] text-on-surface-variant">Seguimiento en tiempo real por tu red.</p>
+</div>
+<div class="flex items-center">
+<input checked="" class="w-6 h-6 rounded-full border-outline text-primary-container focus:ring-primary-container" id="loc" type="checkbox"/>
+</div>
+</div>
+</div>
+<!-- Illustration / Mood area -->
+<div class="mt-8 mb-8 flex justify-center">
+<div class="w-full h-40 rounded-2xl overflow-hidden relative shadow-lg">
+<img class="w-full h-full object-cover" data-alt="A sophisticated minimalist digital illustration of a glowing violet shield protecting a stylized human silhouette. The background is a clean, bright white and soft gray mesh pattern. The lighting is ethereal and high-key, emphasizing safety, trust, and advanced artificial intelligence technology in a professional corporate modern style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPc4HdhXIHJOr9_0QojQFpDVH7289xciiYFEs4Xg3tn8dG9BJBLvEm7zDxP2VdXiMg9rDbdCNHYIHeYT4QX1INe7A6uwA09_dzMyOe_-0Z2m1VMVJA_dieL17U9GGJ3ZuI0K9NZ8cH1U9E8I9RQDQxf5yP11mGC0HkscsX2IOe7yUlewtAj2MrZOuHcAjyLF4wZGpof70dFI3dMe8Ct1anQSZGC5qEjyg-WhZ6JMmH_C_vGoGlLc7kr7Jnud1REB5_jP9JW6JOfso"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="pb-10 pt-4 flex flex-col items-center gap-6">
+<button class="w-full h-[48px] bg-primary text-on-primary font-label-md text-[16px] rounded-xl shadow-lg active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+                Otorgar permisos y continuar
+                <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+<div class="flex flex-col items-center gap-1 opacity-60">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="font-label-md text-on-surface-variant text-[10px] tracking-widest uppercase">Privacidad Encriptada</span>
+</div>
+</div>
+</main>
+<script>
+        // Micro-interaction for permission cards
+        document.querySelectorAll('.permission-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'INPUT') {
+                    const checkbox = card.querySelector('input');
+                    checkbox.checked = !checkbox.checked;
+                }
+                
+                // Visual feedback
+                if (card.querySelector('input').checked) {
+                    card.classList.add('border-primary-container', 'ring-1', 'ring-primary-container/20');
+                } else {
+                    card.classList.remove('border-primary-container', 'ring-1', 'ring-primary-container/20');
+                }
+            });
+        });
+
+        // Initialize state for checked cards
+        document.querySelectorAll('input:checked').forEach(input => {
+            input.closest('.permission-card').classList.add('border-primary-container', 'ring-1', 'ring-primary-container/20');
+        });
+    </script>
+</body></html>

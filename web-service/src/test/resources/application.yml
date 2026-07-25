@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: aura-backend-test
+
+  data:
+    mongodb:
+      database: aura_test
+
+aura:
+  jwt:
+    secret: ZGV2LW9ubHktc2VjcmV0LWZvci1hdXJhLWRvLW5vdC11c2UtaW4tcHJvZA==
+    access-token-expiration-minutes: 15
+    refresh-token-expiration-days: 30
+
+  security:
+    cors:
+      allowed-origins: http://localhost:3000
+
+  rate-limit:
+    login:
+      capacity: 100
+      refill-tokens: 100
+      refill-duration-seconds: 60
+    pin:
+      capacity: 100
+      refill-tokens: 100
+      refill-duration-seconds: 60

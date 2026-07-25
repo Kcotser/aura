@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#006878",
+                        "primary-container": "#5a189a",
+                        "secondary-fixed-dim": "#58d6f1",
+                        "on-primary-fixed": "#2b0052",
+                        "surface-container-high": "#e4e9eb",
+                        "on-tertiary-container": "#54bf8e",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#cec3d4",
+                        "inverse-primary": "#dbb8ff",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#4b4452",
+                        "surface": "#f5fafc",
+                        "on-tertiary-fixed-variant": "#005235",
+                        "secondary-fixed": "#a7edff",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#001f25",
+                        "secondary-container": "#69e5ff",
+                        "on-surface": "#171c1e",
+                        "primary-fixed": "#efdbff",
+                        "on-primary-container": "#c896ff",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f5fafc",
+                        "tertiary-fixed": "#8df7c2",
+                        "outline": "#7d7483",
+                        "inverse-surface": "#2c3133",
+                        "surface-tint": "#7a3fbb",
+                        "on-background": "#171c1e",
+                        "on-secondary-fixed-variant": "#004e5b",
+                        "surface-dim": "#d6dbdd",
+                        "tertiary-fixed-dim": "#71daa7",
+                        "surface-variant": "#dee3e5",
+                        "surface-container-highest": "#dee3e5",
+                        "tertiary-container": "#004a30",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#ecf1f3",
+                        "on-tertiary-fixed": "#002113",
+                        "tertiary": "#00311f",
+                        "primary-fixed-dim": "#dbb8ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#006575",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#eaeff1",
+                        "surface-container-low": "#eff4f6",
+                        "background": "#f5fafc",
+                        "on-primary-fixed-variant": "#6122a1",
+                        "primary": "#3f0075"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "44px",
+                        "xs": "8px",
+                        "lg": "24px",
+                        "sm": "12px",
+                        "button-height": "48px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "input-height": "52px",
+                        "list-item-height": "64px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "critical-data": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(8px); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-40">
+<!-- Top App Bar -->
+<header class="sticky top-0 w-full z-50 flex items-center justify-between px-4 h-[64px] bg-surface shadow-sm">
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center hover:bg-surface-container rounded-full transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary">Borrador del Incidente</h1>
+</div>
+<span class="bg-[#FF9100]/10 text-[#E65100] px-3 py-1 rounded-full font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">pending</span>
+            Pendiente
+        </span>
+</header>
+<main class="px-4 py-6 max-w-md mx-auto space-y-6">
+<!-- Section: Datos Generales -->
+<section class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-surface-container">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">info</span>
+<h2 class="font-headline-md text-headline-md-mobile text-on-surface">Datos Generales</h2>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-4">
+<div class="space-y-1">
+<p class="text-label-md font-label-md text-on-surface-variant">Fecha y Hora</p>
+<p class="text-body-md font-body-md text-on-surface font-semibold">24 Oct, 2023 • 22:15</p>
+</div>
+<div class="space-y-1 text-right">
+<p class="text-label-md font-label-md text-on-surface-variant">Precisión GPS</p>
+<p class="text-body-md font-body-md text-on-tertiary-container font-semibold flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[16px]">gps_fixed</span> Alta (3m)
+                    </p>
+</div>
+</div>
+<div class="rounded-lg overflow-hidden h-40 border border-outline-variant relative group">
+<div class="w-full h-full bg-cover bg-center" data-location="Madrid, Spain" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCEQMIu8LMD5N42H0FzM2bNZ2bBkrNT1cVgUAYnKORVb3ZM0nO9BXDZUPpAN4lkW9nM4JuJRligiF9MW1OOayw8gfL3cZNDqcQtn_HsAUnaId1_s3ztKDbGNazmy1pSfW3XI4W7WzE1Qsc6jVqDVLAD1VtwnBss1UCnxt789pwI2PAQYIRH2ErfbaUy_IVjSYdFOjB4iltzuW9pKbPVQBizPvbA4VVC3tH1JZ0b0HpltJOZ-0z8Wxf4Q5ZLt218XyRUJ8C65zJ-kf4')"></div>
+<div class="absolute bottom-2 left-2 right-2 bg-white/90 backdrop-blur-sm p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">location_on</span>
+<p class="text-xs font-medium truncate">Calle de la Victoria, 12, Madrid</p>
+</div>
+</div>
+</section>
+<!-- Section: Transcripción Audio -->
+<section class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-surface-container">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">record_voice_over</span>
+<h2 class="font-headline-md text-headline-md-mobile text-on-surface">Transcripción</h2>
+</div>
+<button class="text-primary font-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">play_circle</span> Escuchar original
+                </button>
+</div>
+<div class="space-y-4 max-h-60 overflow-y-auto pr-2 scrollbar-hide">
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-[16px]" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+<div class="bg-surface-container rounded-r-xl rounded-bl-xl p-3">
+<p class="text-label-md font-label-md text-primary mb-1">Víctima</p>
+<p class="text-body-md font-body-md">"Por favor, aléjate de mí. No te conozco y me estás siguiendo desde el metro."</p>
+</div>
+</div>
+<div class="flex gap-3 flex-row-reverse">
+<div class="w-8 h-8 rounded-full bg-error-container/20 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-error text-[16px]" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+<div class="bg-error-container/10 rounded-l-xl rounded-br-xl p-3 text-right">
+<p class="text-label-md font-label-md text-error mb-1">Agresor</p>
+<p class="text-body-md font-body-md italic text-on-error-container">"[Inaudible] ...solo quiero hablar contigo, no te pongas así."</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-[16px]" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+<div class="bg-surface-container rounded-r-xl rounded-bl-xl p-3">
+<p class="text-label-md font-label-md text-primary mb-1">Víctima</p>
+<p class="text-body-md font-body-md">"¡SororIA, activa protocolo de alerta y envía mi ubicación!"</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Contexto Visual IA -->
+<section class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-surface-container">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+<h2 class="font-headline-md text-headline-md-mobile text-on-surface">Análisis del Entorno</h2>
+</div>
+<div class="grid grid-cols-2 gap-3 mb-4">
+<div class="aspect-square rounded-lg overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A low-light street photography shot of a dark urban alleyway with a single flickering street lamp, captured through a mobile phone lens perspective. The aesthetic is grainy and high-tension, consistent with a safety app's emergency documentation. Professional cool-toned lighting with deep purple shadows creates an atmosphere of urgency and empowerment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkyL9RH8qcJCXFOHDYa-Q2WOYeTHwnsnA9mxt4qWDA_7_CMH_xnT1knx7Pr0qK7XaUqFJHJjxr0xLZFuD6U_QkFyuZK8aH0VyFnqjHUdxssYPrW6HL7dPMzaQctaSycVVSk2ffb_umdevSekKb6LNR92JvLFmLavEs_EGnMTjTrs6LhdH_nMAzGHRHKHyhiPv8k8eMrWWUApKuKLBt6-LBwL11oMiOfBvs8EAht0iit6SpMKnWN2WjdNTVKEf-2eVr4zs5fHocTp4"/>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A detailed AI-generated analysis view showing a blurred figure of a person in a dark hoodie in a night setting, with digital bounding boxes and data points overlaid in violet. The visual style is clean, technical, and high-reliability, emphasizing security and precision within a modern femtech application interface. Cinematic lighting enhances the clarity of detected objects." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1CZNbTpd4cvFVrCC135PVTizTqMUe-XG9vNIODsWsfVjeLLab2pw-xSLQJ_ZHO-dt2GXhOIV3_8l3Nz8Uy7TuLzdJrdz8IUgakpE5-cZkyw_G_RWI-fk8_gcI6IHKCy3h1QhIGL5ZwunqIpsE_4b8Qups_Sxj3_dpm3jdd7aM7itmuzcK6crBGgpa3ecYVmVg6saRICJ6sK06k3Z0cPJjtvYOw1harcJuzbSKZKljQZDg6OrHlePrmxbq5tK551YJnoIf3uCHZTI"/>
+</div>
+</div>
+<div class="space-y-3">
+<div class="p-3 bg-primary/5 border-l-4 border-primary rounded-r-lg">
+<p class="text-label-md font-label-md text-primary mb-1">Descripción del Agresor</p>
+<p class="text-body-md font-body-md text-on-surface">Varón, aprox. 1.80m, complexión media. Viste sudadera oscura con capucha y pantalones vaqueros. Actitud persistente y lenguaje corporal invasivo.</p>
+</div>
+<div class="p-3 bg-secondary/5 border-l-4 border-secondary rounded-r-lg">
+<p class="text-label-md font-label-md text-secondary mb-1">Entorno Detectado</p>
+<p class="text-body-md font-body-md text-on-surface">Zona poco iluminada, escaso tránsito peatonal. Presencia de cámaras de seguridad pública a 50 metros.</p>
+</div>
+</div>
+</section>
+<!-- Section: Entidad Sugerida (Violet Border) -->
+<section class="bg-surface-container-lowest rounded-xl p-5 shadow-[0px_8px_20px_rgba(90,24,154,0.1)] border-2 border-primary-container relative overflow-hidden">
+<div class="absolute top-0 right-0 p-2">
+<span class="bg-primary-container text-white text-[10px] px-2 py-0.5 rounded-bl-lg font-bold uppercase tracking-wider">Recomendado</span>
+</div>
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">gavel</span>
+<h2 class="font-headline-md text-headline-md-mobile text-primary-container">Entidad de Apoyo Sugerida</h2>
+</div>
+<p class="text-body-md font-body-md text-on-surface mb-4">Basado en la gravedad y el análisis del incidente, se recomienda contactar con:</p>
+<div class="flex items-center gap-4 bg-white p-3 rounded-lg border border-primary-container/20">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[28px]">account_balance</span>
+</div>
+<div class="flex-1">
+<h3 class="font-critical-data text-critical-data text-on-surface">Unidad de Atención a la Familia</h3>
+<p class="text-label-md font-label-md text-on-surface-variant">Especialistas en violencia de género</p>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">call</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Bottom Action Bar (Fixed) -->
+<footer class="fixed bottom-0 left-0 right-0 bg-surface px-4 py-4 shadow-[0px_-8px_24px_rgba(0,0,0,0.08)] z-50">
+<div class="max-w-md mx-auto grid grid-cols-4 gap-2">
+<button class="flex flex-col items-center justify-center gap-1 p-2 hover:bg-surface-container rounded-xl transition-all active:scale-95">
+<span class="material-symbols-outlined text-on-surface-variant">edit</span>
+<span class="text-[10px] font-semibold text-on-surface-variant">Editar</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 p-2 bg-primary-container text-on-primary rounded-xl transition-all active:scale-95 shadow-md shadow-primary/20 col-span-1">
+<span class="material-symbols-outlined">check_circle</span>
+<span class="text-[10px] font-semibold">Aprobar</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 p-2 hover:bg-surface-container rounded-xl transition-all active:scale-95">
+<span class="material-symbols-outlined text-on-surface-variant">picture_as_pdf</span>
+<span class="text-[10px] font-semibold text-on-surface-variant">PDF</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 p-2 bg-secondary text-white rounded-xl transition-all active:scale-95">
+<span class="material-symbols-outlined">send</span>
+<span class="text-[10px] font-semibold">Enviar</span>
+</button>
+</div>
+<!-- Safety Home Indicator Spacing -->
+<div class="h-4 w-1/3 bg-on-surface-variant/20 mx-auto rounded-full mt-4"></div>
+</footer>
+<!-- Micro-interaction script -->
+<script>
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', () => {
+                const originalScale = button.style.transform;
+                button.style.transform = 'scale(0.92)';
+                setTimeout(() => {
+                    button.style.transform = originalScale;
+                }, 100);
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006878",
+                    "primary-container": "#5a189a",
+                    "secondary-fixed-dim": "#58d6f1",
+                    "on-primary-fixed": "#2b0052",
+                    "surface-container-high": "#e4e9eb",
+                    "on-tertiary-container": "#54bf8e",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#cec3d4",
+                    "inverse-primary": "#dbb8ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4b4452",
+                    "surface": "#f5fafc",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#a7edff",
+                    "error": "#ba1a1a",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f5fafc",
+                    "tertiary-fixed": "#8df7c2",
+                    "outline": "#7d7483",
+                    "inverse-surface": "#2c3133",
+                    "surface-tint": "#7a3fbb",
+                    "on-background": "#171c1e",
+                    "on-secondary-fixed-variant": "#004e5b",
+                    "surface-dim": "#d6dbdd",
+                    "tertiary-fixed-dim": "#71daa7",
+                    "surface-variant": "#dee3e5",
+                    "surface-container-highest": "#dee3e5",
+                    "tertiary-container": "#004a30",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1f3",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary": "#00311f",
+                    "primary-fixed": "#efdbff",
+                    "on-primary-container": "#c896ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#006575",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eaeff1",
+                    "surface-container-low": "#eff4f6",
+                    "background": "#f5fafc",
+                    "on-primary-fixed-variant": "#6122a1",
+                    "primary": "#3f0075"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "44px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "button-height": "48px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "input-height": "52px",
+                    "list-item-height": "64px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "critical-data": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "critical-data": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #f5fafc;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .radio-card:checked + label {
+            border-color: #3f0075;
+            background-color: #efdbff;
+        }
+        .radio-card:checked + label .radio-indicator {
+            border-color: #3f0075;
+            border-width: 5px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen max-w-[390px] mx-auto bg-background text-on-background">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 flex items-center justify-between px-4 h-[64px] bg-surface">
+<div class="flex items-center gap-4">
+<button aria-label="Volver" class="flex items-center justify-center w-10 h-10 transition-colors duration-200 hover:bg-surface-container rounded-full">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary">Ajustes</h1>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-4 py-6 space-y-8">
+<!-- Intro Section -->
+<section class="space-y-2">
+<h2 class="font-headline-lg text-headline-lg-mobile text-on-surface">Políticas de Autodestrucción</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Configura cuánto tiempo deseas conservar tus datos de seguridad antes de que se eliminen permanentemente.
+            </p>
+</section>
+<!-- Radio Cards Selection -->
+<form class="space-y-4" id="policyForm">
+<!-- Option 1: recommended -->
+<div class="relative">
+<input checked="" class="hidden radio-card" id="opt_export" name="auto_delete" type="radio" value="export"/>
+<label class="flex items-center justify-between p-4 border-2 border-outline-variant rounded-xl bg-surface-container-lowest cursor-pointer transition-all active:scale-95" for="opt_export">
+<div class="flex flex-col gap-1">
+<span class="font-body-lg text-body-lg font-bold text-on-surface">Eliminar tras exportar</span>
+<span class="font-label-md text-label-md text-secondary">Recomendado para máxima privacidad</span>
+</div>
+<div class="radio-indicator w-5 h-5 rounded-full border-2 border-outline transition-all"></div>
+</label>
+</div>
+<!-- Option 2: 30 days -->
+<div class="relative">
+<input class="hidden radio-card" id="opt_30" name="auto_delete" type="radio" value="30"/>
+<label class="flex items-center justify-between p-4 border-2 border-outline-variant rounded-xl bg-surface-container-lowest cursor-pointer transition-all active:scale-95" for="opt_30">
+<div class="flex flex-col gap-1">
+<span class="font-body-lg text-body-lg font-bold text-on-surface">30 días</span>
+</div>
+<div class="radio-indicator w-5 h-5 rounded-full border-2 border-outline transition-all"></div>
+</label>
+</div>
+<!-- Option 3: 90 days -->
+<div class="relative">
+<input class="hidden radio-card" id="opt_90" name="auto_delete" type="radio" value="90"/>
+<label class="flex items-center justify-between p-4 border-2 border-outline-variant rounded-xl bg-surface-container-lowest cursor-pointer transition-all active:scale-95" for="opt_90">
+<div class="flex flex-col gap-1">
+<span class="font-body-lg text-body-lg font-bold text-on-surface">90 días</span>
+</div>
+<div class="radio-indicator w-5 h-5 rounded-full border-2 border-outline transition-all"></div>
+</label>
+</div>
+<!-- Option 4: Never -->
+<div class="relative">
+<input class="hidden radio-card" id="opt_never" name="auto_delete" type="radio" value="never"/>
+<label class="flex items-center justify-between p-4 border-2 border-outline-variant rounded-xl bg-surface-container-lowest cursor-pointer transition-all active:scale-95" for="opt_never">
+<div class="flex flex-col gap-1">
+<span class="font-body-lg text-body-lg font-bold text-on-surface">Nunca</span>
+</div>
+<div class="radio-indicator w-5 h-5 rounded-full border-2 border-outline transition-all"></div>
+</label>
+</div>
+</form>
+<!-- Red Alert Box -->
+<div class="flex items-start gap-4 p-4 bg-error-container text-on-error-container rounded-xl">
+<span class="material-symbols-outlined text-error mt-0.5">warning</span>
+<div class="space-y-1">
+<p class="font-critical-data text-critical-data">No recuperable</p>
+<p class="font-body-md text-body-md">
+                    Una vez transcurrido el tiempo seleccionado, los archivos se borrarán de forma segura y no podrán ser recuperados ni por ti ni por SororIA.
+                </p>
+</div>
+</div>
+</main>
+<!-- Fixed Action Button Area -->
+<div class="p-4 bg-background">
+<button class="w-full h-button-height bg-primary text-on-primary rounded-full font-label-md text-body-lg font-bold shadow-[0px_4px_12px_rgba(90,24,154,0.3)] transition-transform active:scale-95">
+            Guardar política
+        </button>
+</div>
+<!-- No Bottom Navigation as requested -->
+<script>
+        // Micro-interaction: visual feedback for radio card selection
+        const radioInputs = document.querySelectorAll('.radio-card');
+        radioInputs.forEach(input => {
+            input.addEventListener('change', () => {
+                // Potential for haptic feedback or sound effects
+                console.log('Policy changed to:', input.value);
+            });
+        });
+    </script>
+</body></html>
